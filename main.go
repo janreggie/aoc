@@ -76,5 +76,5 @@ func main() {
 		fmt.Printf("First answer is %v.\n", result1)
 		fmt.Printf("Second answer is %v.\n", result2)
 	}
-	fmt.Printf("It took %v time to solve Year %v Day %v.\n", time.Since(start), year, day)
+	fmt.Printf("It took %v time to solve Y%04vD%02v.\n", time.Since(start), year, day)
 }

@@ -7,13 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDay01(t *testing.T) {
+func TestDay02(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []testCase{
-		{")", "-1", "1"},
-		{"()())", "-1", "5"},
-	}
+		{"2x3x4", "58", "34"},
+		{"1x1x10", "43", "14"},
+		{"2x3x4\n1x1x10", "101", "48"}}
 	for _, eachCase := range testCases {
-		testTestCase(eachCase, aoc2015.Day01, assert)
+		testTestCase(eachCase, aoc2015.Day02, assert)
 	}
 }

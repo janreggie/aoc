@@ -19,7 +19,7 @@ func Day01(scanner *bufio.Scanner) (string, string, error) {
 	for scanner.Scan() {
 		readFloor := scanner.Text()
 		if readFloor != "(" && readFloor != ")" {
-			glog.Infof("Unexpected bit: %v", readFloor)
+			glog.Warningf("Unexpected bit: %v", readFloor)
 			continue
 		}
 		if readFloor == "(" {

@@ -11,7 +11,7 @@ import "bufio"
 // so day 1
 var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 	Day01,   // day 1
-	nothing, // day 2
+	Day02,   // day 2
 	nothing, // day 3
 	nothing, // day 4
 	nothing, // day 5
@@ -40,5 +40,5 @@ var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 // nothing function is just here
 func nothing(scanner *bufio.Scanner) (string, string, error) {
 	// return nothing
-	return "", "", nil
+	return "unimplemented", "unimplemented", nil
 }
