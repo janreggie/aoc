@@ -8,7 +8,8 @@ import (
 	"github.com/golang/glog"
 )
 
-// Day01 solves the first day
+// Day01 solves the first day puzzle
+// "Not Quite Lisp"
 func Day01(scanner *bufio.Scanner) (string, string, error) {
 	answer1, answer2 := "", ""
 	var err error

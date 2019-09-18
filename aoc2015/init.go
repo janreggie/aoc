@@ -12,7 +12,7 @@ import "bufio"
 var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 	Day01,   // day 1
 	Day02,   // day 2
-	nothing, // day 3
+	Day03,   // day 3
 	nothing, // day 4
 	nothing, // day 5
 	nothing, // day 6

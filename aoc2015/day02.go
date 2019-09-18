@@ -7,13 +7,16 @@ import (
 	"strings"
 )
 
-// Day02 solves the second day
+// Day02 solves the second day puzzle
+// "I Was Told There Would Be No Math"
 func Day02(scanner *bufio.Scanner) (string, string, error) {
+	// initialize important variables
 	answer1, answer2 := "", ""
 	splitDims := make([]string, 3)
 	actualDims := make([]int64, 3)
-	totalPaper := int64(0)
-	totalRibbon := int64(0)
+	totalPaper := int64(0)  //for part 1
+	totalRibbon := int64(0) //for part 2
+
 	// some helper functions
 	// it is assumed that dims is of length 3
 	// max function for maximum of a slice
@@ -52,6 +55,8 @@ func Day02(scanner *bufio.Scanner) (string, string, error) {
 	bow := func(dims []int64) int64 {
 		return dims[0] * dims[1] * dims[2]
 	}
+
+	// now for the big part.
 	for scanner.Scan() {
 		readDims := scanner.Text()
 		splitDims = strings.Split(readDims, "x")
@@ -70,6 +75,7 @@ func Day02(scanner *bufio.Scanner) (string, string, error) {
 		totalPaper += surfaceArea(actualDims) + slack(actualDims)
 		totalRibbon += ribbon(actualDims) + bow(actualDims)
 	}
+
 	answer1 = strconv.FormatInt(totalPaper, 10)
 	answer2 = strconv.FormatInt(totalRibbon, 10)
 	return answer1, answer2, nil
