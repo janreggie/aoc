@@ -69,6 +69,7 @@ func main() {
 	bufferFile := bufio.NewScanner(osFile)
 	// now this is where it gets interesting
 	solverFunc := allAoCs[year-minYear][day-minDay]
+	glog.Infof("Solving puzzle...\n")
 	start := time.Now()
 	if result1, result2, err := solverFunc(bufferFile); err != nil {
 		glog.Fatalf("some error: %v", err)
