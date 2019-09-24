@@ -1,17 +1,21 @@
 = Advent of Code
+
 Nothing much to say, really.
 
 == Syntax
-++++
+
+----
 ./AdventOfCode [profiling flags] -year 2015 -day 4 -input file
-++++
+----
 will solve the Day 4 problem of Year 2015
 using `file` as the input file.
 This will print out the answer as output.
 
 === Profiling flags
 Profiling flags are as follows.
+
 Only one of them may be active at a time:
+
 * `-cpuprof`: writes CPU profile
 * `-memprof`: writes memory profile to `me`
 * `-trace`: writes execution trace to `trace.out` and disables `-cpuprof` and `-memprof`
