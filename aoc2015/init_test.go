@@ -17,6 +17,6 @@ func testTestCase(expected testCase, f func(*bufio.Scanner) (string, string, err
 	scanner := bufio.NewScanner(strings.NewReader(expected.input))
 	answer1, answer2, err := f(scanner)
 	a.NoError(err)
-	a.Equal(expected.result1, answer1)
-	a.Equal(expected.result2, answer2)
+	a.Equal(expected.result1, answer1, expected.input)
+	a.Equal(expected.result2, answer2, expected.input)
 }
