@@ -1,3 +1,5 @@
+.*
 *.code-workspace
 *.pprof
 *.out
+*.log

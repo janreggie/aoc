@@ -16,7 +16,7 @@ var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 	Day04,   // day 4
 	Day05,   // day 5
 	Day06,   // day 6
-	nothing, // day 7
+	Day07,   // day 7
 	nothing, // day 8
 	nothing, // day 9
 	nothing, // day 10
