@@ -16,9 +16,9 @@ Profiling flags are as follows.
 
 Only one of them may be active at a time:
 
-* `-cpuprof`: writes CPU profile
-* `-memprof`: writes memory profile to `me`
-* `-trace`: writes execution trace to `trace.out` and disables `-cpuprof` and `-memprof`
+* `-cpuprof`: writes CPU profile to `cpu.pprof`
+* `-memprof`: writes memory profile to `mem.pprof`
+* `-trace`: writes execution trace to `trace.out`
 
 == Program flow and structure
 `main.go` reads the input `file` to a buffer `bufio.Scanner`.
