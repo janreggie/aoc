@@ -10,6 +10,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/janreggie/AdventOfCode/aoc2015"
 	"github.com/janreggie/AdventOfCode/aoc2016"
+	"github.com/janreggie/AdventOfCode/aoc2017"
 	"github.com/janreggie/AdventOfCode/aoc2019"
 	"github.com/pkg/profile"
 )
@@ -28,7 +29,7 @@ const minDay, maxDay = 1, 25        // minimum and maximum days
 var allAoCs = [][]func(*bufio.Scanner) (string, string, error){
 	aoc2015.AllSolutions, // 2015
 	aoc2016.AllSolutions, // 2016
-	aoc2015.AllSolutions, // 2017
+	aoc2017.AllSolutions, // 2017
 	aoc2015.AllSolutions, // 2018
 	aoc2019.AllSolutions, // 2019
 }
