@@ -2,8 +2,8 @@ package aoc2017
 
 import "bufio"
 
-// aoc2015 implements the solutions
-// for Advent of Code 2015
+// aoc2017 implements the solutions
+// for Advent of Code 2017
 
 // AllSolutions is the slice of all solutions
 // so that they may be indexed easily.

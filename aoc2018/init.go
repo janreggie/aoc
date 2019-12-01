@@ -1,9 +1,9 @@
-package aoc2019
+package aoc2018
 
 import "bufio"
 
-// aoc2019 implements the solutions
-// for Advent of Code 2019
+// aoc2018 implements the solutions
+// for Advent of Code 2018
 
 // AllSolutions is the slice of all solutions
 // so that they may be indexed easily.
