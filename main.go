@@ -9,6 +9,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/janreggie/AdventOfCode/aoc2015"
+	"github.com/janreggie/AdventOfCode/aoc2019"
 	"github.com/pkg/profile"
 )
 
@@ -20,11 +21,16 @@ var profileCPU bool
 var profileMem bool
 var profileTrace bool
 
-const minYear, maxYear = 2015, 2018 // minimum and maximum years so far
+const minYear, maxYear = 2015, 2019 // minimum and maximum years so far
 const minDay, maxDay = 1, 25        // minimum and maximum days
 
 var allAoCs = [][]func(*bufio.Scanner) (string, string, error){
-	aoc2015.AllSolutions}
+	aoc2015.AllSolutions, // 2015
+	aoc2015.AllSolutions, // 2016
+	aoc2015.AllSolutions, // 2017
+	aoc2015.AllSolutions, // 2018
+	aoc2019.AllSolutions, // 2019
+}
 
 func init() {
 	flag.IntVar(&year, "year", 0, "Year to solve")
