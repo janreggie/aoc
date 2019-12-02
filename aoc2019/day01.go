@@ -15,13 +15,13 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	}
 	for scanner.Scan() {
 		raw := scanner.Text()
-		mass, err := strconv.Atoi(raw)
+		mass, err := strconv.ParseInt(raw, 10, 64)
 		if err != nil {
 			e = err
 			return
 		}
-		totalFuel += massToFuel(int64(mass))
-		for fuel := massToFuel(int64(mass)); fuel > 0; fuel = massToFuel(fuel) {
+		totalFuel += massToFuel(mass)
+		for fuel := massToFuel(mass); fuel > 0; fuel = massToFuel(fuel) {
 			cumuFuel += fuel
 		}
 	}
