@@ -5,15 +5,14 @@ import (
 	"strconv"
 )
 
-func day01MassToFuel(mass int64) int64 {
-	return (mass / 3) - 2 // will automatically round down!!
-}
-
 // Day01 solves the first day puzzle
 // "The Tyranny of the Rocket Equation"
 func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	var totalFuel int64 // total fuel required
 	var cumuFuel int64  // answer2 (where fuel requires fuel!)
+	massToFuel := func(mass int64) int64 {
+		return (mass / 3) - 2 // will automatically round down!!
+	}
 	for scanner.Scan() {
 		raw := scanner.Text()
 		mass, err := strconv.Atoi(raw)
@@ -21,8 +20,8 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 			e = err
 			return
 		}
-		totalFuel += day01MassToFuel(int64(mass))
-		for fuel := day01MassToFuel(int64(mass)); fuel > 0; fuel = day01MassToFuel(fuel) {
+		totalFuel += massToFuel(int64(mass))
+		for fuel := massToFuel(int64(mass)); fuel > 0; fuel = massToFuel(fuel) {
 			cumuFuel += fuel
 		}
 	}
