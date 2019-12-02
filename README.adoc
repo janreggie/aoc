@@ -31,9 +31,9 @@ and an applicable error.
 
 * [ ] 2015 (8 of 30 completed)
 * [ ] 2016 (1 of 30 completed)
-* [ ] 2017 (0 of 30 completed)
-* [ ] 2018 (0 of 30 completed)
-* [ ] 2019 (1 of 30 completed) (🎉 current year!)
+* [ ] 2017 (1 of 30 completed)
+* [ ] 2018 (1 of 30 completed)
+* [ ] 2019 (2 of 30 completed) (🎉 current year!)
 
 
 == License
