@@ -6,8 +6,6 @@ import (
 	"image"
 	"strconv"
 	"strings"
-
-	"github.com/golang/glog"
 )
 
 func maxInt(a int, b ...int) (r int) {
@@ -271,33 +269,33 @@ func Day03(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		trace2[ind] = make([]bool, maxPoint.Y-minPoint.Y)
 	}
 	origin = minPoint.Mul(-1)
-	glog.Info("minPoint: ", minPoint)
-	glog.Info("maxPoint: ", maxPoint)
+	// glog.Info("minPoint: ", minPoint)
+	// glog.Info("maxPoint: ", maxPoint)
 
 	// from here on do the actual tracing
 	// right now allIntersections contains nothing
 	tracePath(wire1, trace1, origin, crits1)
 	tracePath(wire2, trace2, origin, crits2) // it points to nowhere right now
 	// // print the traces out?
-	boolsToStr := func(bools []bool) string {
-		s := make([]string, len(bools))
-		for i, v := range bools {
-			if v {
-				s[i] = "X"
-			} else {
-				s[i] = "."
-			}
-		}
-		return strings.Join(s, "")
-	}
-	glog.Info("trace 1:")
-	for i, v := range trace1 {
-		glog.Info(i, ":", boolsToStr(v))
-	}
-	glog.Info("trace 2:")
-	for i, v := range trace2 {
-		glog.Info(i, ":", boolsToStr(v))
-	}
+	// boolsToStr := func(bools []bool) string {
+	// 	s := make([]string, len(bools))
+	// 	for i, v := range bools {
+	// 		if v {
+	// 			s[i] = "X"
+	// 		} else {
+	// 			s[i] = "."
+	// 		}
+	// 	}
+	// 	return strings.Join(s, "")
+	// }
+	// glog.Info("trace 1:")
+	// for i, v := range trace1 {
+	// 	glog.Info(i, ":", boolsToStr(v))
+	// }
+	// glog.Info("trace 2:")
+	// for i, v := range trace2 {
+	// 	glog.Info(i, ":", boolsToStr(v))
+	// }
 
 	// now that trace1 and trace2 have been established
 	// let us determine if there are any points that are common
@@ -308,7 +306,7 @@ func Day03(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		if has && answer1 == "" {
 			answer1 = strconv.Itoa(ii)
 		}
-		glog.Infof("%v found some points: %v", ii, pts)
+		// glog.Infof("%v found some points: %v", ii, pts)
 		for _, v := range pts {
 
 			crits1[v] = 0 // initializing!
@@ -325,7 +323,7 @@ func Day03(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	}
 	tracePath(wire1, trace1, origin, crits1)
 	tracePath(wire2, trace2, origin, crits2) // should result to something
-	glog.Info("crit points: ", crits1)       // they're the same either way
+	// glog.Info("crit points: ", crits1)       // they're the same either way
 	for k, v := range crits2 {
 		crits1[k] += v
 	}
