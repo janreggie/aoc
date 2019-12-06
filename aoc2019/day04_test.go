@@ -13,6 +13,10 @@ func TestDay04(t *testing.T) {
 		{"271973-785961", "925", "607"},
 	}
 	for _, eachCase := range testCases {
+<<<<<<< HEAD
 		testTestCase(eachCase, aoc2019.Day04, assert)
+=======
+		testTestCase(eachCase, aoc2019.Day03, assert)
+>>>>>>> e104f5f9b491de3848f5c13338ef5a09f72ba8e5
 	}
 }
