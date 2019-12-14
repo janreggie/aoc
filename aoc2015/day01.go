@@ -4,39 +4,31 @@ import (
 	"bufio"
 	"fmt"
 	"strconv"
-
-	"github.com/golang/glog"
 )
 
 // Day01 solves the first day puzzle
 // "Not Quite Lisp"
-func Day01(scanner *bufio.Scanner) (string, string, error) {
-	answer1, answer2 := "", ""
-	var err error
-	currentFloor := int64(0)
-	position := int64(1)
+func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+	currentFloor := 0
+	position := 1
 	passedBasement := false
 	scanner.Split(bufio.ScanBytes)
 	for scanner.Scan() {
-		readFloor := scanner.Text()
-		if readFloor != "(" && readFloor != ")" {
-			glog.Warningf("Unexpected bit: %v", readFloor)
-			continue
-		}
+		readFloor := scanner.Text() // each character (`(` or `)`)
 		if readFloor == "(" {
 			currentFloor++
 		} else if readFloor == ")" {
 			currentFloor--
+		} else {
+			e = fmt.Errorf("unexpected: %v", readFloor)
+			return
 		}
 		if currentFloor == -1 && !passedBasement {
-			answer2 = strconv.FormatInt(position, 10)
+			answer2 = strconv.Itoa(position)
 			passedBasement = true
 		}
 		position++
-		if err := scanner.Err(); err != nil {
-			return "", "", fmt.Errorf("scanner error: %v", err)
-		}
 	}
-	answer1 = strconv.FormatInt(currentFloor, 10)
-	return answer1, answer2, err
+	answer1 = strconv.Itoa(currentFloor)
+	return
 }
