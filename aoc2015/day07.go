@@ -10,8 +10,7 @@ import (
 
 // Day07 solves the seventh day problem
 // "Some Assembly Required"
-func Day07(scanner *bufio.Scanner) (string, string, error) {
-	answer1, answer2 := "", ""
+func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wires := make(map[identifier]signal) // map of all wires and their signal values
 	imap1 := newInstructionMap()
 	imap2 := newInstructionMap()
@@ -19,31 +18,34 @@ func Day07(scanner *bufio.Scanner) (string, string, error) {
 	// place everything in a instructionMap
 	for scanner.Scan() {
 		rawQuery := scanner.Text()
-		instr1, err := parseInstruction(rawQuery)
-		if err != nil {
-			return "", "", fmt.Errorf("cannot parse %v: ", err)
+		instr1, e := parseInstruction(rawQuery)
+		if e != nil {
+			err = fmt.Errorf("cannot parse %v: ", e)
+			return
 		}
-		instr2, err := parseInstruction(rawQuery)
-		if err != nil {
-			return "", "", fmt.Errorf("cannot parse %v: ", err)
+		instr2, e := parseInstruction(rawQuery)
+		if e != nil {
+			err = fmt.Errorf("cannot parse %v: ", e)
+			return
 		}
 		imap1.append(instr1)
 		imap2.append(instr2)
 	}
 	// make sure everyone found their children
-	parent1, err := imap1.lookup("a") // parent1 of our "tree"
-	if err != nil {
-		return "", "", fmt.Errorf("cannot find parent1 a: %v", err)
+	parent1, e := imap1.lookup("a") // parent1 of our "tree"
+	if e != nil {
+		err = fmt.Errorf("cannot find parent1 a: %v", err)
+		return
 	}
 	glog.Infof("Populating parent1...\n")
-	if err := parent1.populateChildren(imap1); err != nil {
-		return "", "", err
+	if err = parent1.populateChildren(imap1); err != nil {
+		return
 	}
 	fmt.Println(imap1)
 	// now do all children operations...
 	glog.Infof("Performing parent1's operations...\n")
-	if err := parent1.performAll(wires); err != nil {
-		return "", "", err
+	if err = parent1.performAll(wires); err != nil {
+		return
 	}
 	for key, val := range wires {
 		glog.Infof("%v: %v\n", key, val)
@@ -52,9 +54,10 @@ func Day07(scanner *bufio.Scanner) (string, string, error) {
 
 	// reset wires and hijack b
 	wires = make(map[identifier]signal)
-	nodeB, err := imap1.lookup("b")
-	if err != nil {
-		return "", "", err
+	nodeB, e := imap1.lookup("b")
+	if e != nil {
+		err = e
+		return
 	}
 	nodeB.parameters = []identifier{identifier(answer1)}
 	nodeB.childrenID = []identifier{}
@@ -66,13 +69,13 @@ func Day07(scanner *bufio.Scanner) (string, string, error) {
 		instr.done = false
 	})
 	glog.Infof("Performing parent1's operations...\n")
-	if err := parent1.performAll(wires); err != nil {
-		return "", "", err
+	if err = parent1.performAll(wires); err != nil {
+		return
 	}
 	for key, val := range wires {
 		glog.Infof("%v: %v\n", key, val)
 	}
 	answer2 = strconv.Itoa(int(wires[parent1.id]))
 
-	return answer1, answer2, nil
+	return
 }

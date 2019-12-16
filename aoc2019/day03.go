@@ -46,9 +46,9 @@ type path struct {
 	dst int32     // distance R1006 -> 1006
 }
 
-func strToPath(raw string) (p path, e error) {
+func strToPath(raw string) (p path, err error) {
 	if len(raw) < 2 {
-		e = fmt.Errorf("path %v too short", raw)
+		err = fmt.Errorf("path %v too short", raw)
 		return
 	}
 	switch b1 := raw[0]; b1 {
@@ -61,12 +61,12 @@ func strToPath(raw string) (p path, e error) {
 	case 'L':
 		p.drn = left
 	default:
-		e = fmt.Errorf("invalid direction for %v: %v", raw, b1)
+		err = fmt.Errorf("invalid direction for %v: %v", raw, b1)
 		return
 	}
-	d, err := strconv.ParseInt(raw[1:], 10, 16)
-	if err != nil {
-		e = fmt.Errorf("invalid number for %v: %v", raw, raw[1:])
+	d, e := strconv.ParseInt(raw[1:], 10, 16)
+	if e != nil {
+		err = fmt.Errorf("invalid number for %v: %v", raw, raw[1:])
 		return
 	}
 	p.dst = int32(d)
@@ -223,7 +223,7 @@ func checkIntersect(trace1, trace2 [][]bool, distance int, origin, maxPoint imag
 //
 // WARNING: This may consume half a gigabyte of RAM.
 // But it works. And more often than not that's what matters.
-func Day03(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wire1 := make([]path, 0) // we don't know how long it is just yet
 	wire2 := make([]path, 0)
 	var trace1, trace2 [][]bool           // "traces" for the wire; 0 if non-traced; 1 if traced
@@ -233,26 +233,26 @@ func Day03(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	var origin image.Point
 
 	if scan := scanner.Scan(); !scan {
-		e = fmt.Errorf("premature scan error")
+		err = fmt.Errorf("premature scan error")
 		return
 	}
 	for _, eachPath := range strings.Split(scanner.Text(), ",") {
-		p, err := strToPath(eachPath)
-		if err != nil {
-			e = fmt.Errorf("cannot extract path: %v", err)
+		p, e := strToPath(eachPath)
+		if e != nil {
+			err = fmt.Errorf("cannot extract path: %v", e)
 			return
 		}
 		wire1 = append(wire1, p)
 	}
 
 	if scan := scanner.Scan(); !scan {
-		e = fmt.Errorf("premature scan error")
+		err = fmt.Errorf("premature scan error")
 		return
 	}
 	for _, eachPath := range strings.Split(scanner.Text(), ",") {
-		p, err := strToPath(eachPath)
-		if err != nil {
-			e = fmt.Errorf("cannot extract path: %v", err)
+		p, e := strToPath(eachPath)
+		if e != nil {
+			err = fmt.Errorf("cannot extract path: %v", e)
 			return
 		}
 		wire2 = append(wire2, p)

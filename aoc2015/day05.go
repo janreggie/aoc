@@ -2,14 +2,12 @@ package aoc2015
 
 import (
 	"bufio"
-	"fmt"
 	"strconv"
 )
 
 // Day05 solves the fifth day puzzle
 // "Doesn't He Have Intern-Elves For This?"
-func Day05(scanner *bufio.Scanner) (string, string, error) {
-	answer1, answer2 := "", ""
+func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var totalNiceOne, totalNiceTwo int64
 	// Is it more worth to check each ind := range currentString?
 	// Not necessarily since it will run the same number of comparisons
@@ -128,11 +126,11 @@ func Day05(scanner *bufio.Scanner) (string, string, error) {
 		if checkNiceTwo(currentString) {
 			totalNiceTwo++
 		}
-		if err := scanner.Err(); err != nil {
-			return "", "", fmt.Errorf("scanner error: %v", err)
+		if err = scanner.Err(); err != nil {
+			return
 		}
 	}
 	answer1 = strconv.FormatInt(totalNiceOne, 10)
 	answer2 = strconv.FormatInt(totalNiceTwo, 10)
-	return answer1, answer2, nil
+	return
 }

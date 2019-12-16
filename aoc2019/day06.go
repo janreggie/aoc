@@ -92,14 +92,14 @@ exterloop:
 
 // Day06 solves the sixth day puzzle
 // "Universal Orbit Map"
-func Day06(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	allSatellites := make(map[string]*orbit, 0)
 	for scanner.Scan() {
 		raw := strings.Fields(scanner.Text())
 		if len(raw) != 1 {
 			continue
 		}
-		if e = newOrbit(raw[0], allSatellites); e != nil {
+		if err = newOrbit(raw[0], allSatellites); err != nil {
 			return
 		}
 	}
@@ -111,7 +111,6 @@ func Day06(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		totalOrbits += val.orbiterCount
 	}
 	answer1 = strconv.Itoa(totalOrbits)
-
 	answer2 = strconv.Itoa(orbitalTransfers(allSatellites["YOU"], allSatellites["SAN"]))
 
 	return

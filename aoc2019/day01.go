@@ -7,7 +7,7 @@ import (
 
 // Day01 solves the first day puzzle
 // "The Tyranny of the Rocket Equation"
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var totalFuel int64 // total fuel required
 	var cumuFuel int64  // answer2 (where fuel requires fuel!)
 	massToFuel := func(mass int64) int64 {
@@ -15,9 +15,9 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	}
 	for scanner.Scan() {
 		raw := scanner.Text()
-		mass, err := strconv.ParseInt(raw, 10, 64)
-		if err != nil {
-			e = err
+		mass, e := strconv.ParseInt(raw, 10, 64)
+		if e != nil {
+			err = e
 			return
 		}
 		totalFuel += massToFuel(mass)

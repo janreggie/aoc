@@ -62,7 +62,7 @@ func checkNonDecreasing(input int) bool {
 
 // Day04 solves the fourth day puzzle
 // "Secure Container"
-func Day04(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var current, lowerBound, upperBound int
 	var count1, count2 int
 	// This looks more like a number theory problem
@@ -81,17 +81,17 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	scanner.Scan()
 	raw := strings.Split(scanner.Text(), "-")
 	if len(raw) != 2 {
-		e = fmt.Errorf("invalid input: %v", raw)
+		err = fmt.Errorf("invalid input: %v", raw)
 		return
 	}
-	lowerBound, e = strconv.Atoi(raw[0])
-	if e != nil {
-		e = fmt.Errorf("cannot convert %v: %v", raw[0], e)
+	lowerBound, err = strconv.Atoi(raw[0])
+	if err != nil {
+		err = fmt.Errorf("cannot convert %v: %v", raw[0], err)
 		return
 	}
-	upperBound, e = strconv.Atoi(raw[1])
-	if e != nil {
-		e = fmt.Errorf("cannot convert %v: %v", raw[10], e)
+	upperBound, err = strconv.Atoi(raw[1])
+	if err != nil {
+		err = fmt.Errorf("cannot convert %v: %v", raw[10], err)
 		return
 	}
 

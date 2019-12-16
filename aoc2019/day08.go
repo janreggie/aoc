@@ -49,10 +49,11 @@ func (sp *spaceImage) count() (count [3]int) {
 
 // Day08 solves the sixth day puzzle
 // "Space Image Format"
-func Day08(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	allLayers := make([]spaceImage, 0)
 	// scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	// 	// This is bufio.ScanBytes but with 150 bytes at a time
+	// 	// For some reason it doesn't work...
 	// 	if atEOF && len(data) == 0 {
 	// 		return 0, nil, nil
 	// 	}
@@ -67,9 +68,9 @@ func Day08(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		raw := scanner.Text()
 		// split for every 150 bytes
 		for i := 0; (i+1)*150 <= len(raw); i++ {
-			sp, err := newSpaceImage(raw[i*150 : (i+1)*150])
-			if err != nil {
-				e = fmt.Errorf("can't create image from %v: %v", raw, err)
+			sp, e := newSpaceImage(raw[i*150 : (i+1)*150])
+			if e != nil {
+				err = fmt.Errorf("can't create image from %v: %v", raw, e)
 				return
 			}
 			allLayers = append(allLayers, sp)

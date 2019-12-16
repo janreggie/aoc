@@ -10,14 +10,14 @@ import (
 
 // Day04 solves the fourth day puzzle
 // "The Ideal Stocking Stuffer"
-func Day04(scanner *bufio.Scanner) (string, string, error) {
-	answer1, answer2 := "", ""
+func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// the entire scanner is read.
 	input := ""
 	if scanner.Scan() {
 		input = scanner.Text()
 	} else {
-		return "", "", errors.New("first line of file is empty")
+		err = errors.New("first line of file is empty")
+		return
 	}
 	// now what do we do with the input
 	var index int64 = 1
@@ -45,5 +45,5 @@ func Day04(scanner *bufio.Scanner) (string, string, error) {
 		}
 		index++
 	}
-	return answer1, answer2, nil
+	return
 }

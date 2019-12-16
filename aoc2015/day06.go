@@ -9,8 +9,7 @@ import (
 
 // Day06 solves the sixth day problem
 // "Probably a Fire Hazard"
-func Day06(scanner *bufio.Scanner) (string, string, error) {
-	answer1, answer2 := "", ""
+func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var countLit, brightness uint64 // countLit is Part 1; brightness is Part 2
 	// generate powerGrid (0 is off; 1 is on)
 	// so powerGrid[x][y] represents the x'th lightbulb in y'th row
@@ -62,31 +61,33 @@ func Day06(scanner *bufio.Scanner) (string, string, error) {
 		// turn on ROW1,COL1 through ROW2,COL2
 		// so query is of length 4 or 5
 		if len(query) != 4 && len(query) != 5 {
-			return "", "", fmt.Errorf("unknown spacing: %q", rawQuery)
+			err = fmt.Errorf("unknown spacing: %q", rawQuery)
+			return
 		}
 		var row1, col1, row2, col2 int
 		var manipFn func(grid [][]bool, nordGrid [][]uint64, row, col int)
 		if query[0] == "toggle" {
-			if err := parseRowCol(query[1], &row1, &col1); err != nil {
-				return "", "", err
+			if err = parseRowCol(query[1], &row1, &col1); err != nil {
+				return
 			}
-			if err := parseRowCol(query[3], &row2, &col2); err != nil {
-				return "", "", err
+			if err = parseRowCol(query[3], &row2, &col2); err != nil {
+				return
 			}
 			manipFn = toggle
 		} else if query[0] == "turn" {
-			if err := parseRowCol(query[2], &row1, &col1); err != nil {
-				return "", "", err
+			if err = parseRowCol(query[2], &row1, &col1); err != nil {
+				return
 			}
-			if err := parseRowCol(query[4], &row2, &col2); err != nil {
-				return "", "", err
+			if err = parseRowCol(query[4], &row2, &col2); err != nil {
+				return
 			}
 			if query[1] == "off" {
 				manipFn = turnOff
 			} else if query[1] == "on" {
 				manipFn = turnOn
 			} else {
-				return "", "", fmt.Errorf("unknown function: %q in %q neither off nor on", query[1], rawQuery)
+				err = fmt.Errorf("unknown function: %q in %q neither off nor on", query[1], rawQuery)
+				return
 			}
 		} else {
 			return "", "", fmt.Errorf("unknown function: %q in %q", query[0], rawQuery)
@@ -96,9 +97,6 @@ func Day06(scanner *bufio.Scanner) (string, string, error) {
 			for col := col1; col <= col2; col++ {
 				manipFn(powerGrid, nordicGrid, row, col)
 			}
-		}
-		if err := scanner.Err(); err != nil {
-			return "", "", fmt.Errorf("scanner error: %v", err)
 		}
 	}
 
@@ -114,5 +112,5 @@ func Day06(scanner *bufio.Scanner) (string, string, error) {
 
 	answer1 = strconv.FormatUint(countLit, 10)
 	answer2 = strconv.FormatUint(brightness, 10)
-	return answer1, answer2, nil
+	return
 }

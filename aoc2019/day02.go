@@ -67,14 +67,14 @@ func day02Run(intcode []int64) error {
 
 // Day02 solves the second day puzzle
 // "1202 Program Alarm"
-func Day02(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Split(readUntilCommaSpace)
 	allInstr := make([]int64, 0, 12) // i dunno how long it can be
 	for scanner.Scan() {
 		raw := scanner.Text()
-		instr, err := strconv.ParseInt(raw, 10, 64)
-		if err != nil {
-			e = fmt.Errorf("cannot parse %v: %v", raw, err)
+		instr, e := strconv.ParseInt(raw, 10, 64)
+		if e != nil {
+			err = fmt.Errorf("cannot parse %v: %v", raw, e)
 			return
 		}
 		allInstr = append(allInstr, instr)
@@ -86,7 +86,8 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	// okay all instructions are in allInstr
 	// but let's change some values first!
 	if len(allInstr) < 3 {
-		e = fmt.Errorf("allInstr is length %v: at least 3 required", len(allInstr))
+		err = fmt.Errorf("allInstr is length %v: at least 3 required", len(allInstr))
+		return
 	}
 	allInstr[1] = 12
 	allInstr[2] = 2
