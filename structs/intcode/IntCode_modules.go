@@ -11,9 +11,8 @@ package intcode
 var SimpleAdder *Module = &Module{
 	// mem: 1 LOC1 LOC2 LOC3
 	// add: mem[LOC3] = mem[LOC1]+mem[LOC2]
-	Opcode:     1,
-	Mnemonic:   "AND",
-	ParamCount: 3,
+	Opcode:   1,
+	Mnemonic: "ADD",
 	Function: func(ic *IntCode) (err error) {
 		// assume that Current() is 1
 		// Now check if the next ones are in memory
@@ -46,9 +45,8 @@ var SimpleAdder *Module = &Module{
 var SimpleMultiplier *Module = &Module{
 	// mem: 2 LOC1 LOC2 LOC3
 	// mul: mem[LOC3] = mem[LOC1]*mem[LOC2]
-	Opcode:     2,
-	Mnemonic:   "MUL",
-	ParamCount: 3,
+	Opcode:   2,
+	Mnemonic: "MUL",
 	Function: func(ic *IntCode) (err error) {
 		// assume that Current() is 2
 		// Now check if the next ones are in memory

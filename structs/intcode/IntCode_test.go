@@ -13,9 +13,9 @@ func ExampleModule_Add_and_Multiply() {
 	add := &intcode.Module{
 		// mem: 1 LOC1 LOC2 LOC3
 		// add: mem[LOC3] = mem[LOC1]+mem[LOC2]
-		Opcode:     1,
-		Mnemonic:   "AND",
-		ParamCount: 3,
+		Opcode:   1,
+		Mnemonic: "ADD",
+		// ParamCount: 3,
 		Function: func(ic *intcode.IntCode) (err error) {
 			// assume that Current() is 1
 			// Now check if the next ones are in memory
@@ -38,9 +38,9 @@ func ExampleModule_Add_and_Multiply() {
 	mul := &intcode.Module{
 		// mem: 2 LOC1 LOC2 LOC3
 		// mul: mem[LOC3] = mem[LOC1]*mem[LOC2]
-		Opcode:     2,
-		Mnemonic:   "MUL",
-		ParamCount: 3,
+		Opcode:   2,
+		Mnemonic: "MUL",
+		// ParamCount: 3,
 		Function: func(ic *intcode.IntCode) (err error) {
 			// assume that Current() is 2
 			// Now check if the next ones are in memory

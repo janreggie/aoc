@@ -36,8 +36,14 @@ type InvalidOpcodeError struct {
 // NewInvalidOpcodeError returns an InvalidOpcodeError
 // with message "invalid opcode Opcode, wants Wants (Mnemonic)"
 func NewInvalidOpcodeError(opcode int, module *Module) error {
+	var msg string
+	if module.Opcode != 0 {
+		msg = fmt.Sprintf("invalid opcode %v, wants %v (%v)", opcode, module.Opcode, module.Mnemonic)
+	} else {
+		msg = fmt.Sprintf("invalid opcode %v, wants %v", opcode, module.Mnemonic)
+	}
 	return &InvalidOpcodeError{
-		msg:      fmt.Sprintf("invalid opcode %v, wants: %v (%v)", opcode, module.Opcode, module.Mnemonic),
+		msg:      msg,
 		Opcode:   opcode,
 		Wants:    module.Opcode,
 		Mnemonic: module.Mnemonic,

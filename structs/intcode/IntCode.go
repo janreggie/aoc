@@ -16,17 +16,17 @@ import (
 // e.g., accessing an invalid memory address.
 // Note that Function will affect the
 type Module struct {
-	Opcode     int                     // what is the opcode that is required
-	Mnemonic   string                  // "name" of the opcode
-	ParamCount int                     // how many parameters does it need?
-	Function   func(ic *IntCode) error // what does it do to the computer?
+	Opcode   int                     // opcode (if 0 then check will occur in Function)
+	Mnemonic string                  // "name" of the opcode
+	Function func(ic *IntCode) error // what does it do to the computer?
 }
 
 // Halt is a module that is built in to the IntCode
 var Halt *Module = &Module{
-	Opcode:     99,
-	Mnemonic:   "HALT",
-	ParamCount: 0,
+	// ToRun:    func(opcode int) bool { return opcode == 99 },
+	Opcode:   99,
+	Mnemonic: "HALT",
+	// ParamCount: 0,
 	Function: func(ic *IntCode) error {
 		return NewHaltError("HALT (99)") // that's its literally function
 	},
@@ -108,18 +108,23 @@ func (ic *IntCode) Operate() (err error) {
 	for ic.pc < len(ic.mem) { // while we haven't reached the end yet
 		// let's go through all the modules
 		for _, module := range ic.modules {
-			if ic.mem[ic.pc] != module.Opcode {
+			if module.Opcode != 0 && module.Opcode != ic.mem[ic.pc] {
 				err = NewInvalidOpcodeError(ic.pc, module)
 				continue
 			}
 			// but hey it's equal now!!
+			// or at least module.Opcode == 0,
+			// where in that case it will do some checks
 			if err = module.Function(ic); err != nil {
+				if _, isInvalid := err.(*InvalidOpcodeError); isInvalid {
+					continue // maybe it wants a different opcode...
+				}
 				return // no point in continuing
 			}
 			break // out of the loop once we found a module
 		}
 		if err != nil {
-			return
+			return // something must've happened
 		}
 	}
 	return
