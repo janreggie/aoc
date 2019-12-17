@@ -1,5 +1,5 @@
 // Package intcode implements programming in "IntCode"
-// (https://adventofcode.com/2019/day/2).
+// for Advent of Code 2019.
 package intcode
 
 import (
@@ -10,24 +10,45 @@ import (
 	"unicode/utf8"
 )
 
-// Module is a module with an Opcode and a ParamCount
+// Module is a module with an opcode and a ParamCount
 // which does something to an ic computer *IntCode using the next ParamCount memory locations.
-// Calling Function can return an error if its params turns out to be invalid
+// Calling function can return an error if its params turns out to be invalid
 // e.g., accessing an invalid memory address.
-// Note that Function will affect the
+//
+// It is assumed that calling function only happens if ic.Current() equals the opcode,
+// unless if the Module supports "parameter modes",
+// where in that case ic.Current()%100 is checked instead.
+// Note that function will affect the IntCode computer
+// e.g., changing its memory, inputs and outputs.
 type Module struct {
-	Opcode   int                     // opcode (if 0 then check will occur in Function)
-	Mnemonic string                  // "name" of the opcode
-	Function func(ic *IntCode) error // what does it do to the computer?
+	opcode        int                     // opcode (if 0 then check will occur in function)
+	mnemonic      string                  // "name" of the opcode
+	parameterized bool                    // should module support parameter modes?
+	function      func(ic *IntCode) error // what does it do to the computer?
+}
+
+// NewModule generates a module object with several attributes using a config struct
+func NewModule(config struct {
+	Opcode        int                     // opcode (if 0 then check will occur in function)
+	Mnemonic      string                  // "name" of the opcode
+	Parameterized bool                    // should module support parameter modes?
+	Function      func(ic *IntCode) error // what does it do to the computer?
+}) *Module {
+	return &Module{
+		opcode:        config.Opcode,
+		mnemonic:      config.Mnemonic,
+		parameterized: config.Parameterized,
+		function:      config.Function,
+	}
 }
 
 // Halt is a module that is built in to the IntCode
 var Halt *Module = &Module{
 	// ToRun:    func(opcode int) bool { return opcode == 99 },
-	Opcode:   99,
-	Mnemonic: "HALT",
-	// ParamCount: 0,
-	Function: func(ic *IntCode) error {
+	opcode:        99,
+	mnemonic:      "HALT",
+	parameterized: false,
+	function: func(ic *IntCode) error {
 		return NewHaltError("HALT (99)") // that's its literally function
 	},
 }
@@ -41,6 +62,8 @@ type IntCode struct {
 	pc      int       // program counter
 	mem     []int     // memory
 	modules []*Module // all modules it has
+	input   int       // the initial input
+	output  []int     // a slice of outputs
 }
 
 // New generates an IntCode using a memory reel
@@ -108,23 +131,20 @@ func (ic *IntCode) Operate() (err error) {
 	for ic.pc < len(ic.mem) { // while we haven't reached the end yet
 		// let's go through all the modules
 		for _, module := range ic.modules {
-			if module.Opcode != 0 && module.Opcode != ic.mem[ic.pc] {
-				err = NewInvalidOpcodeError(ic.pc, module)
+			opcode := ic.Current()
+			if module.parameterized {
+				opcode = opcode % 100 // we only care about the last two
+			}
+			if module.opcode != opcode {
+				err = NewInvalidOpcodeError(opcode, module)
 				continue
 			}
 			// but hey it's equal now!!
-			// or at least module.Opcode == 0,
-			// where in that case it will do some checks
-			if err = module.Function(ic); err != nil {
-				if _, isInvalid := err.(*InvalidOpcodeError); isInvalid {
-					continue // maybe it wants a different opcode...
-				}
-				return // no point in continuing
-			}
+			err = module.function(ic)
 			break // out of the loop once we found a module
 		}
 		if err != nil {
-			return // something must've happened
+			return // either something happened in module.function or it cannot find a module
 		}
 	}
 	return
@@ -175,7 +195,7 @@ func (ic *IntCode) PC() (pc int) {
 	return
 }
 
-// Current returns the current memory location
+// Current returns the current memory location at the program counter
 func (ic *IntCode) Current() (value int) {
 	return ic.mem[ic.pc]
 }
@@ -210,11 +230,43 @@ func (ic *IntCode) Rewind() {
 	ic.Jump(0) // this cannot return any error
 }
 
-// Format formats the memory and sets PC to zero
+// Format formats the memory, input, and outputs and sets PC to zero
 func (ic *IntCode) Format(mem []int) {
 	ic.mem = make([]int, len(mem))
 	for ii := range mem {
 		ic.mem[ii] = mem[ii]
 	}
+	ic.SetInput(0)
+	ic.ResetOutput()
 	ic.Rewind()
+}
+
+// SetInput sets the input
+func (ic *IntCode) SetInput(input int) {
+	ic.input = input
+}
+
+// GetInput gets the input
+func (ic *IntCode) GetInput() (input int) {
+	input = ic.input
+	return
+}
+
+// ResetOutput resets the outputs
+func (ic *IntCode) ResetOutput() {
+	ic.output = make([]int, 0)
+}
+
+// PushToOutput pushes a value to its outputs
+func (ic *IntCode) PushToOutput(value int) {
+	ic.output = append(ic.output, value)
+}
+
+// Output prints the output
+func (ic *IntCode) Output() (output []int) {
+	output = make([]int, len(ic.output))
+	for ii := range output {
+		output[ii] = ic.output[ii]
+	}
+	return
 }

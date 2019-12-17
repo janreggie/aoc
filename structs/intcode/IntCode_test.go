@@ -9,13 +9,16 @@ import (
 )
 
 // This example tries to implement Addition and Multiplication modules
-func ExampleModule_Add_and_Multiply() {
-	add := &intcode.Module{
-		// mem: 1 LOC1 LOC2 LOC3
-		// add: mem[LOC3] = mem[LOC1]+mem[LOC2]
-		Opcode:   1,
-		Mnemonic: "ADD",
-		// ParamCount: 3,
+func ExampleNewModule() {
+	// mem: 1 LOC1 LOC2 LOC3
+	// add: mem[LOC3] = mem[LOC1]+mem[LOC2]
+	add := intcode.NewModule(struct {
+		Opcode        int
+		Mnemonic      string
+		Parameterized bool
+		Function      func(ic *intcode.IntCode) error
+	}{
+		Opcode: 1, Mnemonic: "ADD",
 		Function: func(ic *intcode.IntCode) (err error) {
 			// assume that Current() is 1
 			// Now check if the next ones are in memory
@@ -33,14 +36,16 @@ func ExampleModule_Add_and_Multiply() {
 				return
 			}
 			return ic.Increment(4)
-		},
-	}
-	mul := &intcode.Module{
-		// mem: 2 LOC1 LOC2 LOC3
-		// mul: mem[LOC3] = mem[LOC1]*mem[LOC2]
-		Opcode:   2,
-		Mnemonic: "MUL",
-		// ParamCount: 3,
+		}})
+	// mem: 2 LOC1 LOC2 LOC3
+	// mul: mem[LOC3] = mem[LOC1]*mem[LOC2]
+	mul := intcode.NewModule(struct {
+		Opcode        int
+		Mnemonic      string
+		Parameterized bool
+		Function      func(ic *intcode.IntCode) error
+	}{
+		Opcode: 2, Mnemonic: "MUL",
 		Function: func(ic *intcode.IntCode) (err error) {
 			// assume that Current() is 2
 			// Now check if the next ones are in memory
@@ -59,7 +64,7 @@ func ExampleModule_Add_and_Multiply() {
 			}
 			return ic.Increment(4)
 		},
-	}
+	})
 	// let's use a simple computer
 	ic := intcode.New([]int{1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50})
 	ic.Install(add)
@@ -75,22 +80,23 @@ func ExampleModule_Add_and_Multiply() {
 func TestIntcode_Operate(t *testing.T) {
 	assert := assert.New(t)
 	ic := intcode.New([]int{})
-	ic.Install(intcode.SimpleAdder)
-	ic.Install(intcode.SimpleMultiplier)
+	ic.Install(intcode.Adder)
+	ic.Install(intcode.Multiplier)
 	type testCase struct {
-		input  []int
-		output []int
+		initial []int
+		final   []int
 	}
 	cases := []testCase{
-		{input: []int{1, 0, 0, 0, 99}, output: []int{2, 0, 0, 0, 99}},
-		{input: []int{2, 3, 0, 3, 99}, output: []int{2, 3, 0, 6, 99}},
-		{input: []int{1, 1, 1, 4, 99, 5, 6, 0, 99}, output: []int{30, 1, 1, 4, 2, 5, 6, 0, 99}},
-		{input: []int{1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50}, output: []int{3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50}},
+		{initial: []int{1, 0, 0, 0, 99}, final: []int{2, 0, 0, 0, 99}},
+		{initial: []int{2, 3, 0, 3, 99}, final: []int{2, 3, 0, 6, 99}},
+		{initial: []int{1, 1, 1, 4, 99, 5, 6, 0, 99}, final: []int{30, 1, 1, 4, 2, 5, 6, 0, 99}},
+		{initial: []int{1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50}, final: []int{3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50}},
+		{initial: []int{1002, 4, 3, 4, 33}, final: []int{1002, 4, 3, 4, 99}},
 	}
 	for _, eachCase := range cases {
-		ic.Format(eachCase.input)
+		ic.Format(eachCase.initial)
 		err := ic.Operate()
 		assert.True(intcode.IsHalt(err), err)
-		assert.Equal(eachCase.output, ic.Snapshot())
+		assert.Equal(eachCase.final, ic.Snapshot())
 	}
 }

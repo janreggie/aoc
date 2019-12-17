@@ -28,25 +28,25 @@ func (e *OutOfBoundsError) Error() string {
 // is not valid.
 type InvalidOpcodeError struct {
 	msg      string
-	Opcode   int    // what opcode did it see?
+	opcode   int    // what opcode did it see?
 	Wants    int    // what does a Module want?
-	Mnemonic string // name of a Module
+	mnemonic string // name of a Module
 }
 
 // NewInvalidOpcodeError returns an InvalidOpcodeError
-// with message "invalid opcode Opcode, wants Wants (Mnemonic)"
+// with message "invalid opcode opcode, wants Wants (mnemonic)"
 func NewInvalidOpcodeError(opcode int, module *Module) error {
 	var msg string
-	if module.Opcode != 0 {
-		msg = fmt.Sprintf("invalid opcode %v, wants %v (%v)", opcode, module.Opcode, module.Mnemonic)
+	if module.opcode != 0 {
+		msg = fmt.Sprintf("invalid opcode %v, wants %v (%v)", opcode, module.opcode, module.mnemonic)
 	} else {
-		msg = fmt.Sprintf("invalid opcode %v, wants %v", opcode, module.Mnemonic)
+		msg = fmt.Sprintf("invalid opcode %v, wants %v", opcode, module.mnemonic)
 	}
 	return &InvalidOpcodeError{
 		msg:      msg,
-		Opcode:   opcode,
-		Wants:    module.Opcode,
-		Mnemonic: module.Mnemonic,
+		opcode:   opcode,
+		Wants:    module.opcode,
+		mnemonic: module.mnemonic,
 	}
 }
 
