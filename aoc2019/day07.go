@@ -46,7 +46,7 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	intcode.InstallAdderMultiplier(ic)
 	intcode.InstallJumpers(ic)
 	ic.Install(intcode.Inputter)
-	ic.Install(intcode.Outputter)
+	ic.Install(intcode.OutputToInput)
 	ic.PushToOutput(0) // there is no previous amplifier
 	var highestOutput int
 
@@ -60,24 +60,18 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	for _, permutation := range permuteIntslice([]int{0, 1, 2, 3, 4}) {
 		// now run the program...
 		ic.Format(memory)
-		ic.PushToOutput(0) // previous amplifier
-		// ic.PushToInput(0)
+		ic.PushToInput(0) // previous amplifier
 		var output int
 		for ii := range permutation {
 			// glog.Infof("at %v", ii)
 			ic.Rewind()
 			ic.PushToInput(permutation[ii])
-			output, err = ic.GetOutput()
-			if err != nil {
-				return
-			}
-			ic.PushToInput(output)
 			if err = ic.Operate(); !intcode.IsHalt(err) {
 				return
 			}
 		}
 		// check the output
-		output, err = ic.GetOutput()
+		output, err = ic.GetInput()
 		if err != nil {
 			return
 		}

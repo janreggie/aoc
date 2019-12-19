@@ -62,8 +62,8 @@ type IntCode struct {
 	pc      int       // program counter
 	mem     []int     // memory
 	modules []*Module // all modules it has
-	input   []int     // an input "queue" (FIFO)
-	output  []int     // a slice of outputs
+	input   []int     // an input "stack" (FILO)
+	output  []int     // an output "stack"
 }
 
 // New generates an IntCode using a memory reel
@@ -274,8 +274,8 @@ func (ic *IntCode) GetInput() (input int, err error) {
 		err = fmt.Errorf("input is length zero")
 		return
 	}
-	input = ic.input[0]
-	ic.input = ic.input[1:]
+	input = ic.input[len(ic.input)-1]
+	ic.input = ic.input[:len(ic.input)-1]
 	return
 }
 
@@ -298,13 +298,13 @@ func (ic *IntCode) Output() (output []int) {
 	return
 }
 
-// GetOutput removes an output from the queue
+// GetOutput removes an output from the stack
 func (ic *IntCode) GetOutput() (output int, err error) {
 	if len(ic.output) == 0 {
 		err = fmt.Errorf("output is length zero")
 		return
 	}
-	output = ic.output[0]
-	ic.output = ic.output[1:]
+	output = ic.output[len(ic.output)-1]
+	ic.output = ic.output[:len(ic.output)-1]
 	return
 }
