@@ -151,7 +151,7 @@ var Multiplier *Module = &Module{
 // Memory:
 //  3 ARG1
 // Procedure:
-//  mem[ARG1] = input
+//  mem[ARG1], err = ic.GetInput()
 //  pc += 2
 var Inputter *Module = &Module{
 	opcode:        3,
@@ -159,10 +159,14 @@ var Inputter *Module = &Module{
 	mnemonic:      "INPUT",
 	function: func(ic *IntCode) (err error) {
 		var params []int
+		var input int
 		if params, err = ic.GetNext(1); err != nil {
 			return
 		}
-		if err = ic.SetLocation(params[0], ic.input); err != nil {
+		if input, err = ic.GetInput(); err != nil {
+			return
+		}
+		if err = ic.SetLocation(params[0], input); err != nil {
 			return
 		}
 		return ic.Increment(2)
@@ -189,6 +193,25 @@ var Outputter *Module = &Module{
 			return
 		}
 		ic.PushToOutput(params[0])
+		return ic.Increment(2)
+	},
+}
+
+// OutputToInput is a moule that, instead of pushing its parameter to Output,
+// it pushes the value to Input
+var OutputToInput *Module = &Module{
+	opcode:        4,
+	parameterized: true,
+	mnemonic:      "OUTPUT",
+	function: func(ic *IntCode) (err error) {
+		var params []int
+		if params, err = ic.GetNext(1); err != nil {
+			return
+		}
+		if err = getFromMemory(ic.Current()/100, params, ic); err != nil {
+			return
+		}
+		ic.PushToInput(params[0])
 		return ic.Increment(2)
 	},
 }
@@ -346,4 +369,21 @@ var Equals *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
+}
+
+// InstallAdderMultiplier installs the Adder and Multiplier modules
+// to the IntCode computer
+func InstallAdderMultiplier(ic *IntCode) {
+	ic.Install(Adder)
+	ic.Install(Multiplier)
+	return
+}
+
+// InstallJumpers installs the
+// JumpIfFalse, JumpIfTrue, LessThan, and Equals modules
+func InstallJumpers(ic *IntCode) {
+	ic.Install(JumpIfFalse)
+	ic.Install(JumpIfTrue)
+	ic.Install(LessThan)
+	ic.Install(Equals)
 }

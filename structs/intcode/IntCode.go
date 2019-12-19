@@ -62,16 +62,14 @@ type IntCode struct {
 	pc      int       // program counter
 	mem     []int     // memory
 	modules []*Module // all modules it has
-	input   int       // the initial input
+	input   []int     // an input "queue" (FIFO)
 	output  []int     // a slice of outputs
 }
 
 // New generates an IntCode using a memory reel
 func New(mem []int) (ic *IntCode) {
 	ic = &IntCode{pc: 0, mem: make([]int, len(mem))}
-	for i := range mem {
-		ic.mem[i] = mem[i]
-	}
+	copy(ic.mem, mem)
 	ic.Install(Halt)
 	return
 }
@@ -119,9 +117,16 @@ func NewFromScanner(scanner *bufio.Scanner) (ic *IntCode, err error) {
 	return
 }
 
-// Install installs a module in ic
+// Install installs a module
 func (ic *IntCode) Install(module *Module) {
 	ic.modules = append(ic.modules, module)
+	return
+}
+
+// UninstallAll removes all modules
+func (ic *IntCode) UninstallAll() {
+	ic.modules = make([]*Module, 0)
+	return
 }
 
 // Operate performs instructions on the IntCode computer
@@ -231,24 +236,46 @@ func (ic *IntCode) Rewind() {
 }
 
 // Format formats the memory, input, and outputs and sets PC to zero
+// but does not remove installed modules
 func (ic *IntCode) Format(mem []int) {
 	ic.mem = make([]int, len(mem))
-	for ii := range mem {
-		ic.mem[ii] = mem[ii]
-	}
-	ic.SetInput(0)
+	copy(ic.mem, mem)
+	ic.SetInput()
 	ic.ResetOutput()
 	ic.Rewind()
 }
 
-// SetInput sets the input
-func (ic *IntCode) SetInput(input int) {
-	ic.input = input
+// Input returns a copy of its inputs
+func (ic *IntCode) Input() (input []int) {
+	input = make([]int, len(ic.input))
+	for ii := range input {
+		input[ii] = ic.input[ii]
+	}
+	return
 }
 
-// GetInput gets the input
-func (ic *IntCode) GetInput() (input int) {
-	input = ic.input
+// PushToInput pushes a value to the input queue
+func (ic *IntCode) PushToInput(input int) {
+	ic.input = append(ic.input, input)
+	return
+}
+
+// SetInput sets the input
+func (ic *IntCode) SetInput(inputs ...int) {
+	ic.input = make([]int, len(inputs))
+	for ii := range inputs {
+		ic.input[ii] = inputs[ii]
+	}
+}
+
+// GetInput removes an input from the queue
+func (ic *IntCode) GetInput() (input int, err error) {
+	if len(ic.input) == 0 {
+		err = fmt.Errorf("input is length zero")
+		return
+	}
+	input = ic.input[0]
+	ic.input = ic.input[1:]
 	return
 }
 
@@ -268,5 +295,16 @@ func (ic *IntCode) Output() (output []int) {
 	for ii := range output {
 		output[ii] = ic.output[ii]
 	}
+	return
+}
+
+// GetOutput removes an output from the queue
+func (ic *IntCode) GetOutput() (output int, err error) {
+	if len(ic.output) == 0 {
+		err = fmt.Errorf("output is length zero")
+		return
+	}
+	output = ic.output[0]
+	ic.output = ic.output[1:]
 	return
 }
