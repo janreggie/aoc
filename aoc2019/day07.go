@@ -16,13 +16,13 @@ func inspectIntCode(ic *intcode.IntCode) {
 	glog.Infof("Output: %v\n", ic.Output())
 }
 
-func permuteIntslice(xs []int) (permuts [][]int) {
-	var rc func([]int, int)
-	rc = func(a []int, k int) {
-		if k == len(a) {
-			permuts = append(permuts, append([]int{}, a...))
+func permuteIntslice(xs []int64) (permuts [][]int64) {
+	var rc func([]int64, int64)
+	rc = func(a []int64, k int64) {
+		if k == int64(len(a)) {
+			permuts = append(permuts, append([]int64{}, a...))
 		} else {
-			for i := k; i < len(xs); i++ {
+			for i := k; i < int64(len(xs)); i++ {
 				a[k], a[i] = a[i], a[k]
 				rc(a, k+1)
 				a[k], a[i] = a[i], a[k]
@@ -38,7 +38,7 @@ func permuteIntslice(xs []int) (permuts [][]int) {
 // "Amplification Circuit"
 func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var ic *intcode.IntCode
-	var memory []int
+	var memory []int64
 	if ic, err = intcode.NewFromScanner(scanner); err != nil {
 		return
 	}
@@ -48,7 +48,7 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	ic.Install(intcode.Inputter)
 	ic.Install(intcode.OutputToInput)
 	ic.PushToOutput(0) // there is no previous amplifier
-	var highestOutput int
+	var highestOutput int64
 
 	// now suppose we do not know the phase setting sequence...
 	// Due to the chaotic nature of the program,
@@ -57,11 +57,11 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 	// Part 1
 	highestOutput = 0
-	for _, permutation := range permuteIntslice([]int{0, 1, 2, 3, 4}) {
+	for _, permutation := range permuteIntslice([]int64{0, 1, 2, 3, 4}) {
 		// now run the program...
 		ic.Format(memory)
 		ic.PushToInput(0) // previous amplifier
-		var output int
+		var output int64
 		for ii := range permutation {
 			ic.Rewind()
 			ic.PushToInput(permutation[ii])
@@ -78,16 +78,16 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 			highestOutput = output
 		}
 	}
-	answer1 = strconv.Itoa(highestOutput)
+	answer1 = strconv.FormatInt(highestOutput, 10)
 
 	// // Part 2
 	// highestOutput = 0
-	// p := make([]int, 5)
+	// p := make([]int64, 5)
 	// _ = highestOutput
-	// // permutation := []int{9, 7, 8, 5, 6}
+	// // permutation := []int64{9, 7, 8, 5, 6}
 	// ic.Format(memory)
-	// for _, permutation := range permuteIntslice([]int{5, 6, 7, 8, 9}) {
-	// 	var output int
+	// for _, permutation := range permuteIntslice([]int64{5, 6, 7, 8, 9}) {
+	// 	var output int64
 	// 	ic.PushToInput(0)
 	// 	for ii := range permutation {
 	// 		output, err = ic.GetInput()

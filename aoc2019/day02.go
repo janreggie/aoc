@@ -28,7 +28,7 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	if err != nil {
 		return
 	}
-	answer1 = strconv.Itoa(first)
+	answer1 = strconv.FormatInt(first, 10)
 
 	// now for part 2
 	// There are a total of 10000 solutions
@@ -37,8 +37,8 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// but that doesn't seem to be possible.
 
 bruteforce:
-	for mem1 := 0; mem1 < 100; mem1++ {
-		for mem2 := 0; mem2 < 100; mem2++ {
+	for mem1 := int64(0); mem1 < 100; mem1++ {
+		for mem2 := int64(0); mem2 < 100; mem2++ {
 			ic.Format(instrs)
 			if err = ic.SetLocation(1, mem1); err != nil {
 				return
@@ -51,7 +51,7 @@ bruteforce:
 				return
 			}
 			if val, e := ic.GetLocation(0); val == 19690720 && e == nil {
-				answer2 = strconv.Itoa(mem1*100 + mem2)
+				answer2 = strconv.FormatInt(mem1*100+mem2, 10)
 				break bruteforce
 			}
 		}

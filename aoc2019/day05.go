@@ -27,7 +27,7 @@ func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	}
 	err = nil
 	// the last element of Output is our answer1
-	answer1 = strconv.Itoa(ic.Output()[len(ic.Output())-1])
+	answer1 = strconv.FormatInt(ic.Output()[len(ic.Output())-1], 10)
 
 	// Part 2
 	ic.Format(mem)
@@ -40,7 +40,7 @@ func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		return
 	}
 	err = nil
-	answer2 = strconv.Itoa(ic.Output()[len(ic.Output())-1])
+	answer2 = strconv.FormatInt(ic.Output()[len(ic.Output())-1], 10)
 
 	return
 }

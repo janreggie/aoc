@@ -2,14 +2,71 @@ package intcode
 
 import "fmt"
 
+// Module is a module with an opcode and a ParamCount
+// which does something to an ic computer *IntCode using the next ParamCount memory locations.
+// Calling function can return an error if its params turns out to be invalid
+// e.g., accessing an invalid memory address.
+//
+// It is assumed that calling function only happens if ic.Current() equals the opcode,
+// unless if the Module supports "parameter modes",
+// where in that case ic.Current()%100 is checked instead.
+// Note that function will affect the IntCode computer
+// e.g., changing its memory, inputs and outputs.
+type Module struct {
+	opcode        int64                   // opcode (if 0 then check will occur in function)
+	mnemonic      string                  // "name" of the opcode
+	parameterized bool                    // should module support parameter modes?
+	function      func(ic *IntCode) error // what does it do to the computer?
+}
+
+// ModuleConfig is a structure representing the configuration of a module
+type ModuleConfig struct {
+	Opcode        int64                   // opcode (if 0 then check will occur in function)
+	Mnemonic      string                  // "name" of the opcode
+	Parameterized bool                    // should module support parameter modes?
+	Function      func(ic *IntCode) error // what does it do to the computer?
+}
+
+// NewModule generates a module object with several attributes using a config struct
+func NewModule(config ModuleConfig) *Module {
+	return &Module{
+		opcode:        config.Opcode,
+		mnemonic:      config.Mnemonic,
+		parameterized: config.Parameterized,
+		function:      config.Function,
+	}
+}
+
 // getFromMemory turns an int flags (opcode without 2 LSDs), a slice of parameters, and an IntCode reel
 // into the appropriate parameters, depending on slice inputs.
-// e.g., if flags is 10 (from LSD: position, immediate),
-// parameters is []int{4,3} (excluding last one)
-// then parameters becomes []int{4, GetLocation(3)}.
+// The parameters are taken from the memory, raw,
+// that is, the flags are unknown.
+// If writeEnable is true, it is assumed that parameters[len(parameters)-1]
+// is the address to be written,
+// making it as a value as is, or added by ic.RelativeBase().
+// The parameter slice is then modified, depending on said flags.
+//
+// Example: if flags is 10 (from LSD: position, immediate, position),
+// parameters is []int64{4,3, 2}, writeEnable is true (thus using the raw value 2),
+// then parameters becomes []int64{4, GetLocation(3), 3}.
+//
+// Modes:
+// * Position mode (flag 0): use memory location
+// * Immediate mode (flag 1): use the value itself
+// * Relative mode (flag 2): use memory location plus the relative base of the computer
+//
+//
 // May return an error if OutOfBounds.
-func getFromMemory(flags int, parameters []int, ic *IntCode) (err error) {
-	for ii := range parameters {
+func getFromMemory(flags int64, parameters []int64, ic *IntCode, writeEnable bool) (err error) {
+	parameterCount := len(parameters)
+	// to ignore or not to ignore parameters[len(parameters)-1]?
+	// check writeEnable
+	if writeEnable {
+		// then parameters[len(parameters)-1] would be direct
+		// therefore reduce the number of "parameters" to get
+		parameterCount--
+	}
+	for ii := 0; ii < parameterCount; ii++ {
 		switch flag := flags % 10; flag {
 		case 0: // position mode
 			if parameters[ii], err = ic.GetLocation(parameters[ii]); err != nil {
@@ -17,10 +74,23 @@ func getFromMemory(flags int, parameters []int, ic *IntCode) (err error) {
 			}
 		case 1: // immediate mode
 			// do nothing
+		case 2: // relative mode
+			if parameters[ii], err = ic.GetLocation(parameters[ii] + ic.RelativeBase()); err != nil {
+				return
+			}
 		default:
 			return fmt.Errorf("unimplemented flag (%v)", flag)
 		}
 		flags /= 10
+	}
+	// now for the last flag...
+	if writeEnable {
+		switch flag := flags % 10; flag {
+		case 0, 1: // position mode
+			// do nothing
+		case 2: // relative mode
+			parameters[parameterCount] = parameters[parameterCount] + ic.RelativeBase()
+		}
 	}
 	return
 }
@@ -41,7 +111,7 @@ var SimpleAdder *Module = &Module{
 	function: func(ic *IntCode) (err error) {
 		// assume that Current() is 1
 		// Now check if the next ones are in memory
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
 		}
@@ -75,7 +145,7 @@ var SimpleMultiplier *Module = &Module{
 	function: func(ic *IntCode) (err error) {
 		// assume that Current() is 2
 		// Now check if the next ones are in memory
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
 		}
@@ -105,11 +175,11 @@ var Adder *Module = &Module{
 	mnemonic:      "ADD",
 	parameterized: true,
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params[0:2], ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, true); err != nil {
 			return
 		}
 		if err = ic.SetLocation(params[2], params[0]+params[1]); err != nil {
@@ -132,11 +202,11 @@ var Multiplier *Module = &Module{
 	mnemonic:      "MUL",
 	parameterized: true,
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params[0:2], ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, true); err != nil {
 			return
 		}
 		if err = ic.SetLocation(params[2], params[0]*params[1]); err != nil {
@@ -155,15 +225,18 @@ var Multiplier *Module = &Module{
 //  pc += 2
 var Inputter *Module = &Module{
 	opcode:        3,
-	parameterized: false,
+	parameterized: true, // because apparently 203 exists...
 	mnemonic:      "INPUT",
 	function: func(ic *IntCode) (err error) {
-		var params []int
-		var input int
+		var params []int64
+		var input int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
 		}
 		if input, err = ic.GetInput(); err != nil {
+			return
+		}
+		if err = getFromMemory(ic.Current()/100, params, ic, true); err != nil {
 			return
 		}
 		if err = ic.SetLocation(params[0], input); err != nil {
@@ -185,11 +258,11 @@ var Outputter *Module = &Module{
 	parameterized: true,
 	mnemonic:      "OUTPUT",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params, ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, false); err != nil {
 			return
 		}
 		ic.PushToOutput(params[0])
@@ -204,11 +277,11 @@ var OutputToInput *Module = &Module{
 	parameterized: true,
 	mnemonic:      "OUTPUT",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params, ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, false); err != nil {
 			return
 		}
 		ic.PushToInput(params[0])
@@ -230,11 +303,11 @@ var OutputAndHalt *Module = &Module{
 	parameterized: true,
 	mnemonic:      "OUTPUT",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params, ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, false); err != nil {
 			return
 		}
 		ic.PushToOutput(params[0])
@@ -258,11 +331,11 @@ var JumpIfTrue *Module = &Module{
 	parameterized: true,
 	mnemonic:      "JUMPIFTRUE",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(2); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params, ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, false); err != nil {
 			return
 		}
 		// from here on, params[0] would be the value we would check
@@ -287,11 +360,11 @@ var JumpIfFalse *Module = &Module{
 	parameterized: true,
 	mnemonic:      "JUMPIFTRUE",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(2); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params, ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, false); err != nil {
 			return
 		}
 		// from here on, params[0] would be the value we would check
@@ -316,11 +389,11 @@ var LessThan *Module = &Module{
 	parameterized: true,
 	mnemonic:      "LESSTHAN",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params[0:2], ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, true); err != nil {
 			return
 		}
 		// now write to mem[params[2]] depending on what's with params[0]&params[1]
@@ -350,11 +423,11 @@ var Equals *Module = &Module{
 	parameterized: true,
 	mnemonic:      "EQUALS",
 	function: func(ic *IntCode) (err error) {
-		var params []int
+		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
 		}
-		if err = getFromMemory(ic.Current()/100, params[0:2], ic); err != nil {
+		if err = getFromMemory(ic.Current()/100, params, ic, true); err != nil {
 			return
 		}
 		// now write to mem[params[2]] depending on what's with params[0]&params[1]
@@ -368,6 +441,32 @@ var Equals *Module = &Module{
 			}
 		}
 		return ic.Increment(4)
+	},
+}
+
+// ChangeRelativeBase adjusts the relative base of the computer
+// by its parameter.
+//
+// Memory:
+//  9 ARG1
+// Procedure:
+//  relativeBase += mem[ARG1]
+//  pc += 2
+var ChangeRelativeBase *Module = &Module{
+	opcode:        9,
+	parameterized: true,
+	mnemonic:      "RELBASE",
+	function: func(ic *IntCode) (err error) {
+		var params []int64
+		if params, err = ic.GetNext(1); err != nil {
+			return
+		}
+		if err = getFromMemory(ic.Current()/100, params, ic, false); err != nil {
+			return
+		}
+		// now pull out an ic.AdjustRelativeBase
+		ic.AdjustRelativeBase(params[0])
+		return ic.Increment(2)
 	},
 }
 

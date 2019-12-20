@@ -6,12 +6,12 @@ import "fmt"
 // that is outside IntCode.mem
 type OutOfBoundsError struct {
 	msg          string
-	LookingFor   int // what memory location is out of bounds?
-	ActualLength int // how long is memory?
+	LookingFor   int64 // what memory location is out of bounds?
+	ActualLength int64 // how long is memory?
 }
 
 // NewOutOfBoundsError generates an OutOfBoundsError
-func NewOutOfBoundsError(lookingFor, actualLength int) error {
+func NewOutOfBoundsError(lookingFor, actualLength int64) error {
 	return &OutOfBoundsError{
 		msg: fmt.Sprintf("wants to access %v, mem length %v",
 			lookingFor, actualLength),
@@ -28,25 +28,23 @@ func (e *OutOfBoundsError) Error() string {
 // is not valid.
 type InvalidOpcodeError struct {
 	msg      string
-	opcode   int    // what opcode did it see?
-	Wants    int    // what does a Module want?
-	mnemonic string // name of a Module
+	Opcode   int64  // what opcode did it see?
+	Wants    int64  // what does a Module want?
+	At       int64  // program counter?
+	Mnemonic string // name of a Module
 }
 
 // NewInvalidOpcodeError returns an InvalidOpcodeError
 // with message "invalid opcode opcode, wants Wants (mnemonic)"
-func NewInvalidOpcodeError(opcode int, module *Module) error {
+func NewInvalidOpcodeError(opcode int64, position int64, module *Module) error {
 	var msg string
-	if module.opcode != 0 {
-		msg = fmt.Sprintf("invalid opcode %v, wants %v (%v)", opcode, module.opcode, module.mnemonic)
-	} else {
-		msg = fmt.Sprintf("invalid opcode %v, wants %v", opcode, module.mnemonic)
-	}
+	msg = fmt.Sprintf("invalid opcode %v at position %v, wants %v (%v)", opcode, position, module.opcode, module.mnemonic)
 	return &InvalidOpcodeError{
 		msg:      msg,
-		opcode:   opcode,
+		Opcode:   opcode,
 		Wants:    module.opcode,
-		mnemonic: module.mnemonic,
+		At:       position,
+		Mnemonic: module.mnemonic,
 	}
 }
 
@@ -73,4 +71,32 @@ func (e *HaltError) Error() string {
 func IsHalt(err error) bool {
 	_, result := err.(*HaltError)
 	return result
+}
+
+// OperationError is an error that occurs during the operation of the IntCode computer
+type OperationError struct {
+	msg    string
+	Child  error   // a "deeper" error
+	PC     int64   // program counter
+	Opcode int64   // the current opcode
+	Memory []int64 // memory snapshot
+	Input  []int64
+	Output []int64
+}
+
+// NewOperationError creates an Error object that occurred due to some other error
+func NewOperationError(err error, ic *IntCode) *OperationError {
+	return &OperationError{
+		msg:    fmt.Sprintf("operation error due to %v", err),
+		Child:  err,
+		Memory: ic.Snapshot(),
+		PC:     ic.PC(),
+		Opcode: ic.Current(),
+		Input:  ic.Input(),
+		Output: ic.Output(),
+	}
+}
+
+func (e *OperationError) Error() string {
+	return e.msg
 }
