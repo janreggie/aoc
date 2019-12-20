@@ -63,7 +63,6 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		ic.PushToInput(0) // previous amplifier
 		var output int
 		for ii := range permutation {
-			// glog.Infof("at %v", ii)
 			ic.Rewind()
 			ic.PushToInput(permutation[ii])
 			if err = ic.Operate(); !intcode.IsHalt(err) {
@@ -83,18 +82,36 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 	// // Part 2
 	// highestOutput = 0
-	// permutation := []int{9, 8, 7, 6, 5}
-	// // for _, permutation := range permuteIntslice([]int{5, 6, 7, 8, 9}) {
-	// // 	// now do things...
-	// // 	ic.Format(memory) // go back to clean...
-	// // 	_ = permutation
-	// // }
+	// p := make([]int, 5)
+	// _ = highestOutput
+	// // permutation := []int{9, 7, 8, 5, 6}
 	// ic.Format(memory)
-	// ic.PushToInput(0)
-	// for ii := range permutation {
-	// 	ic.Rewind()
-	// 	ic.PushToInput(permutation[ii])
+	// for _, permutation := range permuteIntslice([]int{5, 6, 7, 8, 9}) {
+	// 	var output int
+	// 	ic.PushToInput(0)
+	// 	for ii := range permutation {
+	// 		output, err = ic.GetInput()
+	// 		if err != nil {
+	// 			return
+	// 		}
+	// 		ic.Format(memory)
+	// 		ic.PushToInput(output)
+	// 		ic.PushToInput(permutation[ii])
+	// 		if err = ic.Operate(); !intcode.IsHalt(err) {
+	// 			return
+	// 		}
+	// 	}
+	// 	output, err = ic.GetInput()
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	if output > highestOutput {
+	// 		copy(p, permutation)
+	// 		highestOutput = output
+	// 	}
 	// }
-
+	// glog.Infof("with highest: %v", p)
+	// answer2 = strconv.Itoa(highestOutput)
+	answer2 = "unimplemented"
 	return
 }
