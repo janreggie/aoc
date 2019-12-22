@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-// iterateCoordinate iterates the location using an input
+// iterateCoordinate moves the location using an input (`v`, `^`, `<`, `>`)
 func iterateCoordinate(location *image.Point, input string) {
 	switch input {
 	case "v":
