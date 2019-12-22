@@ -85,7 +85,7 @@ func movePosition(old image.Point, dir direction, amt int64) image.Point {
 
 // Day01 solves the first day puzzle
 // "No Time for a Taxicab"
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	currentDirection := north
 	current := image.Pt(0, 0) // current position
 	allVisited := make([]image.Point, 0, 32)
@@ -96,7 +96,7 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		raw := scanner.Text() // raw == [R|L](count)
 		// check direction
 		if len(raw) < 2 {
-			e = fmt.Errorf("invalid string: `%v`", raw)
+			err = fmt.Errorf("invalid string: `%v`", raw)
 			return
 		}
 		if raw[0] == 'R' {
@@ -104,14 +104,14 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		} else if raw[0] == 'L' {
 			currentDirection--
 		} else {
-			e = fmt.Errorf("invalid string: `%v`", raw)
+			err = fmt.Errorf("invalid string: `%v`", raw)
 			return
 		}
 		currentDirection = currentDirection % 4
 
-		amt, err := strconv.ParseInt(raw[1:], 10, 64)
-		if err != nil {
-			e = err
+		amt, e := strconv.ParseInt(raw[1:], 10, 64)
+		if e != nil {
+			err = e
 			return
 		}
 

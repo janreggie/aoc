@@ -57,5 +57,5 @@ func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	answer1 = strconv.Itoa(len(houses))
 	answer2 = strconv.Itoa(len(dualHouses))
 
-	return answer1, answer2, nil
+	return
 }

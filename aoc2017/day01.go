@@ -7,7 +7,7 @@ import (
 
 // Day01 solves the first day puzzle
 // "Inverse Captcha"
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// scanner.Split(bufio.ScanBytes)
 	var input string
 	var adjacentCaptcha, halfwayCaptcha int64 // answer1, answer2
@@ -20,9 +20,9 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	for ii, length := 0, len(input); ii < length; ii++ {
 		// check if input[ii] equals input[ii+1] (except when ii == length-1)
 		if input[ii] == input[(ii+1)%length] {
-			toAdd, err := strconv.ParseInt(string(input[ii]), 10, 64)
-			if err != nil {
-				e = err
+			toAdd, e := strconv.ParseInt(string(input[ii]), 10, 64)
+			if e != nil {
+				err = e
 				return
 			}
 			adjacentCaptcha += toAdd
@@ -32,9 +32,9 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	// second one for halfways
 	for ii, halflength := 0, len(input)/2; ii < halflength; ii++ {
 		if input[ii] == input[ii+halflength] {
-			toAdd, err := strconv.ParseInt(string(input[ii]), 10, 64)
-			if err != nil {
-				e = err
+			toAdd, e := strconv.ParseInt(string(input[ii]), 10, 64)
+			if e != nil {
+				err = e
 				return
 			}
 			halfwayCaptcha += toAdd * 2

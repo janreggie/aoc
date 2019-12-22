@@ -10,7 +10,7 @@ import (
 
 // Day01 solves the first day puzzle
 // "Chronal Calibration"
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Split(bufio.ScanWords)
 	var frequency int64   // both actually
 	var onceFreq int64    // answer1
@@ -29,9 +29,9 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 	}
 	for scanner.Scan() {
 		raw := scanner.Text()
-		toAdd, err := strconv.ParseInt(raw, 10, 64)
-		if err != nil {
-			e = fmt.Errorf("%v is invalid: %v", raw, err)
+		toAdd, e := strconv.ParseInt(raw, 10, 64)
+		if e != nil {
+			err = fmt.Errorf("%v is invalid: %v", raw, e)
 			return
 		}
 		frequency += toAdd

@@ -9,8 +9,7 @@ import (
 
 // Day08 solves the eighth day problem
 // "Matchsticks"
-func Day08(scanner *bufio.Scanner) (string, string, error) {
-	answer1, answer2 := "", ""
+func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var representedDiff uint64 // character difference (representation and actual) for answer 1
 	var encodedDiff uint64     // character difference (literal and encoded) for answer 2
 
@@ -69,5 +68,5 @@ func Day08(scanner *bufio.Scanner) (string, string, error) {
 
 	answer1 = strconv.FormatUint(representedDiff, 10)
 	answer2 = strconv.FormatUint(encodedDiff, 10)
-	return answer1, answer2, nil
+	return
 }

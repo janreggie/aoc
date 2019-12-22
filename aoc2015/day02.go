@@ -9,7 +9,7 @@ import (
 
 // Day02 solves the second day puzzle
 // "I Was Told There Would Be No Math"
-func Day02(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
+func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// initialize important variables
 	splitDims := make([]string, 3)
 	actualDims := make([]int, 3)
@@ -60,14 +60,14 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, e error) {
 		splitDims = strings.Split(readDims, "x")
 		if len(splitDims) != 3 {
 			// throw an error
-			e = fmt.Errorf("invalid dimensions: %v", readDims)
+			err = fmt.Errorf("invalid dimensions: %v", readDims)
 			return
 		}
 		// Atoi each dimension
 		for ind := range actualDims {
-			convt, err := strconv.Atoi(splitDims[ind])
-			if err != nil {
-				e = fmt.Errorf("not an integer: %v (%v)", readDims, splitDims[ind])
+			convt, e := strconv.Atoi(splitDims[ind])
+			if e != nil {
+				err = fmt.Errorf("not an integer: %v (%v)", readDims, splitDims[ind])
 				return
 			}
 			actualDims[ind] = convt

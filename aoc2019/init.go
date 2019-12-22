@@ -11,13 +11,13 @@ import "bufio"
 // so day 1
 var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 	Day01,   // day 1
-	nothing, // day 2
-	nothing, // day 3
-	nothing, // day 4
+	Day02,   // day 2
+	Day03,   // day 3
+	Day04,   // day 4
 	nothing, // day 5
-	nothing, // day 6
+	Day06,   // day 6
 	nothing, // day 7
-	nothing, // day 8
+	Day08,   // day 8
 	nothing, // day 9
 	nothing, // day 10
 	nothing, // day 11
