@@ -47,7 +47,7 @@ func (sp *spaceImage) count() (count [3]int) {
 	return
 }
 
-// Day08 solves the sixth day puzzle
+// Day08 solves the eighth day puzzle
 // "Space Image Format"
 func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	allLayers := make([]spaceImage, 0)

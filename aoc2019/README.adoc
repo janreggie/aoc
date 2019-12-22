@@ -10,7 +10,7 @@
 * [*] Day 6: Universal Orbit Map
 * [ ] Day 7: Amplification Circuit (*part 1 only*)
 * [*] Day 8: Space Image Format
-* [ ] Day 9: Sensor Boost
+* [*] Day 9: Sensor Boost
 * [ ] Day 10: Monitoring Station
 * [ ] Day 11: Space Police
 * [ ] Day 12: The N-Body Problem
