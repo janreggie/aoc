@@ -19,31 +19,30 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		err = errors.New("first line of file is empty")
 		return
 	}
-	// now what do we do with the input
-	var index int64 = 1
-	foundFive := false
-	foundSix := false
+	result := 1        // to be appended to input
+	foundFive := false // have we found five zeroes?
+	foundSix := false  // have we found six zeroes?
 	for {
-		builtString := []byte(fmt.Sprintf("%v%v", input, index))
+		builtString := []byte(fmt.Sprintf("%v%v", input, result))
 		if !foundFive {
 			firstFive := fmt.Sprintf("%x", md5.Sum(builtString))[:5]
 			if firstFive == "00000" {
 				foundFive = true
-				answer1 = strconv.FormatInt(index, 10)
+				answer1 = strconv.Itoa(result)
 			}
 		}
 		if !foundSix {
 			firstSix := fmt.Sprintf("%x", md5.Sum(builtString))[:6]
 			if firstSix == "000000" {
 				foundSix = true
-				answer2 = strconv.FormatInt(index, 10)
+				answer2 = strconv.Itoa(result)
 			}
 
 		}
 		if foundFive && foundSix == true {
 			break
 		}
-		index++
+		result++
 	}
 	return
 }
