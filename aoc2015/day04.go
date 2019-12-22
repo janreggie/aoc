@@ -11,6 +11,11 @@ import (
 // checkFirstBytesOfHash checks the first n bytes of the MD5 of Augend+string(Addend)
 // and inserts value to a chan int if so
 func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int) {
+	defer func() { // just in case...
+		if r := recover(); r != nil {
+			fmt.Printf("was trying to insert %v (n:%v)\n", augend+strconv.Itoa(addend), n)
+		}
+	}()
 	if n >= 16 || n < 0 {
 		return // don't deal with invalid input
 	}
@@ -19,7 +24,7 @@ func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int)
 		return
 	}
 
-	builtString := []byte(fmt.Sprintf("%v%v", augend, addend))
+	builtString := []byte(augend + strconv.Itoa(addend))
 	hash := fmt.Sprintf("%x", md5.Sum(builtString))
 	for ii := 0; ii < n; ii++ {
 		if hash[ii] != '0' {
@@ -28,7 +33,7 @@ func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int)
 	}
 	// once we know first n bits is zero...
 	channel <- addend
-	// close(channel)
+	close(channel)
 }
 
 // Day04 solves the fourth day puzzle
@@ -42,6 +47,7 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		err = errors.New("first line of file is empty")
 		return
 	}
+
 	// suppose we have an addends channel
 	// which contains all the possible addends for input
 	// i.e., input+<-addned
@@ -56,24 +62,30 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		}
 	}()
 	_ = input
+
 	for5Zeroes := make(chan int, 1) // will be blocked until we found answer for 5 zeroes
 	for6Zeroes := make(chan int, 1) // will be blocked until we found answer for 6 zeroes
+	foundFive, foundSix := false, false
+
 	for ii := 0; ii < processes; ii++ {
 		// let's create processes amount of goroutines
 		go func() {
 			for len(for5Zeroes)+len(for6Zeroes) < 2 {
 				current := <-addends
-				if len(for5Zeroes) == 0 {
+				if !foundFive {
 					checkFirstBytesOfHash(5, input, current, for5Zeroes)
 				}
-				if len(for6Zeroes) == 0 {
+				if !foundSix {
 					checkFirstBytesOfHash(6, input, current, for6Zeroes)
 				}
 			}
 		}()
 	}
+
 	answer1 = strconv.Itoa(<-for5Zeroes)
+	foundFive = true // since the statement above would empty for5Zeroes
 	answer2 = strconv.Itoa(<-for6Zeroes)
+	foundSix = true
 	return
 }
 
