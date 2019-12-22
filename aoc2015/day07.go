@@ -41,7 +41,7 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	if err = parent1.populateChildren(imap1); err != nil {
 		return
 	}
-	fmt.Println(imap1)
+	// fmt.Println(imap1)
 	// now do all children operations...
 	glog.Infof("Performing parent1's operations...\n")
 	if err = parent1.performAll(wires); err != nil {
