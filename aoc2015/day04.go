@@ -32,6 +32,9 @@ func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int)
 		}
 	}
 	// once we know first n bits is zero...
+	if len(channel) > 0 {
+		return
+	}
 	channel <- addend
 	close(channel)
 }
