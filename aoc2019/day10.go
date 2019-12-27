@@ -329,6 +329,11 @@ func rationalToPoint(rational *big.Rat) image.Point {
 // If both width and height are non-positive
 // the function returns an already closed channel.
 // If only the height is positive, return (0,1).
+//
+// TODO: Optimize. Current algorithm brute forces by iterating thru
+// lcmUpto(width) and lcmUpto(height).
+// Average case is exponential time!
+// (https://math.stackexchange.com/questions/1111334/reason-for-lcm-of-all-numbers-from-1-n-equals-roughly-en)
 func generateSisonPoints(width, height int) chan image.Point {
 	channel := make(chan image.Point, 4)
 
