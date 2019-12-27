@@ -9,7 +9,7 @@ import (
 )
 
 // checkFirstBytesOfHash checks the first n bytes of the MD5 of Augend+string(Addend)
-// and inserts value to a chan int if so
+// and inserts value to a chan int if the first n bytes are all 0.
 func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int) {
 	defer func() { // just in case...
 		if r := recover(); r != nil {

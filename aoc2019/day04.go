@@ -9,8 +9,8 @@ import (
 	"github.com/golang/glog"
 )
 
+// checkAdjacent returns true if there are at least two adjacent numbers.
 func checkAdjacent(input int) bool {
-	// Returns true if there are at least two adjacent numbers.
 	// We can use a recursive solution here,
 	// but iterative works too.
 	for ; input >= 10; input /= 10 {

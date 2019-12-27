@@ -1,13 +1,12 @@
-package structs_test
+package structs
 
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
 	"github.com/stretchr/testify/assert"
 )
 
-func generateBinaryTree() *structs.BinaryTree {
+func generateBinaryTree() *BinaryTree {
 	// generateBinaryTree() should create the following binary tree
 	//             10
 	//           /    \
@@ -16,7 +15,7 @@ func generateBinaryTree() *structs.BinaryTree {
 	//        3  7   13     17
 	//       /\  /\  / \    / \
 	//      1 4  6 8 11 14 16 18
-	bt := structs.NewBinaryTree(10)
+	bt := NewBinaryTree(10)
 	bt.Insert(5)
 	bt.Insert(15)
 	bt.Insert(3)
@@ -73,7 +72,7 @@ func TestGenerateBinaryTree(t *testing.T) {
 
 func TestNewBinaryTree(t *testing.T) {
 	assert := assert.New(t)
-	bt := structs.NewBinaryTree(42)
+	bt := NewBinaryTree(42)
 	assert.EqualValues(bt.Get(), 42)
 	assert.Nil(bt.GetLeft())
 	assert.Nil(bt.GetRight())
@@ -81,15 +80,15 @@ func TestNewBinaryTree(t *testing.T) {
 
 func TestBinaryTree_Set(t *testing.T) {
 	assert := assert.New(t)
-	original := structs.NewBinaryTree(42)
+	original := NewBinaryTree(42)
 	original.Set(15)
 	assert.EqualValues(original.Get(), 15)
 }
 
 func TestBinaryTree_SetLeft(t *testing.T) {
 	assert := assert.New(t)
-	original := structs.NewBinaryTree(42)
-	assist := structs.NewBinaryTree(15)
+	original := NewBinaryTree(42)
+	assist := NewBinaryTree(15)
 	original.SetLeft(assist)
 	assert.Nil(original.GetRight())
 	assert.EqualValues(original.GetLeft(), assist)
@@ -97,8 +96,8 @@ func TestBinaryTree_SetLeft(t *testing.T) {
 
 func TestBinaryTree_SetRight(t *testing.T) {
 	assert := assert.New(t)
-	original := structs.NewBinaryTree(42)
-	assist := structs.NewBinaryTree(15)
+	original := NewBinaryTree(42)
+	assist := NewBinaryTree(15)
 	original.SetRight(assist)
 	assert.Nil(original.GetLeft())
 	assert.EqualValues(original.GetRight(), assist)
@@ -107,7 +106,7 @@ func TestBinaryTree_SetRight(t *testing.T) {
 func TestBinaryTree_Lookup(t *testing.T) {
 	assert := assert.New(t)
 	bt := generateBinaryTree()
-	var lookedUp *structs.BinaryTree
+	var lookedUp *BinaryTree
 
 	// root?
 	lookedUp = bt.Lookup(10)
@@ -146,7 +145,7 @@ func TestBinaryTree_In(t *testing.T) {
 
 func TestBinaryTree_Update(t *testing.T) {
 	assert := assert.New(t)
-	bt := structs.NewBinaryTree(10)
+	bt := NewBinaryTree(10)
 	assert.True(bt.Update(15))
 	assert.Nil(bt.GetLeft())
 	assert.EqualValues(bt.GetRight().Get(), 15)
@@ -157,7 +156,7 @@ func TestBinaryTree_Update(t *testing.T) {
 
 func TestBinaryTree_Delete(t *testing.T) {
 	assert := assert.New(t)
-	var bt *structs.BinaryTree
+	var bt *BinaryTree
 	var err error
 
 	// note the original

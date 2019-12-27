@@ -223,6 +223,8 @@ func checkIntersect(trace1, trace2 [][]bool, distance int, origin, maxPoint imag
 //
 // WARNING: This may consume half a gigabyte of RAM.
 // But it works. And more often than not that's what matters.
+//
+// TODO (janreggie): Optimize.
 func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wire1 := make([]path, 0) // we don't know how long it is just yet
 	wire2 := make([]path, 0)
