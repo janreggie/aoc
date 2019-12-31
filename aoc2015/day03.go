@@ -2,7 +2,6 @@ package aoc2015
 
 import (
 	"bufio"
-	"fmt"
 	"image"
 	"strconv"
 )
@@ -49,10 +48,6 @@ func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 			dualHouses[roboSanta]++
 		}
 		isSanta = !isSanta
-	}
-	if err = scanner.Err(); err != nil {
-		err = fmt.Errorf("scanner error: %v", err)
-		return
 	}
 	answer1 = strconv.Itoa(len(houses))
 	answer2 = strconv.Itoa(len(dualHouses))

@@ -6,24 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"sync"
 )
 
-// checkFirstBytesOfHash checks the first n bytes of the MD5 of Augend+string(Addend)
-// and inserts value to a chan int if the first n bytes are all 0.
+// checkFirstBytesOfHash checks the first n nibbles (half-octets) of the MD5 of Augend+string(Addend)
+// and inserts the augend to a chan int if the first n nibbles are all 0.
+// It is assumed that the input is valid
+// and that the channel is not blocked or closed.
 func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int) {
-	defer func() { // just in case...
-		if r := recover(); r != nil {
-			fmt.Printf("was trying to insert %v (n:%v)\n", augend+strconv.Itoa(addend), n)
-		}
-	}()
-	if n >= 16 || n < 0 {
-		return // don't deal with invalid input
-	}
-	// check if channel is full
-	if len(channel) > 0 {
-		return
-	}
-
 	builtString := []byte(augend + strconv.Itoa(addend))
 	hash := fmt.Sprintf("%x", md5.Sum(builtString))
 	for ii := 0; ii < n; ii++ {
@@ -36,7 +26,6 @@ func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int)
 		return
 	}
 	channel <- addend
-	close(channel)
 }
 
 // Day04 solves the fourth day puzzle
@@ -54,7 +43,7 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// suppose we have an addends channel
 	// which contains all the possible addends for input
 	// i.e., input+<-addned
-	processes := 8 // how many processes in parallel?
+	processes := 16 // how many processes in parallel?
 	addends := make(chan int, processes)
 	go func() {
 		moar := 1
@@ -73,7 +62,7 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	for ii := 0; ii < processes; ii++ {
 		// let's create processes amount of goroutines
 		go func() {
-			for len(for5Zeroes)+len(for6Zeroes) < 2 {
+			for !foundFive || !foundSix {
 				current := <-addends
 				if !foundFive {
 					checkFirstBytesOfHash(5, input, current, for5Zeroes)
@@ -85,10 +74,20 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		}()
 	}
 
-	answer1 = strconv.Itoa(<-for5Zeroes)
-	foundFive = true // since the statement above would empty for5Zeroes
-	answer2 = strconv.Itoa(<-for6Zeroes)
-	foundSix = true
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		answer1 = strconv.Itoa(<-for5Zeroes)
+		foundFive = true // since the statement above would empty for5Zeroes
+		wg.Done()
+	}()
+	go func() {
+		answer2 = strconv.Itoa(<-for6Zeroes)
+		foundSix = true
+		wg.Done()
+	}()
+	wg.Wait()
 	return
 }
 

@@ -5,58 +5,102 @@ import (
 	"strconv"
 )
 
+// checkThreeVowels checks whether input has at least three vowels
+// and returns true if so.
+func checkThreeVowels(input string) bool {
+	checkVowel := func(char byte) bool {
+		return char == 'a' || char == 'e' || char == 'i' || char == 'o' || char == 'u'
+	}
+	vowelCount := 0
+	for ind := range input {
+		if checkVowel(input[ind]) {
+			vowelCount++
+		}
+		if vowelCount >= 3 {
+			return true
+		}
+	}
+	return false
+}
+
+// checkTwiceInARow checks whether input has a letter appearing twice in a row
+// and returns true if so.
+func checkTwiceInARow(input string) bool {
+	for ind := range input {
+		if ind == len(input)-1 {
+			break
+		}
+		if input[ind] == input[ind+1] {
+			return true
+		}
+	}
+	return false
+}
+
+// checkSanity checks for the strings
+// ab, cd, pq, or xy
+// and returns false if found
+func checkSanity(input string) bool {
+	for ind := range input {
+		if ind == len(input)-1 {
+			break
+		}
+		currentAndNext := input[ind : ind+2]
+		if currentAndNext == "ab" ||
+			currentAndNext == "cd" ||
+			currentAndNext == "pq" ||
+			currentAndNext == "xy" {
+			return false
+		}
+	}
+	return true
+}
+
+// checkRepeatPair checks whether any pair of any two letters
+// appears twice in the string without overlapping
+func checkRepeatPair(input string) bool {
+	// checkPatternExists checks whether pattern is in text
+	checkPatternExists := func(text, pattern string) bool {
+		indexText := 0
+		indexPat := 0
+		for indexText < len(text) {
+			// compare text[indexText] and pattern[indexPat]
+			if text[indexText] != pattern[indexPat] {
+				indexPat = 0
+			}
+			if text[indexText] == pattern[indexPat] {
+				indexPat++
+			}
+			if indexPat == len(pattern) {
+				return true
+			}
+			indexText++
+		}
+		return false
+	}
+	for ii := 0; ii < len(input)-1; ii++ {
+		substr := input[ii : ii+2] // length 2
+		if checkPatternExists(input[ii+2:], substr) {
+			return true
+		}
+	}
+	return false
+}
+
+// checkRepeatChar checks whether at least one letter
+// repeats with exactly one letter between them
+func checkRepeatChar(input string) bool {
+	for ind := 0; ind < len(input)-2; ind++ {
+		// check input[ind] and input[ind+2]
+		if input[ind] == input[ind+2] {
+			return true
+		}
+	}
+	return false
+}
+
 // checkNiceOne checks whether string is "nice" according to Part One criteria
 func checkNiceOne(input string) bool {
-	// checkThreeVowels checks whether input has at least three vowels
-	// and returns true if so.
-	checkThreeVowels := func(input string) bool {
-		checkVowel := func(char byte) bool {
-			return char == 'a' || char == 'e' || char == 'i' || char == 'o' || char == 'u'
-		}
-		numberOfVowels := 0
-		for ind := range input {
-			if checkVowel(input[ind]) {
-				numberOfVowels++
-			}
-			if numberOfVowels >= 3 {
-				return true
-			}
-		}
-		return false
-	}
-	// checkTwiceInARow checks whether input has a letter appearing twice in a row
-	// and returns true if so.
-	checkTwiceInARow := func(input string) bool {
-		for ind := range input {
-			if ind == len(input)-1 {
-				break
-			}
-			if input[ind] == input[ind+1] {
-				return true
-			}
-		}
-		return false
-	}
-	// checkSanity checks for the strings
-	// ab, cd, pq, or xy
-	// and returns false if found
-	checkSanity := func(input string) bool {
-		invalidStrings := make(map[byte]byte)
-		invalidStrings['a'] = 'b'
-		invalidStrings['c'] = 'd'
-		invalidStrings['p'] = 'q'
-		invalidStrings['x'] = 'y'
-		for ind := range input {
-			if ind == len(input)-1 {
-				break
-			}
-			if invalidStrings[input[ind]] == input[ind+1] {
-				return false
-			}
-		}
-		return true
-	}
-
 	return checkSanity(input) &&
 		checkThreeVowels(input) &&
 		checkTwiceInARow(input)
@@ -64,48 +108,6 @@ func checkNiceOne(input string) bool {
 
 // checkNiceTwo checks whether string is "nice" according to Part Two criteria
 func checkNiceTwo(input string) bool {
-	// checkRepeatPair checks whether a pair of any two letters
-	// appears twice in the string without overlapping
-	checkRepeatPair := func(input string) bool {
-		// checkPatternExists checks whether pattern is in text
-		checkPatternExists := func(text, pattern string) bool {
-			indexText := 0
-			indexPat := 0
-			for indexText < len(text) {
-				// compare text[indexText] and pattern[indexPat]
-				if text[indexText] != pattern[indexPat] {
-					indexPat = 0
-				}
-				if text[indexText] == pattern[indexPat] {
-					indexPat++
-				}
-				if indexPat == len(pattern) {
-					return true
-				}
-				indexText++
-			}
-			return false
-		}
-		for ind := 0; ind < len(input)-1; ind++ {
-			substr := input[ind : ind+2] // length 2
-			if checkPatternExists(input[ind+2:], substr) {
-				return true
-			}
-		}
-		return false
-	}
-	// checkRepeatChar checks whether at least one letter
-	// repeats with exactly one letter between them
-	checkRepeatChar := func(input string) bool {
-		for ind := 0; ind < len(input)-2; ind++ {
-			// check input[ind] and input[ind+2]
-			if input[ind] == input[ind+2] {
-				return true
-			}
-		}
-		return false
-	}
-
 	return checkRepeatChar(input) &&
 		checkRepeatPair(input)
 }
