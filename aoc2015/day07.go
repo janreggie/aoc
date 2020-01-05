@@ -96,7 +96,7 @@ func and(mem map[identifier]signal, address identifier, params []identifier) err
 }
 
 // or performs bitwise or
-//	"eg AND 3 -> ej" turns into
+//	"eg OR 3 -> ej" turns into
 //	params = {"eg","3"}
 //	mem["ej"] = mem["eg"] | 3
 // Note that either parameter can be a signal or an identifier
