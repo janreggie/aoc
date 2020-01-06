@@ -11,10 +11,13 @@ import (
 )
 
 // graph represents a graph
-type graph map[string]map[string]uint // pls no negative distance
+type graph struct {
+	links map[string]uint // pls no negative distance
+	towns []string
+}
 
 func newGraph(scanner *bufio.Scanner) (graph, error) {
-	out := make(graph)
+	out := graph{links: make(map[string]uint), towns: make([]string, 0)}
 
 	// now fill it in for each line
 	for scanner.Scan() {
@@ -22,35 +25,65 @@ func newGraph(scanner *bufio.Scanner) (graph, error) {
 		// `AlphaNumericStringA to AlphaNumericStringB = UnsignedInteger`
 		text := strings.Fields(scanner.Text())
 		if len(text) != 5 {
-			return nil, fmt.Errorf("could not parse %v", scanner.Text())
+			return graph{}, fmt.Errorf("could not parse %v", scanner.Text())
 		}
 		townOne, townTwo := text[0], text[2]
 		distance, err := strconv.Atoi(text[4])
 		if err != nil {
-			return nil, errors.Wrapf(err, "could not convert %v in %v", text[4], scanner.Text())
+			return graph{}, errors.Wrapf(err, "could not convert %v in %v", text[4], scanner.Text())
 		}
 		if distance < 0 {
-			return nil, errors.Wrapf(err, "could not fathom distance %v in %v", distance, scanner.Text())
+			return graph{}, errors.Wrapf(err, "could not fathom distance %v in %v", distance, scanner.Text())
 		}
-		out.add(townOne, townTwo, uint(distance))
+		out.set(townOne, townTwo, uint(distance))
 	}
 
 	return out, nil
 }
 
-// add adds the edge that connects a and b with distance dist
-func (gr graph) add(a, b string, dist uint) {
-	if _, ok := gr[a]; !ok {
-		gr[a] = make(map[string]uint)
+// set adds the edge that connects a and b with distance dist.
+// Make sure that neither a nor b contain \x00.
+// If a == b then it doesn't do anything.
+func (gr *graph) set(a, b string, dist uint) {
+	if a == b {
+		return
 	}
-	if _, ok := gr[b]; !ok {
-		gr[b] = make(map[string]uint)
+	if a > b {
+		a, b = b, a
 	}
+	gr.links[a+"\x00"+b] = dist
+	writeA, writeB := true, true
+	for _, v := range gr.towns {
+		if v == a {
+			writeA = false
+		}
+		if v == b {
+			writeB = false
+		}
+	}
+	if writeA {
+		gr.towns = append(gr.towns, a)
+	}
+	if writeB {
+		gr.towns = append(gr.towns, b)
+	}
+}
 
-	gr[a][b] = dist
-	gr[b][a] = dist
-	gr[a][a] = 0 // self distance!
-	gr[b][b] = 0 // self distance!
+// get returns the distance between two towns.
+// If a == b then return 0.
+// If link doesn't exist then return MaxUint.
+func (gr graph) get(a, b string) uint {
+	if a == b {
+		return 0
+	}
+	if a > b {
+		a, b = b, a
+	}
+	link := a + "\x00" + b
+	if dist, ok := gr.links[link]; ok {
+		return dist
+	}
+	return uint(math.MaxUint32)
 }
 
 // distance traces the distance returned after traversing all towns in []string.
@@ -60,85 +93,48 @@ func (gr graph) distance(towns []string) uint {
 		return 0 // there is no distance to be travelled
 	}
 	if len(towns) == 2 {
-		return gr[towns[0]][towns[1]]
+		return gr.get(towns[0], towns[1])
 	}
-	return gr[towns[0]][towns[1]] + gr.distance(towns[1:])
+	return gr.get(towns[0], towns[1]) + gr.distance(towns[1:])
 }
 
-// findMinimumHamiltonian returns the smallest Hamiltonian distance there is for a graph
-// by exhausting all permutations.
-func (gr graph) findMinimumHamiltonian() uint {
-	// what are all the Towns again?
-	// permute from https://www.golangprograms.com/golang-program-to-generate-slice-permutations-of-number-entered-by-user.html
-	permuteStrings := func(xs []string) (permuts [][]string) {
-		var rc func([]string, int)
-		rc = func(a []string, k int) {
-			if k == len(a) {
-				permuts = append(permuts, append([]string{}, a...))
-			} else {
-				for i := k; i < len(xs); i++ {
-					a[k], a[i] = a[i], a[k]
-					rc(a, k+1)
-					a[k], a[i] = a[i], a[k]
-				}
-			}
-		}
-		rc(xs, 0)
-		return permuts
-	}
-
-	allTowns := []string{}
-	for town := range gr {
-		allTowns = append(allTowns, town)
-	}
-	allPermuts := permuteStrings(allTowns)
-
-	// check lowest
-	lowest := uint(math.MaxUint32)
-	for _, path := range allPermuts {
-		if pathDist := gr.distance(path); pathDist < lowest {
-			lowest = pathDist
-		}
-	}
-	return lowest
+// generatePermutations generates a channel containing permutations of a string slice
+// and closes once all permutations have been exhausted
+func generatePermutations(data []string) <-chan []string {
+	c := make(chan []string)
+	go func(c chan []string) {
+		defer close(c)
+		permutate(c, data)
+	}(c)
+	return c
 }
 
-// findMaximumHamiltonian returns the largest Hamiltonian distance there is for a graph
-// by exhausting all permutations.
-func (gr graph) findMaximumHamiltonian() uint {
-	// what are all the Towns again?
-	// permute from https://www.golangprograms.com/golang-program-to-generate-slice-permutations-of-number-entered-by-user.html
-	permuteStrings := func(xs []string) (permuts [][]string) {
-		var rc func([]string, int)
-		rc = func(a []string, k int) {
-			if k == len(a) {
-				permuts = append(permuts, append([]string{}, a...))
-			} else {
-				for i := k; i < len(xs); i++ {
-					a[k], a[i] = a[i], a[k]
-					rc(a, k+1)
-					a[k], a[i] = a[i], a[k]
-				}
-			}
+func permutate(c chan []string, inputs []string) {
+	output := make([]string, len(inputs))
+	copy(output, inputs)
+	c <- output
+
+	size := len(inputs)
+	p := make([]int, size+1)
+	for i := 0; i < size+1; i++ {
+		p[i] = i
+	}
+	for i := 1; i < size; {
+		p[i]--
+		j := 0
+		if i%2 == 1 {
+			j = p[i]
 		}
-		rc(xs, 0)
-		return permuts
-	}
-
-	allTowns := []string{}
-	for town := range gr {
-		allTowns = append(allTowns, town)
-	}
-	allPermuts := permuteStrings(allTowns)
-
-	// check highest
-	highest := uint(0)
-	for _, path := range allPermuts {
-		if pathDist := gr.distance(path); pathDist > highest {
-			highest = pathDist
+		tmp := inputs[j]
+		inputs[j] = inputs[i]
+		inputs[i] = tmp
+		output := make([]string, len(inputs))
+		copy(output, inputs)
+		c <- output
+		for i = 1; p[i] == 0; i++ {
+			p[i] = i
 		}
 	}
-	return highest
 }
 
 // Day09 solves the ninth day puzzle
@@ -148,7 +144,20 @@ func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	if err != nil {
 		return
 	}
-	answer1 = strconv.FormatUint(uint64(santasGraph.findMinimumHamiltonian()), 10)
-	answer2 = strconv.FormatUint(uint64(santasGraph.findMaximumHamiltonian()), 10)
+
+	allPermuts := generatePermutations(santasGraph.towns)
+
+	highest := uint(0)
+	lowest := uint(math.MaxUint32)
+	for path := range allPermuts {
+		if pathDist := santasGraph.distance(path); pathDist > highest {
+			highest = pathDist
+		} else if pathDist < lowest {
+			lowest = pathDist
+		}
+	}
+
+	answer1 = strconv.FormatUint(uint64(lowest), 10)
+	answer2 = strconv.FormatUint(uint64(highest), 10)
 	return
 }
