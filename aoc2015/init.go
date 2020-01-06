@@ -25,7 +25,7 @@ var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 	Unimplemented, // day 11
 	Unimplemented, // day 12
 	Unimplemented, // day 13
-	Unimplemented, // day 14
+	Day14,         // day 14
 	Unimplemented, // day 15
 	Unimplemented, // day 16
 	Unimplemented, // day 17
