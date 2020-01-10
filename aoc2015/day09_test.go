@@ -15,7 +15,7 @@ var day09sampleGraph = func() townGraph {
 		"Dublin to Belfast = 141\n"
 
 	// guaranteed not to error
-	gr, _ := newGraph(bufio.NewScanner(strings.NewReader(input)))
+	gr, _ := newTownGraph(bufio.NewScanner(strings.NewReader(input)))
 	return gr
 }()
 
@@ -50,7 +50,7 @@ var day09myGraph = func() townGraph {
 		"Tambi to Straylight = 70\n"
 
 	// guaranteed not to error
-	gr, _ := newGraph(bufio.NewScanner(strings.NewReader(input)))
+	gr, _ := newTownGraph(bufio.NewScanner(strings.NewReader(input)))
 	return gr
 }()
 
@@ -118,6 +118,117 @@ func Test_graph_shortestPathGreedy(t *testing.T) {
 	for _, tt := range tests {
 		assert.Equal(tt.want, tt.gr.shortestPathGreedy(), tt.gr)
 	}
+}
+
+func Test_townPath_newAndCopy(t *testing.T) {
+	assert := assert.New(t)
+	gr := &day09sampleGraph
+	tests := []struct {
+		a, b      town
+		wantErr   bool
+		distance  townDistance
+		remaining []town
+	}{
+		{"London", "Dublin", false, 464, []town{"Belfast"}},
+		{"London", "Nowhere", true, disconnected, []town{}},
+		{"Nowhere", "London", true, disconnected, []town{}},
+	}
+	for _, tt := range tests {
+		path, err := newTownPath(tt.a, tt.b, gr)
+		if tt.wantErr {
+			assert.Error(err, tt)
+			continue
+		}
+		assert.NoError(err, tt)
+		assert.Equal([]town{tt.a, tt.b}, path.raw, tt)
+		assert.Equal(tt.distance, path.distance, tt)
+		assert.Equal(tt.remaining, path.remaining, tt)
+		// now for copying
+		otherPath := path.copy()
+		assert.Equal([]town{tt.a, tt.b}, otherPath.raw, tt)
+		assert.Equal(tt.distance, otherPath.distance, tt)
+		assert.Equal(tt.remaining, otherPath.remaining, tt)
+	}
+}
+
+func Test_townPath_add(t *testing.T) {
+	assert := assert.New(t)
+	gr := &day09sampleGraph
+
+	testCases := []struct {
+		next      town
+		wantErr   bool
+		distance  townDistance
+		remaining []town
+	}{
+		{"Dublin", false, 659, []town{}},
+		{"Nowhere", true, disconnected, []town{}},
+		{"London", true, disconnected, []town{}},
+	}
+	for _, tt := range testCases {
+		path, err := newTownPath("London", "Belfast", gr)
+		assert.NoError(err)
+		newPath, err := path.add(tt.next)
+		if tt.wantErr {
+			assert.Error(err, tt)
+			continue
+		}
+		assert.NoError(err, tt)
+		assert.Equal(tt.distance, newPath.distance, tt)
+		assert.Equal(tt.remaining, newPath.remaining, tt)
+	}
+}
+
+func Test_townPathQueue_pushAndPop(t *testing.T) {
+	assert := assert.New(t)
+	gr := &day09sampleGraph
+
+	// let's initialize the path
+	LD, err := newTownPath("London", "Dublin", gr) // LD: 464
+	assert.NoError(err, gr)
+	LDB, err := LD.add("Belfast") // LDB: 605
+	assert.NoError(err, LD)
+
+	// let's make that queue
+	tpq := newTownPathQueue()
+	tpq.push(LD) // tpq: [LondonDublin]
+	assert.ElementsMatch(townPathQueue{LD}, tpq, tpq)
+	tpq.push(LDB) // tpq: [LondonDublin, LondonDublinBelfast]
+	assert.ElementsMatch(townPathQueue{LD, LDB}, tpq, tpq)
+
+	// now let's another one
+	DB, err := newTownPath("Dublin", "Belfast", gr) // DB: 141
+	assert.NoError(err, gr)
+	DBL, err := DB.add("London") // DBL: 659
+	assert.NoError(err, DB)
+	tpq.push(DB) // tpq: [DB, LD, LDB]
+	assert.ElementsMatch(townPathQueue{DB, LD, LDB}, tpq, tpq)
+	tpq.push(DBL) // tpq: [DB, LD, LDB, DBL]
+	assert.ElementsMatch(townPathQueue{DB, LD, LDB, DBL}, tpq, tpq)
+
+	// now let's start popping...
+	pop, err := tpq.pop() // pop, tpq: DB, [LD, LDB, DBL]
+	assert.NoError(err, tpq)
+	assert.Equal(DB, pop, tpq)
+	assert.ElementsMatch(townPathQueue{LD, LDB, DBL}, tpq, tpq)
+
+	pop, err = tpq.pop() // pop, tpq: LD, [LDB, DBL]
+	assert.NoError(err, tpq)
+	assert.Equal(LD, pop, tpq)
+	assert.ElementsMatch(townPathQueue{LDB, DBL}, tpq, tpq)
+
+	pop, err = tpq.pop() // pop, tpq: LDB, [DBL]
+	assert.NoError(err, tpq)
+	assert.Equal(LDB, pop, tpq)
+	assert.ElementsMatch(townPathQueue{DBL}, tpq, tpq)
+
+	pop, err = tpq.pop() // pop, tpq: DBL, []
+	assert.NoError(err, tpq)
+	assert.Equal(DBL, pop, tpq)
+	assert.ElementsMatch(townPathQueue{}, tpq, tpq)
+
+	pop, err = tpq.pop() // can pop no more
+	assert.Error(err, tpq)
 }
 
 func TestDay09(t *testing.T) {
