@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/pkg/errors"
 )
@@ -62,6 +63,11 @@ type townPath struct {
 // The values in the queue are arranged by their distances,
 // used to perform a breadth-first-search through the paths of a graph.
 type townPathQueue []townPath
+
+// uint64 converts townDistance to uint64
+func (td townDistance) uint64() uint64 {
+	return uint64(td)
+}
 
 // newGraph creates a graph construct
 func newTownGraph(scanner *bufio.Scanner) (townGraph, error) {
@@ -232,7 +238,9 @@ func (tg townGraph) permutations() <-chan []town {
 	c := make(chan []town)
 	go func(c chan []town) {
 		defer close(c)
-		permutate(c, tg.towns)
+		towns := make([]town, len(tg.towns))
+		copy(towns, tg.towns)
+		permutate(c, towns)
 	}(c)
 	return c
 }
@@ -347,6 +355,46 @@ func (tg townGraph) shortestPathGreedy() townDistance {
 	return record
 }
 
+// longestPathGreedyFrom is like shortestPathGreedyFrom but returns
+// the longest path it could trace from town using a greedy algorithm
+func (tg townGraph) longestPathGreedyFrom(from town) townDistance {
+	// check first if town is in towns
+	if !tg.in(from) {
+		return disconnected
+	}
+
+	remaining := excludeTown(tg.towns, from)
+	current := from
+	var total townDistance
+
+	for len(remaining) > 0 {
+		// check distances from current to everything in remaining
+		recordDist, recordTown := townDistance(0), town("")
+		for _, eachDestination := range remaining {
+			if eachDistance := tg.get(current, eachDestination); eachDistance > recordDist {
+				recordDist, recordTown = eachDistance, eachDestination
+			}
+		}
+		// now recordTown sounds like the winner.
+		remaining = excludeTown(remaining, recordTown)
+		current = recordTown
+		total += recordDist
+	}
+
+	return total
+}
+
+// longestPathGreedy checks all towns in a graph's towns list to see which is the shortest to go to.
+func (tg townGraph) longestPathGreedy() townDistance {
+	var record townDistance
+	for _, town := range tg.towns {
+		if pathDistance := tg.longestPathGreedyFrom(town); pathDistance > record {
+			record = pathDistance
+		}
+	}
+	return record
+}
+
 // shortestPathCleverFrom determines the shortest path from a town
 // using an algorithm a bit smarter than the previous one,
 // although this algorithm is still exhaustive.
@@ -354,8 +402,101 @@ func (tg townGraph) shortestPathGreedy() townDistance {
 // If there is no valid path from town, return disconnected.
 func (tg *townGraph) shortestPathCleverFrom(town town) townDistance {
 	// we should be able to solve this...
+	allPaths := newTownPathQueue()
 
-	return 0
+	// let's use tg.towns...
+	for _, tt := range tg.towns {
+		path, err := newTownPath(town, tt, tg)
+		if err != nil { // maybe same town? or no direct path?
+			continue
+		}
+		allPaths.push(path)
+	}
+
+	for len(allPaths) > 0 {
+		path, _ := allPaths.pop() // guaranteed no error
+		if len(path.remaining) == 0 {
+			// i guess that's our winner
+			return path.distance
+		}
+
+		// otherwise let's consider all remainings
+		for _, next := range path.remaining {
+			nextPath, err := path.add(next)
+			if err != nil {
+				continue // there should be no error...
+			}
+			allPaths.push(nextPath)
+		}
+	}
+
+	return disconnected // well we tried...
+}
+
+// longestPathNotSoCleverFrom computes the longest path from a town.
+func (tg *townGraph) longestPathNotSoCleverFrom(town town) townDistance {
+	allPaths := newTownPathQueue()
+
+	// let's use tg.towns...
+	for _, tt := range tg.towns {
+		path, err := newTownPath(town, tt, tg)
+		if err != nil { // maybe same town? or no direct path?
+			continue
+		}
+		allPaths.push(path)
+	}
+
+	var record townDistance
+
+	for len(allPaths) > 0 {
+		path, _ := allPaths.pop() // guaranteed no error
+		if len(path.remaining) == 0 {
+			// this is part of what makes this algo take so long.
+			// we're exhausting all potential paths
+			// from shortest to longest.
+			if path.distance > record {
+				record = path.distance
+			}
+		}
+
+		// otherwise let's consider all remainings
+		for _, next := range path.remaining {
+			nextPath, err := path.add(next)
+			if err != nil {
+				continue // there should be no error...
+			}
+			allPaths.push(nextPath)
+		}
+	}
+
+	if record == 0 {
+		return disconnected // there are no paths...
+	}
+	return record
+}
+
+// shortestPathClever spins up shortestPathCleverFrom for all towns in a graph
+func (tg *townGraph) shortestPathClever() townDistance {
+	record := disconnected
+	for _, town := range tg.towns {
+		if pathDistance := tg.shortestPathCleverFrom(town); pathDistance < record {
+			record = pathDistance
+		}
+	}
+	return record
+
+}
+
+// longestPathNotSoClever spins up longestPathCleverFrom for all towns in a graph
+func (tg *townGraph) longestPathNotSoClever() townDistance {
+	var record townDistance
+	for _, town := range tg.towns {
+		if pathDistance := tg.longestPathNotSoCleverFrom(town); pathDistance > record {
+			record = pathDistance
+		}
+	}
+	return record
+
 }
 
 // newTownPath creates a new townPath construct that starts with two towns.
@@ -468,8 +609,18 @@ func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		return
 	}
 
-	answer1 = strconv.FormatUint(uint64(santasGraph.shortestPathPermutative()), 10)
-	answer2 = strconv.FormatUint(uint64(santasGraph.longestPathPermutative()), 10)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		answer1 = strconv.FormatUint(santasGraph.shortestPathClever().uint64(), 10)
+		wg.Done()
+	}()
+	go func() {
+		// use permutative. clever's not really clever.
+		answer2 = strconv.FormatUint(santasGraph.longestPathPermutative().uint64(), 10)
+		wg.Done()
+	}()
+	wg.Wait()
 
 	return
 }

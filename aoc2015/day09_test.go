@@ -90,7 +90,7 @@ func Test_graph_distance(t *testing.T) {
 	}
 }
 
-func Test_graph_greedyShortestPathFrom(t *testing.T) {
+func Test_graph_shortestPathGreedyFrom(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
 		gr     *townGraph
@@ -106,7 +106,37 @@ func Test_graph_greedyShortestPathFrom(t *testing.T) {
 	}
 }
 
+func Test_graph_shortestPathCleverFrom(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr     *townGraph
+		origin town
+		want   townDistance
+	}{
+		{&day09sampleGraph, "Dublin", 659},
+		{&day09sampleGraph, "London", 605},
+		{&day09sampleGraph, "Belfast", 605},
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.shortestPathCleverFrom(tt.origin), tt.origin)
+	}
+}
+
 func Test_graph_shortestPathGreedy(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr   *townGraph
+		want townDistance
+	}{
+		{&day09sampleGraph, 605},
+		// {&day09myGraph, 207}, // the shortest one we have. may not work.
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.shortestPathGreedy(), tt.gr)
+	}
+}
+
+func Test_graph_shortestPathClever(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
 		gr   *townGraph
@@ -116,7 +146,75 @@ func Test_graph_shortestPathGreedy(t *testing.T) {
 		{&day09myGraph, 207}, // the shortest one we have.
 	}
 	for _, tt := range tests {
-		assert.Equal(tt.want, tt.gr.shortestPathGreedy(), tt.gr)
+		assert.Equal(tt.want, tt.gr.shortestPathClever(), tt.gr)
+	}
+}
+func Test_graph_shortestPathPermutative(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr   *townGraph
+		want townDistance
+	}{
+		{&day09sampleGraph, 605},
+		{&day09myGraph, 207}, // the shortest one we have.
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.shortestPathPermutative(), tt.gr)
+	}
+}
+func Test_graph_longestPathGreedy(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr   *townGraph
+		want townDistance
+	}{
+		{&day09sampleGraph, 982},
+		// {&day09myGraph, 804}, // the longest one we have. may not work.
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.longestPathGreedy(), tt.gr)
+	}
+}
+func Test_graph_longestPathNotSoCleverFrom(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr     *townGraph
+		origin town
+		want   townDistance
+	}{
+		{&day09sampleGraph, "Dublin", 982},
+		{&day09sampleGraph, "London", 659},
+		{&day09sampleGraph, "Belfast", 982},
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.longestPathNotSoCleverFrom(tt.origin), tt.origin)
+	}
+}
+
+func Test_graph_longestPathNotSoClever(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr   *townGraph
+		want townDistance
+	}{
+		{&day09sampleGraph, 982},
+		{&day09myGraph, 804}, // the longest one we have.
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.longestPathNotSoClever(), tt.gr)
+	}
+}
+func Test_graph_longestPathPermutative(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		gr   *townGraph
+		want townDistance
+	}{
+		{&day09sampleGraph, 982},
+		{&day09myGraph, 804}, // the longest one we have.
+	}
+	for _, tt := range tests {
+		assert.Equal(tt.want, tt.gr.longestPathPermutative(), tt.gr)
 	}
 }
 
@@ -320,5 +418,28 @@ func Benchmark_graph_shortestPathPermutative(b *testing.B) {
 func Benchmark_graph_shortestPathGreedy(b *testing.B) {
 	for ii := 0; ii < b.N; ii++ {
 		day09myGraph.shortestPathGreedy()
+	}
+}
+
+func Benchmark_graph_shortestPathClever(b *testing.B) {
+	for ii := 0; ii < b.N; ii++ {
+		day09myGraph.shortestPathClever()
+	}
+}
+func Benchmark_graph_longestPathPermutative(b *testing.B) {
+	for ii := 0; ii < b.N; ii++ {
+		day09myGraph.longestPathPermutative()
+	}
+}
+
+func Benchmark_graph_longestPathGreedy(b *testing.B) {
+	for ii := 0; ii < b.N; ii++ {
+		day09myGraph.longestPathGreedy()
+	}
+}
+
+func Benchmark_graph_longestPathNotSoClever(b *testing.B) {
+	for ii := 0; ii < b.N; ii++ {
+		day09myGraph.longestPathNotSoClever()
 	}
 }
