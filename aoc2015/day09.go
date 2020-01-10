@@ -6,14 +6,13 @@ import (
 	"math"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/pkg/errors"
 )
 
-// stringSliceBut returns the same slice of strings but without a specified value.
-func stringSliceBut(from []string, except string) []string {
-	out := make([]string, 0, len(from)-1)
+// exclude returns the same slice of towns but without some specified value.
+func exclude(from []town, except town) []town {
+	out := make([]town, 0, len(from)-1)
 	for _, vv := range from {
 		if vv != except {
 			out = append(out, vv)
@@ -22,17 +21,40 @@ func stringSliceBut(from []string, except string) []string {
 	return out
 }
 
-// graph represents a graph
-type graph struct {
-	links map[string]uint // pls no negative distance
-	towns []string
+// disconnected is a townDistance that is unfathomably large.
+const disconnected = townDistance(math.MaxUint32)
+
+// town represents a town
+type town string
+
+// townPair represents a pair of two towns
+// where a is lexographically less than or equal to b.
+type townPair struct {
+	a, b town
 }
 
-// disconnected is a distance that is unfathomably large
-const disconnected = uint(math.MaxUint32)
+// townDistance represents the distance between towns
+type townDistance uint
 
-func newGraph(scanner *bufio.Scanner) (graph, error) {
-	out := graph{links: make(map[string]uint), towns: make([]string, 0)}
+// townGraph represents a graph of towns
+type townGraph struct {
+	links map[townPair]townDistance // pls no negative distance
+	towns []town
+}
+
+// townPath is a path that connects multiple towns together.
+// The path can only be added to.
+type townPath struct {
+	raw      []town
+	distance townDistance
+}
+
+// newTownPath creates a new townPath construct
+// that starts with two paths.
+
+// newGraph creates a graph construct
+func newGraph(scanner *bufio.Scanner) (townGraph, error) {
+	out := townGraph{links: make(map[townPair]townDistance), towns: make([]town, 0)}
 
 	// now fill it in for each line
 	for scanner.Scan() {
@@ -40,17 +62,17 @@ func newGraph(scanner *bufio.Scanner) (graph, error) {
 		// `AlphaNumericStringA to AlphaNumericStringB = UnsignedInteger`
 		text := strings.Fields(scanner.Text())
 		if len(text) != 5 {
-			return graph{}, fmt.Errorf("could not parse %v", scanner.Text())
+			return townGraph{}, fmt.Errorf("could not parse %v", scanner.Text())
 		}
-		townOne, townTwo := text[0], text[2]
-		distance, err := strconv.Atoi(text[4])
+		townOne, townTwo := town(text[0]), town(text[2])
+		dist, err := strconv.Atoi(text[4])
 		if err != nil {
-			return graph{}, errors.Wrapf(err, "could not convert %v in %v", text[4], scanner.Text())
+			return townGraph{}, errors.Wrapf(err, "could not convert %v in %v", text[4], scanner.Text())
 		}
-		if distance < 0 {
-			return graph{}, errors.Wrapf(err, "could not fathom distance %v in %v", distance, scanner.Text())
+		if dist < 0 {
+			return townGraph{}, errors.Wrapf(err, "could not fathom distance %v in %v", dist, scanner.Text())
 		}
-		out.set(townOne, townTwo, uint(distance))
+		out.set(townOne, townTwo, townDistance(dist))
 	}
 
 	return out, nil
@@ -59,16 +81,16 @@ func newGraph(scanner *bufio.Scanner) (graph, error) {
 // set adds the edge that connects a and b with distance dist.
 // Make sure that neither a nor b contain \x00.
 // If a == b then it doesn't do anything.
-func (gr *graph) set(a, b string, dist uint) {
+func (tg *townGraph) set(a, b town, dist townDistance) {
 	if a == b {
 		return
 	}
 	if a > b {
 		a, b = b, a
 	}
-	gr.links[a+"\x00"+b] = dist
+	tg.links[townPair{a, b}] = dist
 	writeA, writeB := true, true
-	for _, v := range gr.towns {
+	for _, v := range tg.towns {
 		if v == a {
 			writeA = false
 		}
@@ -77,33 +99,32 @@ func (gr *graph) set(a, b string, dist uint) {
 		}
 	}
 	if writeA {
-		gr.towns = append(gr.towns, a)
+		tg.towns = append(tg.towns, a)
 	}
 	if writeB {
-		gr.towns = append(gr.towns, b)
+		tg.towns = append(tg.towns, b)
 	}
 }
 
 // get returns the distance between two towns.
 // If a == b then return 0.
 // If link doesn't exist then return disconnected.
-func (gr graph) get(a, b string) uint {
+func (tg townGraph) get(a, b town) townDistance {
 	if a == b {
 		return 0
 	}
 	if a > b {
 		a, b = b, a
 	}
-	link := a + "\x00" + b
-	if dist, ok := gr.links[link]; ok {
+	if dist, ok := tg.links[townPair{a, b}]; ok {
 		return dist
 	}
 	return disconnected
 }
 
 // in returns true if town is in the graph's list of towns.
-func (gr *graph) in(town string) bool {
-	for _, tt := range gr.towns {
+func (tg *townGraph) in(town town) bool {
+	for _, tt := range tg.towns {
 		if tt == town {
 			return true
 		}
@@ -113,40 +134,40 @@ func (gr *graph) in(town string) bool {
 
 // isValid returns whether the path is a isValid path in graph.
 // If path is empty it will return true.
-func (gr *graph) isValid(path []string) bool {
+func (tg *townGraph) isValid(path []town) bool {
 	if len(path) == 0 {
 		return true
 	}
 	if len(path) == 1 {
-		return gr.in(path[0])
+		return tg.in(path[0])
 	}
 
-	firstTwo := gr.get(path[0], path[1])
+	firstTwo := tg.get(path[0], path[1])
 	if len(path) == 2 {
 		return firstTwo != disconnected
 	}
 
-	return gr.isValid(path[1:])
+	return tg.isValid(path[1:])
 }
 
 // distance determines the distance returned after traversing all towns in path.
 // Will also return a boolean signifying if path is a valid path.
 // If path is not valid it will return disconnected and false.
 // If path is empty it will return 0 and true.
-func (gr *graph) distance(path []string) (uint, bool) {
+func (tg *townGraph) distance(path []town) (townDistance, bool) {
 	if len(path) == 0 {
 		return 0, true
 	}
 	if len(path) == 1 {
-		return 0, gr.in(path[0])
+		return 0, tg.in(path[0])
 	}
 
-	firstTwo := gr.get(path[0], path[1])
+	firstTwo := tg.get(path[0], path[1])
 	if len(path) == 2 {
 		return firstTwo, firstTwo != disconnected
 	}
 
-	remaining, areValid := gr.distance(path[1:])
+	remaining, areValid := tg.distance(path[1:])
 	if !areValid {
 		return disconnected, false
 	}
@@ -156,25 +177,23 @@ func (gr *graph) distance(path []string) (uint, bool) {
 // distanceSimple traces the distance returned after traversing all towns in path.
 // Does not check if the path is even valid.
 // If it isn't then distanceSimple may return a number that is at least disconnectedLink.
-func (gr *graph) distanceSimple(path []string) uint {
+func (tg *townGraph) distanceSimple(path []town) townDistance {
 	if len(path) <= 1 {
 		return 0 // there is no distance to be travelled
 	}
 	if len(path) == 2 {
-		return gr.get(path[0], path[1])
+		return tg.get(path[0], path[1])
 	}
-	return gr.get(path[0], path[1]) + gr.distanceSimple(path[1:])
+	return tg.get(path[0], path[1]) + tg.distanceSimple(path[1:])
 }
 
 // permutations creates a channel that contains all the possible paths in the graph
 // and will close said channel.
-func (gr *graph) permutations() <-chan []string {
-	permutate := func(c chan []string, inputs []string) {
-		output := make([]string, len(inputs))
+func (tg *townGraph) permutations() <-chan []town {
+	permutate := func(c chan []town, inputs []town) {
+		output := make([]town, len(inputs))
 		copy(output, inputs)
-		if gr.isValid(output) {
-			c <- output
-		}
+		c <- output
 
 		size := len(inputs)
 		p := make([]int, size+1)
@@ -190,21 +209,19 @@ func (gr *graph) permutations() <-chan []string {
 			tmp := inputs[j]
 			inputs[j] = inputs[i]
 			inputs[i] = tmp
-			output := make([]string, len(inputs))
+			output := make([]town, len(inputs))
 			copy(output, inputs)
-			if gr.isValid(output) {
-				c <- output
-			}
+			c <- output
 			for i = 1; p[i] == 0; i++ {
 				p[i] = i
 			}
 		}
 	}
 
-	c := make(chan []string)
-	go func(c chan []string) {
+	c := make(chan []town)
+	go func(c chan []town) {
 		defer close(c)
-		permutate(c, gr.towns)
+		permutate(c, tg.towns)
 	}(c)
 	return c
 }
@@ -213,13 +230,13 @@ func (gr *graph) permutations() <-chan []string {
 // by checking through all permutations of the towns in the graph.
 // This is an expensive operation.
 // If gr has no valid paths it will return disconnected.
-func (gr *graph) shortestPathPermutative() uint {
-	allPermuts := gr.permutations()
+func (tg *townGraph) shortestPathPermutative() townDistance {
+	allPermuts := tg.permutations()
 
 	record := disconnected
 	for path := range allPermuts {
 		// guaranteed to be valid.
-		if pathDist := gr.distanceSimple(path); pathDist < record {
+		if pathDist := tg.distanceSimple(path); pathDist < record {
 			record = pathDist
 		}
 	}
@@ -231,13 +248,13 @@ func (gr *graph) shortestPathPermutative() uint {
 // by checking through all permutations of the towns in the graph.
 // This is an expensive operation.
 // If gr has no valid paths it will return disconnected.
-func (gr *graph) longestPathPermutative() uint {
-	allPermuts := gr.permutations()
+func (tg *townGraph) longestPathPermutative() townDistance {
+	allPermuts := tg.permutations()
 
-	record := uint(0)
+	record := townDistance(0)
 	for path := range allPermuts {
 		// guaranteed to be valid
-		if pathDist := gr.distanceSimple(path); pathDist > record {
+		if pathDist := tg.distanceSimple(path); pathDist > record {
 			record = pathDist
 		}
 	}
@@ -281,42 +298,52 @@ func (gr *graph) longestPathPermutative() uint {
 // whose total distance is 15.
 // If the path starts from C however, the path taken would have been C -> B -> A -> D,
 // which would have a total distance of 6.
-func (gr *graph) shortestPathGreedyFrom(town string) uint {
+func (tg *townGraph) shortestPathGreedyFrom(from town) townDistance {
 	// check first if town is in towns
-	if !gr.in(town) {
+	if !tg.in(from) {
 		return disconnected
 	}
 
-	remaining := stringSliceBut(gr.towns, town)
-	current := town
-	var totalDistance uint
+	remaining := exclude(tg.towns, from)
+	current := from
+	var total townDistance
 
 	for len(remaining) > 0 {
 		// check distances from current to everything in remaining
-		recordDistance, recordTown := disconnected, ""
+		recordDist, recordTown := disconnected, town("")
 		for _, eachDestination := range remaining {
-			if eachDistance := gr.get(current, eachDestination); eachDistance < recordDistance {
-				recordDistance, recordTown = eachDistance, eachDestination
+			if eachDistance := tg.get(current, eachDestination); eachDistance < recordDist {
+				recordDist, recordTown = eachDistance, eachDestination
 			}
 		}
 		// now recordTown sounds like the winner.
-		remaining = stringSliceBut(remaining, recordTown)
+		remaining = exclude(remaining, recordTown)
 		current = recordTown
-		totalDistance += recordDistance
+		total += recordDist
 	}
 
-	return totalDistance
+	return total
 }
 
 // shortestPathGreedy checks all towns in a graph's towns list to see which is the shortest to go to.
-func (gr *graph) shortestPathGreedy() uint {
+func (tg *townGraph) shortestPathGreedy() townDistance {
 	record := disconnected
-	for _, town := range gr.towns {
-		if pathDistance := gr.shortestPathGreedyFrom(town); pathDistance < record {
+	for _, town := range tg.towns {
+		if pathDistance := tg.shortestPathGreedyFrom(town); pathDistance < record {
 			record = pathDistance
 		}
 	}
 	return record
+}
+
+// shortestPathCleverFrom determines the shortest path from a town
+// using an algorithm a bit smarter than the previous one,
+// although this algorithm is still exhaustive.
+// If there is no valid path from town, return disconnected.
+func (tg *townGraph) shortestPathCleverFrom(town town) townDistance {
+	// do things...
+
+	return 0
 }
 
 // Day09 solves the ninth day puzzle
@@ -327,16 +354,8 @@ func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		return
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		answer1 = strconv.FormatUint(uint64(santasGraph.shortestPathPermutative()), 10)
-		wg.Done()
-	}()
-	go func() {
-		answer2 = strconv.FormatUint(uint64(santasGraph.longestPathPermutative()), 10)
-		wg.Done()
-	}()
-	wg.Wait()
+	answer1 = strconv.FormatUint(uint64(santasGraph.shortestPathPermutative()), 10)
+	answer2 = strconv.FormatUint(uint64(santasGraph.longestPathPermutative()), 10)
+
 	return
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var day09sampleGraph = func() graph {
+var day09sampleGraph = func() townGraph {
 	const input = "London to Dublin = 464\n" +
 		"London to Belfast = 518\n" +
 		"Dublin to Belfast = 141\n"
@@ -19,7 +19,7 @@ var day09sampleGraph = func() graph {
 	return gr
 }()
 
-var day09myGraph = func() graph {
+var day09myGraph = func() townGraph {
 	const input = "Faerun to Norrath = 129\n" +
 		"Faerun to Tristram = 58\n" +
 		"Faerun to AlphaCentauri = 13\n" +
@@ -57,9 +57,9 @@ var day09myGraph = func() graph {
 func Test_graph_get(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
-		gr   *graph
-		a, b string
-		want uint
+		gr   *townGraph
+		a, b town
+		want townDistance
 	}{
 		{&day09sampleGraph, "London", "Belfast", 518},
 		{&day09sampleGraph, "Belfast", "London", 518},
@@ -74,16 +74,16 @@ func Test_graph_get(t *testing.T) {
 func Test_graph_distance(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
-		gr    *graph
-		towns []string
-		want  uint
+		gr    *townGraph
+		towns []town
+		want  townDistance
 	}{
-		{&day09sampleGraph, []string{"Dublin", "London", "Belfast"}, 982},
-		{&day09sampleGraph, []string{"London", "Dublin", "Belfast"}, 605},
-		{&day09sampleGraph, []string{"London", "Belfast", "Dublin"}, 659},
-		{&day09sampleGraph, []string{"Dublin", "Belfast", "London"}, 659},
-		{&day09sampleGraph, []string{"Belfast", "Dublin", "London"}, 605},
-		{&day09sampleGraph, []string{"Belfast", "London", "Dublin"}, 982},
+		{&day09sampleGraph, []town{"Dublin", "London", "Belfast"}, 982},
+		{&day09sampleGraph, []town{"London", "Dublin", "Belfast"}, 605},
+		{&day09sampleGraph, []town{"London", "Belfast", "Dublin"}, 659},
+		{&day09sampleGraph, []town{"Dublin", "Belfast", "London"}, 659},
+		{&day09sampleGraph, []town{"Belfast", "Dublin", "London"}, 605},
+		{&day09sampleGraph, []town{"Belfast", "London", "Dublin"}, 982},
 	}
 	for _, tt := range tests {
 		assert.Equal(tt.want, tt.gr.distanceSimple(tt.towns), tt.towns)
@@ -93,24 +93,24 @@ func Test_graph_distance(t *testing.T) {
 func Test_graph_greedyShortestPathFrom(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
-		gr   *graph
-		town string
-		want uint
+		gr     *townGraph
+		origin town
+		want   townDistance
 	}{
 		{&day09sampleGraph, "Dublin", 659},
 		{&day09sampleGraph, "London", 605},
 		{&day09sampleGraph, "Belfast", 605},
 	}
 	for _, tt := range tests {
-		assert.Equal(tt.want, tt.gr.shortestPathGreedyFrom(tt.town), tt.town)
+		assert.Equal(tt.want, tt.gr.shortestPathGreedyFrom(tt.origin), tt.origin)
 	}
 }
 
 func Test_graph_shortestPathGreedy(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
-		gr   *graph
-		want uint
+		gr   *townGraph
+		want townDistance
 	}{
 		{&day09sampleGraph, 605},
 		{&day09myGraph, 207}, // the shortest one we have.
