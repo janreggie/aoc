@@ -3,6 +3,7 @@ package aoc2015
 import (
 	"testing"
 
+	"github.com/janreggie/AdventOfCode/structs"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,5 +21,17 @@ func Test_lookAndSay(t *testing.T) {
 	}
 	for _, tt := range tests {
 		assert.Equal(tt.want, lookAndSay(tt.input))
+	}
+}
+func TestDay10(t *testing.T) {
+	assert := assert.New(t)
+	testCases := []structs.TestCase{
+		{Details: "Y2015D10 my input",
+			Input:   "3113322113",
+			Result1: "329356",
+			Result2: "4666278"},
+	}
+	for _, eachCase := range testCases {
+		eachCase.Test(Day10, assert)
 	}
 }

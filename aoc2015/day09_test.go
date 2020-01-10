@@ -17,7 +17,7 @@ func TestDay09(t *testing.T) {
 			"Dublin to Belfast = 141\n",
 			Result1: "605",
 			Result2: "982"},
-		{Details: "Y2019D09 my input",
+		{Details: "Y2015D09 my input",
 			Input: "Faerun to Norrath = 129\n" +
 				"Faerun to Tristram = 58\n" +
 				"Faerun to AlphaCentauri = 13\n" +
