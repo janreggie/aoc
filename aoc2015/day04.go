@@ -9,11 +9,11 @@ import (
 	"sync"
 )
 
-// checkFirstBytesOfHash checks the first n nibbles (half-octets) of the MD5 of Augend+string(Addend)
+// checkHash checks the first n nibbles (half-octets) of the MD5 of Augend+string(Addend)
 // and inserts the augend to a chan int if the first n nibbles are all 0.
 // It is assumed that the input is valid
 // and that the channel is not blocked or closed.
-func checkFirstBytesOfHash(n int, augend string, addend int, channel chan<- int) {
+func checkHash(n int, augend string, addend int, channel chan<- int) {
 	builtString := []byte(augend + strconv.Itoa(addend))
 	hash := fmt.Sprintf("%x", md5.Sum(builtString))
 	for ii := 0; ii < n; ii++ {
@@ -43,7 +43,7 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// suppose we have an addends channel
 	// which contains all the possible addends for input
 	// i.e., input+<-addned
-	processes := 16 // how many processes in parallel?
+	processes := 8 // how many processes in parallel?
 	addends := make(chan int, processes)
 	go func() {
 		moar := 1
@@ -57,18 +57,31 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 	for5Zeroes := make(chan int, 1) // will be blocked until we found answer for 5 zeroes
 	for6Zeroes := make(chan int, 1) // will be blocked until we found answer for 6 zeroes
-	foundFive, foundSix := false, false
+	stateFive, stateSix := make(chan bool, 1), make(chan bool, 1)
 
 	for ii := 0; ii < processes; ii++ {
 		// let's create processes amount of goroutines
 		go func() {
+			foundFive, foundSix := false, false
 			for !foundFive || !foundSix {
 				current := <-addends
+
 				if !foundFive {
-					checkFirstBytesOfHash(5, input, current, for5Zeroes)
+					select {
+					case <-stateFive:
+						foundFive = true
+					default:
+						checkHash(5, input, current, for5Zeroes)
+					}
 				}
+
 				if !foundSix {
-					checkFirstBytesOfHash(6, input, current, for6Zeroes)
+					select {
+					case <-stateSix:
+						foundSix = true
+					default:
+						checkHash(6, input, current, for6Zeroes)
+					}
 				}
 			}
 		}()
@@ -79,12 +92,12 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 	go func() {
 		answer1 = strconv.Itoa(<-for5Zeroes)
-		foundFive = true // since the statement above would empty for5Zeroes
+		stateFive <- true // since the statement above would empty for5Zeroes
 		wg.Done()
 	}()
 	go func() {
 		answer2 = strconv.Itoa(<-for6Zeroes)
-		foundSix = true
+		stateSix <- true
 		wg.Done()
 	}()
 	wg.Wait()
