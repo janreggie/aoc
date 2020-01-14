@@ -7,7 +7,7 @@ import (
 	"github.com/golang/glog"
 )
 
-// Day08 solves the eighth day problem
+// Day08 solves the eighth day puzzle
 // "Matchsticks"
 func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var representedDiff uint64 // character difference (representation and actual) for answer 1

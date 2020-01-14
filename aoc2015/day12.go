@@ -76,7 +76,7 @@ func extractSumButRed(value *jason.Value) int64 {
 	return 0
 }
 
-// Day12 solves the twelfth day problem
+// Day12 solves the twelfth day puzzle
 // "JSAbacusFramework.io"
 func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// let's read everything first...

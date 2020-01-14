@@ -75,7 +75,7 @@ func (lights *lights) brightness() uint {
 	return br
 }
 
-// Day06 solves the sixth day problem
+// Day06 solves the sixth day puzzle
 // "Probably a Fire Hazard"
 func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var allLights lights

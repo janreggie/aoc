@@ -65,8 +65,8 @@ type townPath struct {
 type townPathQueue []townPath
 
 // uint64 converts townDistance to uint64
-func (td townDistance) uint64() uint64 {
-	return uint64(td)
+func (distance townDistance) uint64() uint64 {
+	return uint64(distance)
 }
 
 // newGraph creates a graph construct
@@ -98,16 +98,16 @@ func newTownGraph(scanner *bufio.Scanner) (townGraph, error) {
 // set adds the edge that connects a and b with distance dist.
 // Make sure that neither a nor b contain \x00.
 // If a == b then it doesn't do anything.
-func (tg *townGraph) set(a, b town, dist townDistance) {
+func (graph *townGraph) set(a, b town, dist townDistance) {
 	if a == b {
 		return
 	}
 	if a > b {
 		a, b = b, a
 	}
-	tg.links[townPair{a, b}] = dist
+	graph.links[townPair{a, b}] = dist
 	writeA, writeB := true, true
-	for _, v := range tg.towns {
+	for _, v := range graph.towns {
 		if v == a {
 			writeA = false
 		}
@@ -116,32 +116,32 @@ func (tg *townGraph) set(a, b town, dist townDistance) {
 		}
 	}
 	if writeA {
-		tg.towns = append(tg.towns, a)
+		graph.towns = append(graph.towns, a)
 	}
 	if writeB {
-		tg.towns = append(tg.towns, b)
+		graph.towns = append(graph.towns, b)
 	}
 }
 
 // get returns the distance between two towns.
 // If a == b then return 0.
 // If link doesn't exist then return disconnected.
-func (tg townGraph) get(a, b town) townDistance {
+func (graph townGraph) get(a, b town) townDistance {
 	if a == b {
 		return 0
 	}
 	if a > b {
 		a, b = b, a
 	}
-	if dist, ok := tg.links[townPair{a, b}]; ok {
+	if dist, ok := graph.links[townPair{a, b}]; ok {
 		return dist
 	}
 	return disconnected
 }
 
 // in returns true if town is in the graph's list of towns.
-func (tg townGraph) in(town town) bool {
-	for _, tt := range tg.towns {
+func (graph townGraph) in(town town) bool {
+	for _, tt := range graph.towns {
 		if tt == town {
 			return true
 		}
@@ -151,40 +151,40 @@ func (tg townGraph) in(town town) bool {
 
 // isValid returns whether the path is a isValid path in graph.
 // If path is empty it will return true.
-func (tg townGraph) isValid(path []town) bool {
+func (graph townGraph) isValid(path []town) bool {
 	if len(path) == 0 {
 		return true
 	}
 	if len(path) == 1 {
-		return tg.in(path[0])
+		return graph.in(path[0])
 	}
 
-	firstTwo := tg.get(path[0], path[1])
+	firstTwo := graph.get(path[0], path[1])
 	if len(path) == 2 {
 		return firstTwo != disconnected
 	}
 
-	return tg.isValid(path[1:])
+	return graph.isValid(path[1:])
 }
 
 // distance determines the distance returned after traversing all towns in path.
 // Will also return a boolean signifying if path is a valid path.
 // If path is not valid it will return disconnected and false.
 // If path is empty it will return 0 and true.
-func (tg townGraph) distance(path []town) (townDistance, bool) {
+func (graph townGraph) distance(path []town) (townDistance, bool) {
 	if len(path) == 0 {
 		return 0, true
 	}
 	if len(path) == 1 {
-		return 0, tg.in(path[0])
+		return 0, graph.in(path[0])
 	}
 
-	firstTwo := tg.get(path[0], path[1])
+	firstTwo := graph.get(path[0], path[1])
 	if len(path) == 2 {
 		return firstTwo, firstTwo != disconnected
 	}
 
-	remaining, areValid := tg.distance(path[1:])
+	remaining, areValid := graph.distance(path[1:])
 	if !areValid {
 		return disconnected, false
 	}
@@ -194,19 +194,19 @@ func (tg townGraph) distance(path []town) (townDistance, bool) {
 // distanceSimple traces the distance returned after traversing all towns in path.
 // Does not check if the path is even valid.
 // If it isn't then distanceSimple may return a number that is at least disconnectedLink.
-func (tg townGraph) distanceSimple(path []town) townDistance {
+func (graph townGraph) distanceSimple(path []town) townDistance {
 	if len(path) <= 1 {
 		return 0 // there is no distance to be travelled
 	}
 	if len(path) == 2 {
-		return tg.get(path[0], path[1])
+		return graph.get(path[0], path[1])
 	}
-	return tg.get(path[0], path[1]) + tg.distanceSimple(path[1:])
+	return graph.get(path[0], path[1]) + graph.distanceSimple(path[1:])
 }
 
 // permutations creates a channel that contains all the possible paths in the graph
 // and will close said channel.
-func (tg townGraph) permutations() <-chan []town {
+func (graph townGraph) permutations() <-chan []town {
 	permutate := func(c chan []town, inputs []town) {
 		output := make([]town, len(inputs))
 		copy(output, inputs)
@@ -238,8 +238,8 @@ func (tg townGraph) permutations() <-chan []town {
 	c := make(chan []town)
 	go func(c chan []town) {
 		defer close(c)
-		towns := make([]town, len(tg.towns))
-		copy(towns, tg.towns)
+		towns := make([]town, len(graph.towns))
+		copy(towns, graph.towns)
 		permutate(c, towns)
 	}(c)
 	return c
@@ -249,13 +249,13 @@ func (tg townGraph) permutations() <-chan []town {
 // by checking through all permutations of the towns in the graph.
 // This is an expensive operation.
 // If gr has no valid paths it will return disconnected.
-func (tg townGraph) shortestPathPermutative() townDistance {
-	allPermuts := tg.permutations()
+func (graph townGraph) shortestPathPermutative() townDistance {
+	allPermuts := graph.permutations()
 
 	record := disconnected
 	for path := range allPermuts {
 		// guaranteed to be valid.
-		if pathDist := tg.distanceSimple(path); pathDist < record {
+		if pathDist := graph.distanceSimple(path); pathDist < record {
 			record = pathDist
 		}
 	}
@@ -267,13 +267,13 @@ func (tg townGraph) shortestPathPermutative() townDistance {
 // by checking through all permutations of the towns in the graph.
 // This is an expensive operation.
 // If gr has no valid paths it will return disconnected.
-func (tg townGraph) longestPathPermutative() townDistance {
-	allPermuts := tg.permutations()
+func (graph townGraph) longestPathPermutative() townDistance {
+	allPermuts := graph.permutations()
 
 	record := townDistance(0)
 	for path := range allPermuts {
 		// guaranteed to be valid
-		if pathDist := tg.distanceSimple(path); pathDist > record {
+		if pathDist := graph.distanceSimple(path); pathDist > record {
 			record = pathDist
 		}
 	}
@@ -289,7 +289,7 @@ func (tg townGraph) longestPathPermutative() townDistance {
 // If the graph is not complete it may perform undefined behavior.
 // This function has issues (see below).
 //
-// Rationale:
+// Rationale
 //
 // How about instead of permutating all values we do something a bit better...
 // Suppose there are seven towns A to G that Santa has to go through.
@@ -317,13 +317,13 @@ func (tg townGraph) longestPathPermutative() townDistance {
 // whose total distance is 15.
 // If the path starts from C however, the path taken would have been C -> B -> A -> D,
 // which would have a total distance of 6.
-func (tg townGraph) shortestPathGreedyFrom(from town) townDistance {
+func (graph townGraph) shortestPathGreedyFrom(from town) townDistance {
 	// check first if town is in towns
-	if !tg.in(from) {
+	if !graph.in(from) {
 		return disconnected
 	}
 
-	remaining := excludeTown(tg.towns, from)
+	remaining := excludeTown(graph.towns, from)
 	current := from
 	var total townDistance
 
@@ -331,7 +331,7 @@ func (tg townGraph) shortestPathGreedyFrom(from town) townDistance {
 		// check distances from current to everything in remaining
 		recordDist, recordTown := disconnected, town("")
 		for _, eachDestination := range remaining {
-			if eachDistance := tg.get(current, eachDestination); eachDistance < recordDist {
+			if eachDistance := graph.get(current, eachDestination); eachDistance < recordDist {
 				recordDist, recordTown = eachDistance, eachDestination
 			}
 		}
@@ -345,10 +345,10 @@ func (tg townGraph) shortestPathGreedyFrom(from town) townDistance {
 }
 
 // shortestPathGreedy checks all towns in a graph's towns list to see which is the shortest to go to.
-func (tg townGraph) shortestPathGreedy() townDistance {
+func (graph townGraph) shortestPathGreedy() townDistance {
 	record := disconnected
-	for _, town := range tg.towns {
-		if pathDistance := tg.shortestPathGreedyFrom(town); pathDistance < record {
+	for _, town := range graph.towns {
+		if pathDistance := graph.shortestPathGreedyFrom(town); pathDistance < record {
 			record = pathDistance
 		}
 	}
@@ -357,13 +357,13 @@ func (tg townGraph) shortestPathGreedy() townDistance {
 
 // longestPathGreedyFrom is like shortestPathGreedyFrom but returns
 // the longest path it could trace from town using a greedy algorithm
-func (tg townGraph) longestPathGreedyFrom(from town) townDistance {
+func (graph townGraph) longestPathGreedyFrom(from town) townDistance {
 	// check first if town is in towns
-	if !tg.in(from) {
+	if !graph.in(from) {
 		return disconnected
 	}
 
-	remaining := excludeTown(tg.towns, from)
+	remaining := excludeTown(graph.towns, from)
 	current := from
 	var total townDistance
 
@@ -371,7 +371,7 @@ func (tg townGraph) longestPathGreedyFrom(from town) townDistance {
 		// check distances from current to everything in remaining
 		recordDist, recordTown := townDistance(0), town("")
 		for _, eachDestination := range remaining {
-			if eachDistance := tg.get(current, eachDestination); eachDistance > recordDist {
+			if eachDistance := graph.get(current, eachDestination); eachDistance > recordDist {
 				recordDist, recordTown = eachDistance, eachDestination
 			}
 		}
@@ -385,10 +385,10 @@ func (tg townGraph) longestPathGreedyFrom(from town) townDistance {
 }
 
 // longestPathGreedy checks all towns in a graph's towns list to see which is the shortest to go to.
-func (tg townGraph) longestPathGreedy() townDistance {
+func (graph townGraph) longestPathGreedy() townDistance {
 	var record townDistance
-	for _, town := range tg.towns {
-		if pathDistance := tg.longestPathGreedyFrom(town); pathDistance > record {
+	for _, town := range graph.towns {
+		if pathDistance := graph.longestPathGreedyFrom(town); pathDistance > record {
 			record = pathDistance
 		}
 	}
@@ -400,13 +400,13 @@ func (tg townGraph) longestPathGreedy() townDistance {
 // although this algorithm is still exhaustive.
 // This uses the concept of townPaths and a townPathQueue to record all paths.
 // If there is no valid path from town, return disconnected.
-func (tg *townGraph) shortestPathCleverFrom(town town) townDistance {
+func (graph townGraph) shortestPathCleverFrom(town town) townDistance {
 	// we should be able to solve this...
 	allPaths := newTownPathQueue()
 
 	// let's use tg.towns...
-	for _, tt := range tg.towns {
-		path, err := newTownPath(town, tt, tg)
+	for _, tt := range graph.towns {
+		path, err := newTownPath(town, tt, &graph)
 		if err != nil { // maybe same town? or no direct path?
 			continue
 		}
@@ -434,12 +434,12 @@ func (tg *townGraph) shortestPathCleverFrom(town town) townDistance {
 }
 
 // longestPathNotSoCleverFrom computes the longest path from a town.
-func (tg *townGraph) longestPathNotSoCleverFrom(town town) townDistance {
+func (graph townGraph) longestPathNotSoCleverFrom(town town) townDistance {
 	allPaths := newTownPathQueue()
 
 	// let's use tg.towns...
-	for _, tt := range tg.towns {
-		path, err := newTownPath(town, tt, tg)
+	for _, tt := range graph.towns {
+		path, err := newTownPath(town, tt, &graph)
 		if err != nil { // maybe same town? or no direct path?
 			continue
 		}
@@ -476,10 +476,10 @@ func (tg *townGraph) longestPathNotSoCleverFrom(town town) townDistance {
 }
 
 // shortestPathClever spins up shortestPathCleverFrom for all towns in a graph
-func (tg *townGraph) shortestPathClever() townDistance {
+func (graph townGraph) shortestPathClever() townDistance {
 	record := disconnected
-	for _, town := range tg.towns {
-		if pathDistance := tg.shortestPathCleverFrom(town); pathDistance < record {
+	for _, town := range graph.towns {
+		if pathDistance := graph.shortestPathCleverFrom(town); pathDistance < record {
 			record = pathDistance
 		}
 	}
@@ -488,10 +488,10 @@ func (tg *townGraph) shortestPathClever() townDistance {
 }
 
 // longestPathNotSoClever spins up longestPathCleverFrom for all towns in a graph
-func (tg *townGraph) longestPathNotSoClever() townDistance {
+func (graph townGraph) longestPathNotSoClever() townDistance {
 	var record townDistance
-	for _, town := range tg.towns {
-		if pathDistance := tg.longestPathNotSoCleverFrom(town); pathDistance > record {
+	for _, town := range graph.towns {
+		if pathDistance := graph.longestPathNotSoCleverFrom(town); pathDistance > record {
 			record = pathDistance
 		}
 	}
@@ -514,50 +514,50 @@ func newTownPath(a, b town, graph *townGraph) (townPath, error) {
 }
 
 // copy copies the townPath construct
-func (tp townPath) copy() townPath {
+func (path townPath) copy() townPath {
 	output := townPath{}
-	output.raw = make([]town, len(tp.raw))
-	copy(output.raw, tp.raw)
-	output.distance = tp.distance
-	output.graph = tp.graph
-	output.remaining = make([]town, len(tp.remaining))
-	copy(output.remaining, tp.remaining)
+	output.raw = make([]town, len(path.raw))
+	copy(output.raw, path.raw)
+	output.distance = path.distance
+	output.graph = path.graph
+	output.remaining = make([]town, len(path.remaining))
+	copy(output.remaining, path.remaining)
 	return output
 }
 
 // head and tail returns the first and last towns of a townPath
-func (tp *townPath) head() town {
-	return tp.raw[0]
+func (path *townPath) head() town {
+	return path.raw[0]
 }
 
-func (tp *townPath) tail() town {
-	return tp.raw[len(tp.raw)-1]
+func (path *townPath) tail() town {
+	return path.raw[len(path.raw)-1]
 }
 
 // add adds a town to a town path and returns said path.
 // Will return an error if a path between the tail and the next town could not be found.
 // Will also return an error if next is already in the path.
-func (tp townPath) add(next town) (townPath, error) {
+func (path townPath) add(next town) (townPath, error) {
 	// check if tp.remaining is empty
-	if len(tp.remaining) == 0 {
+	if len(path.remaining) == 0 {
 		return townPath{}, fmt.Errorf("but there are no potential towns left")
 	}
 
 	// check if next is in raw
-	for _, town := range tp.raw {
+	for _, town := range path.raw {
 		if town == next {
 			return townPath{}, fmt.Errorf("%v already in path", next)
 		}
 	}
 
 	// check distance bet. last() and next
-	tail := tp.tail()
-	nextDistance := tp.graph.get(tail, next)
+	tail := path.tail()
+	nextDistance := path.graph.get(tail, next)
 	if nextDistance == disconnected {
 		return townPath{}, fmt.Errorf("no link between %v and %v", tail, next)
 	}
 
-	newTp := tp.copy()
+	newTp := path.copy()
 	newTp.raw = append(newTp.raw, next)
 	newTp.distance += nextDistance
 	newTp.remaining = excludeTown(newTp.remaining, next)
@@ -570,34 +570,33 @@ func newTownPathQueue() townPathQueue {
 }
 
 // push pushes a townPath to the queue.
-func (tpq *townPathQueue) push(path townPath) {
-	if len(*tpq) == 0 {
-		*tpq = append(*tpq, path.copy())
+func (queue *townPathQueue) push(path townPath) {
+	if len(*queue) == 0 {
+		*queue = append(*queue, path.copy())
 		return
 	}
 
 	ind := 0
-	for ind < len(*tpq) && (*tpq)[ind].distance < path.distance {
+	for ind < len(*queue) && (*queue)[ind].distance < path.distance {
 		ind++
 	}
 	// append a value to tpq. Just any value..
-	*tpq = append(*tpq, townPath{})
+	*queue = append(*queue, townPath{})
 	// move all elements...
-	for ii := len(*tpq) - 1; ii > ind; ii-- {
-		(*tpq)[ii] = (*tpq)[ii-1]
+	for ii := len(*queue) - 1; ii > ind; ii-- {
+		(*queue)[ii] = (*queue)[ii-1]
 	}
-	(*tpq)[ind] = path
+	(*queue)[ind] = path
 }
 
 // pop pops a value from the queue.
 // Will return an error if the queue is empty.
-func (tpq *townPathQueue) pop() (townPath, error) {
-	if len(*tpq) == 0 {
+func (queue *townPathQueue) pop() (townPath, error) {
+	if len(*queue) == 0 {
 		return townPath{}, errors.New("queue is empty")
 	}
-	out := (*tpq)[0].copy()
-	(*tpq)[0] = townPath{} // make it empty (something about the GC?)
-	*tpq = (*tpq)[1:]
+	out := (*queue)[0]
+	*queue = (*queue)[1:]
 	return out, nil
 }
 

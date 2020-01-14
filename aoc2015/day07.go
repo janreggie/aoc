@@ -60,115 +60,118 @@ func removeNumbers(params []identifier) []identifier {
 	return answer
 }
 
-// assign assigns a value
-//	"44430 -> b"
-//	params = {"44430"}
-//	mem["b"] = 44430
-// Note that the paramter can either be a signal or an identifier
-// e.g., "lx -> a".
-func assign(mem map[identifier]signal, address identifier, params []identifier) error {
-	if len(params) != 1 {
-		return fmt.Errorf("assign error: params %v not length 1", params)
+// The following instruction functions are for the Day 07 puzzle
+var (
+	// assign assigns a value
+	//	"44430 -> b"
+	//	params = {"44430"}
+	//	mem["b"] = 44430
+	// Note that the paramter can either be a signal or an identifier
+	// e.g., "lx -> a".
+	assign instructionFunc = func(mem map[identifier]signal, address identifier, params []identifier) error {
+		if len(params) != 1 {
+			return fmt.Errorf("assign error: params %v not length 1", params)
+		}
+		p, err := parseParams(mem, params)
+		if err != nil {
+			return fmt.Errorf("and error: %v", err)
+		}
+		mem[address] = p[0]
+		return nil
 	}
-	p, err := parseParams(mem, params)
-	if err != nil {
-		return fmt.Errorf("and error: %v", err)
-	}
-	mem[address] = p[0]
-	return nil
-}
 
-// and performs bitwise and
-//	"eg AND 3 -> ej" turns into
-//	params = {"eg","3"}
-//	mem["ej"] = mem["eg"] & 3
-// Note that either parameter can be a signal or an identifier
-func and(mem map[identifier]signal, address identifier, params []identifier) error {
-	if len(params) != 2 {
-		return fmt.Errorf("and error: params %v not length 2", params)
+	// and performs bitwise and
+	//	"eg AND 3 -> ej" turns into
+	//	params = {"eg","3"}
+	//	mem["ej"] = mem["eg"] & 3
+	// Note that either parameter can be a signal or an identifier
+	and instructionFunc = func(mem map[identifier]signal, address identifier, params []identifier) error {
+		if len(params) != 2 {
+			return fmt.Errorf("and error: params %v not length 2", params)
+		}
+		p, err := parseParams(mem, params)
+		if err != nil {
+			return fmt.Errorf("and error: %v", err)
+		}
+		mem[address] = p[0] & p[1]
+		return nil
 	}
-	p, err := parseParams(mem, params)
-	if err != nil {
-		return fmt.Errorf("and error: %v", err)
-	}
-	mem[address] = p[0] & p[1]
-	return nil
-}
 
-// or performs bitwise or
-//	"eg OR 3 -> ej" turns into
-//	params = {"eg","3"}
-//	mem["ej"] = mem["eg"] | 3
-// Note that either parameter can be a signal or an identifier
-func or(mem map[identifier]signal, address identifier, params []identifier) error {
-	// bitwise and e.g., "eg AND ei -> ej"; params={"eg","ei"}
-	// NOTE THAT EITHER PARAMETER CAN BE A NUMBER e.g., "1 OR ed"
-	if len(params) != 2 {
-		return fmt.Errorf("or error: params %v not length 2", params)
+	// or performs bitwise or
+	//	"eg OR 3 -> ej" turns into
+	//	params = {"eg","3"}
+	//	mem["ej"] = mem["eg"] | 3
+	// Note that either parameter can be a signal or an identifier
+	or instructionFunc = func(mem map[identifier]signal, address identifier, params []identifier) error {
+		// bitwise and e.g., "eg AND ei -> ej"; params={"eg","ei"}
+		// NOTE THAT EITHER PARAMETER CAN BE A NUMBER e.g., "1 OR ed"
+		if len(params) != 2 {
+			return fmt.Errorf("or error: params %v not length 2", params)
+		}
+		p, err := parseParams(mem, params)
+		if err != nil {
+			return fmt.Errorf("or error: %v", err)
+		}
+		mem[address] = p[0] | p[1]
+		return nil
 	}
-	p, err := parseParams(mem, params)
-	if err != nil {
-		return fmt.Errorf("or error: %v", err)
-	}
-	mem[address] = p[0] | p[1]
-	return nil
-}
 
-// not performs bitwise not
-//	"NOT h -> i" turns into
-//	params = {"h"}
-//	mem["i"] = ^mem["h"]
-// Note that the parameter can be a signal or an identifier
-func not(mem map[identifier]signal, address identifier, params []identifier) error {
-	// bitwise NOT e.g., "NOT h -> i"; params = {"h"}
-	if len(params) != 1 {
-		return fmt.Errorf("not error: params %v not length 1", params[0])
+	// not performs bitwise not
+	//	"NOT h -> i" turns into
+	//	params = {"h"}
+	//	mem["i"] = ^mem["h"]
+	// Note that the parameter can be a signal or an identifier
+	not instructionFunc = func(mem map[identifier]signal, address identifier, params []identifier) error {
+		// bitwise NOT e.g., "NOT h -> i"; params = {"h"}
+		if len(params) != 1 {
+			return fmt.Errorf("not error: params %v not length 1", params[0])
+		}
+		p, err := parseParams(mem, params)
+		if err != nil {
+			return fmt.Errorf("not error: %v", err)
+		}
+		mem[address] = ^p[0]
+		return nil
 	}
-	p, err := parseParams(mem, params)
-	if err != nil {
-		return fmt.Errorf("not error: %v", err)
-	}
-	mem[address] = ^p[0]
-	return nil
-}
 
-// lshift performs bitwise left shift
-//	"eg AND 3 -> ej" turns into
-//	params = {"eg","3"}
-//	mem["ej"] = mem["eg"] << 3
-// Note that either parameter can be a signal or an identifier
-func lshift(mem map[identifier]signal, address identifier, params []identifier) error {
-	// bitwise shift e.g., "lv LSHIFT 15 -> lz"; params={"lv","15"}
-	// NOTE THAT EITHER VALUE CAN BE AN INTEGER
-	if len(params) != 2 {
-		return fmt.Errorf("lshift error: params %v not length 2", params[0])
+	// lshift performs bitwise left shift
+	//	"eg LSHIFT 3 -> ej" turns into
+	//	params = {"eg","3"}
+	//	mem["ej"] = mem["eg"] << 3
+	// Note that either parameter can be a signal or an identifier
+	lshift instructionFunc = func(mem map[identifier]signal, address identifier, params []identifier) error {
+		// bitwise shift e.g., "lv LSHIFT 15 -> lz"; params={"lv","15"}
+		// NOTE THAT EITHER VALUE CAN BE AN INTEGER
+		if len(params) != 2 {
+			return fmt.Errorf("lshift error: params %v not length 2", params[0])
+		}
+		p, err := parseParams(mem, params)
+		if err != nil {
+			return fmt.Errorf("lshift error: %v", err)
+		}
+		mem[address] = p[0] << p[1]
+		return nil
 	}
-	p, err := parseParams(mem, params)
-	if err != nil {
-		return fmt.Errorf("lshift error: %v", err)
-	}
-	mem[address] = p[0] << p[1]
-	return nil
-}
 
-// rshift performs bitwise right shift
-//	"eg AND 3 -> ej" turns into
-//	params = {"eg","3"}
-//	mem["ej"] = mem["eg"] >> 3
-// Note that either parameter can be a signal or an identifier
-func rshift(mem map[identifier]signal, address identifier, params []identifier) error {
-	// bitwise shift e.g., "lv RSHIFT 15 -> lz"; params={"lv","15"}
-	// NOTE THAT EITHER VALUE CAN BE AN INTEGER
-	if len(params) != 2 {
-		return fmt.Errorf("lshift error: params %v not length 2", params[0])
+	// rshift performs bitwise right shift
+	//	"eg RSHIFT 3 -> ej" turns into
+	//	params = {"eg","3"}
+	//	mem["ej"] = mem["eg"] >> 3
+	// Note that either parameter can be a signal or an identifier
+	rshift instructionFunc = func(mem map[identifier]signal, address identifier, params []identifier) error {
+		// bitwise shift e.g., "lv RSHIFT 15 -> lz"; params={"lv","15"}
+		// NOTE THAT EITHER VALUE CAN BE AN INTEGER
+		if len(params) != 2 {
+			return fmt.Errorf("lshift error: params %v not length 2", params[0])
+		}
+		p, err := parseParams(mem, params)
+		if err != nil {
+			return fmt.Errorf("lshift error: %v", err)
+		}
+		mem[address] = p[0] >> p[1]
+		return nil
 	}
-	p, err := parseParams(mem, params)
-	if err != nil {
-		return fmt.Errorf("lshift error: %v", err)
-	}
-	mem[address] = p[0] >> p[1]
-	return nil
-}
+)
 
 // instruction represents a line of assembly code
 type instruction struct {
@@ -404,7 +407,7 @@ func (imap *instructionMap) traverse(f func(id identifier)) {
 	}
 }
 
-// Day07 solves the seventh day problem
+// Day07 solves the seventh day puzzle
 // "Some Assembly Required"
 func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wires := make(map[identifier]signal) // map of all wires and their signal values
