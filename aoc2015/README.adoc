@@ -12,7 +12,7 @@
 * [*] Day 8: Matchsticks
 * [*] Day 9: All in a Single Night
 * [*] Day 10: Elves Look, Elves Say
-* [ ] Day 11: Corporate Policy
+* [*] Day 11: Corporate Policy
 * [*] Day 12: JSAbacusFramework.io
 * [*] Day 13: Knights of the Dinner Table
 * [*] Day 14: Reindeer Olympics
