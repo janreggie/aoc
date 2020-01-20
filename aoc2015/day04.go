@@ -6,26 +6,32 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"sync"
 )
 
 // checkHash checks the first n nibbles (half-octets) of the MD5 of Augend+string(Addend)
-// and inserts the augend to a chan int if the first n nibbles are all 0.
-// It is assumed that the input is valid
-// and that the channel is not blocked or closed.
-func checkHash(n int, augend string, addend int, channel chan<- int) {
-	builtString := []byte(augend + strconv.Itoa(addend))
-	hash := fmt.Sprintf("%x", md5.Sum(builtString))
+// and returns true if they are all zero.
+func checkHash(n int, augend string, addend int) bool {
+	hash := md5.Sum([]byte(augend + strconv.Itoa(addend)))
+
+	// This is where counting gets weird.
+	// Note that hash is a byte array of length 16,
+	// and a nibble is half a byte, thus having 32 of them...
+	// Let us consider the ii'th nibble as the LSBs and MSBs of hash[ii/2].
 	for ii := 0; ii < n; ii++ {
-		if hash[ii] != '0' {
-			return // do nothing
+		concern := hash[ii/2]
+		if ii%2 == 0 { // LSBs
+			if concern&0x0F != 0 {
+				return false
+			}
+		} else { // MSBs
+			if concern&0xF0 != 0 {
+				return false
+			}
 		}
 	}
+
 	// once we know first n bits is zero...
-	if len(channel) > 0 {
-		return
-	}
-	channel <- addend
+	return true
 }
 
 // Day04 solves the fourth day puzzle
@@ -44,63 +50,66 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// which contains all the possible addends for input
 	// i.e., input+<-addned
 	processes := 8 // how many processes in parallel?
-	addends := make(chan int, processes)
-	go func() {
-		moar := 1
-		// add moar to addend channel
-		for {
-			addends <- moar
-			moar++
-		}
-	}()
-	_ = input
-
-	for5Zeroes := make(chan int, 1) // will be blocked until we found answer for 5 zeroes
-	for6Zeroes := make(chan int, 1) // will be blocked until we found answer for 6 zeroes
-	stateFive, stateSix := make(chan bool, 1), make(chan bool, 1)
-
-	for ii := 0; ii < processes; ii++ {
-		// let's create processes amount of goroutines
+	addends := func() chan int {
+		result := make(chan int)
 		go func() {
-			foundFive, foundSix := false, false
-			for !foundFive || !foundSix {
-				current := <-addends
-
-				if !foundFive {
-					select {
-					case <-stateFive:
-						foundFive = true
-					default:
-						checkHash(5, input, current, for5Zeroes)
-					}
-				}
-
-				if !foundSix {
-					select {
-					case <-stateSix:
-						foundSix = true
-					default:
-						checkHash(6, input, current, for6Zeroes)
-					}
-				}
+			moar := 1
+			// add moar to addend channel
+			for {
+				result <- moar
+				moar++
 			}
 		}()
+		return result
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(2)
+	// Let's rethink this problem...
+	// How do we get the addend that makes checkHash(..., 5) and ...,6 correct?
+	resultFive, resultSix := make(chan int), make(chan int) // result for 5 and 6 zeroes
+	addendFive, addendSix := addends(), addends()
+	foundFive, foundSix := make(chan bool), make(chan bool)
 
-	go func() {
-		answer1 = strconv.Itoa(<-for5Zeroes)
-		stateFive <- true // since the statement above would empty for5Zeroes
-		wg.Done()
-	}()
-	go func() {
-		answer2 = strconv.Itoa(<-for6Zeroes)
-		stateSix <- true
-		wg.Done()
-	}()
-	wg.Wait()
+	// let's use some vocabulary
+	evaluateFive := func() {
+		for {
+			addend := <-addendFive
+			select {
+			case <-foundFive:
+				return
+			default:
+				if checkHash(5, input, addend) {
+					resultFive <- addend
+					close(foundFive) // will always send default
+					return
+				}
+			}
+		}
+	}
+
+	evaluateSix := func() {
+		for {
+			addend := <-addendSix
+			select {
+			case <-foundSix:
+				return
+			default:
+				if checkHash(6, input, addend) {
+					resultSix <- addend
+					close(foundSix) // will always send default
+					return
+				}
+			}
+		}
+	}
+
+	for ii := 0; ii < processes; ii++ {
+		go evaluateFive()
+		go evaluateSix()
+	}
+
+	answer1 = strconv.Itoa(<-resultFive)
+	answer2 = strconv.Itoa(<-resultSix)
+
 	return
 }
 
