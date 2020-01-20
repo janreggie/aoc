@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"image"
 	"math/big"
+	"sort"
 	"strconv"
 
-	"github.com/golang/glog"
 	"github.com/pkg/errors"
 )
 
@@ -39,9 +39,9 @@ func lcm(a, b int, integers ...int) int {
 	return result
 }
 
-// lcmUpto generates the lcm of 1, 2, up to limit.
+// lcmUpTo generates the lcm of 1, 2, up to limit.
 // If limit is less than 2, it will return limit
-func lcmUpto(limit int) int {
+func lcmUpTo(limit int) int {
 	if limit <= 1 {
 		return 1
 	}
@@ -86,13 +86,17 @@ func findNextCoprime(pt *image.Point) {
 
 // isCoprime checks the coordinates of image.Point
 // and returns true if they are coprime.
+// If pt.X or pt.Y is 1, return true.
 // If pt.X or pt.Y is nonpositive,
-// or if they are equal to each other, return false
+// or if they are equal to each other, return false.
 func isCoprime(pt image.Point) bool {
 	x := pt.X
 	y := pt.Y
 	if x <= 0 || y <= 0 { // negative?!
 		return false
+	}
+	if x == 1 || y == 1 {
+		return true
 	}
 	if x == y { // no way.
 		return false
@@ -177,16 +181,22 @@ func newAsteroidField(scanner *bufio.Scanner) (*asteroidField, error) {
 	return &asteroidField{asteroids: asteroids, width: fieldHeight, height: fieldHeight}, nil
 }
 
-// at returns true if there is an asteroid at a position point(x,y),
+// get returns true if there is an asteroid get a position point(x,y),
 // false if there is none or if point is out of bounds
-func (field *asteroidField) at(point image.Point) bool {
-	if point.X >= field.width || point.X < 0 {
-		return false
-	}
-	if point.Y >= field.height || point.Y < 0 {
+func (field *asteroidField) get(point image.Point) bool {
+	if !point.In(field.bounds()) {
 		return false
 	}
 	return field.asteroids[point.Y][point.X]
+}
+
+// set sets the value at some point.
+// If point is out of bounds it does nothing.
+func (field *asteroidField) set(point image.Point, value bool) {
+	if !point.In(field.bounds()) {
+		return
+	}
+	field.asteroids[point.Y][point.X] = value
 }
 
 // bounds returns an image.Rect representing the bounds of the asteroid field
@@ -197,113 +207,10 @@ func (field *asteroidField) bounds() image.Rectangle {
 // countLineOfSight counts the number of asteroids a position index sees in its line of sight.
 func (field *asteroidField) countLineOfSight(index image.Point) int {
 	count := 0
-	glog.Infof("counting surrounding %v", index)
 	for range field.sweepClockwise(index) {
 		count++
 	}
 	return count
-	// // Centering on index,
-	// // suppose let us divide the 2-dimensional grid into eight parts,
-	// // where each part is between one of the major axes
-	// // and one of the lines that pass thru the origin and with slope -1 or 1.
-	// responses := make(chan int, 8)                        // responses on these, um... parts
-	// border := image.Rect(0, 0, field.width, field.height) // the edges of the play grid
-
-	// // There are eight possible points from index which can be checked
-	// // where point is a generated coprime point:
-	// // (index.X+point.X, index.Y+point.Y)
-	// // (index.X+point.X, index.Y-point.Y)
-	// // (index.X+point.Y, index.Y+point.X)
-	// // (index.X+point.Y, index.Y-point.X)
-	// // (index.X-point.X, index.Y+point.Y)
-	// // (index.X-point.X, index.Y-point.Y)
-	// // (index.X-point.Y, index.Y+point.X)
-	// // (index.X-point.Y, index.Y-point.X)
-	// // Now how do we generate these
-	// for ii := 0; ii < 8; ii++ {
-	// 	go func(flags int) {
-	// 		addFxn := func(pt image.Point) image.Point {
-	// 			// these three booleans should be able to represent all configurations.
-	// 			transpose := flags%2 == 0 // transpose
-	// 			// true: index.X adds/subtracts to point.X and index.Y adds/subtracts to point.Y
-	// 			// false: index.Y adds/subtracts to point.X and index.X adds/subtracts to point.Y
-	// 			invert := (flags/2)%2 == 0 // invert
-	// 			// true: index.X gets added and index.Y gets subtracted or vice versa
-	// 			// false: index.X and index.Y both get added or subtracted
-	// 			subtract := (flags/4)%2 == 0 // subtract
-	// 			// true: index.X gets subtracted
-	// 			// false: index.X gets added
-	// 			if transpose {
-	// 				pt.X, pt.Y = pt.Y, pt.X
-	// 			}
-	// 			if invert {
-	// 				pt.Y = -pt.Y
-	// 			}
-	// 			if subtract {
-	// 				pt = pt.Mul(-1)
-	// 			}
-	// 			return pt
-	// 		}
-
-	// 		coprimeChannel := generateCoprime(1)
-	// 		countFound := 0 // how many asteroids have we spotted using coprimeChannel
-	// 		for {
-	// 			affix := <-coprimeChannel // the next point to be examined
-	// 			point := index.Add(addFxn(affix))
-	// 			// how do we know if point exceeds the half-quadrant?
-	// 			if !point.In(border) {
-	// 				if affix.Y == 1 { // a fresh depth
-	// 					break // we know we're done.
-	// 				}
-	// 				continue // no point in continuing
-	// 			}
-	// 			for point.In(border) {
-	// 				// guaranteed field.at will not return some error
-	// 				if field.at(point) {
-	// 					countFound++
-	// 					break
-	// 				}
-	// 				point = point.Add(addFxn(affix))
-	// 			}
-
-	// 		}
-	// 		responses <- countFound
-	// 	}(ii)
-	// }
-
-	// // but we haven't determined the position diagonal to index
-	// // as well as that of the direct sides
-
-	// // check its adjacent sides
-	// for _, affix := range []image.Point{{1, 0}, {0, 1}, {-1, 0}, {0, -1}} {
-	// 	point := index.Add(affix)
-	// 	for point.In(border) {
-	// 		// guaranteed field.at will not return some error
-	// 		if field.at(point) {
-	// 			count++
-	// 			break
-	// 		}
-	// 		point = point.Add(affix)
-	// 	}
-	// }
-
-	// // check its diagonals
-	// for _, affix := range []image.Point{{1, 1}, {1, -1}, {-1, -1}, {-1, 1}} {
-	// 	point := index.Add(affix)
-	// 	for point.In(border) {
-	// 		// guaranteed field.at will not return some error
-	// 		if field.at(point) {
-	// 			count++
-	// 			break
-	// 		}
-	// 		point = point.Add(affix)
-	// 	}
-	// }
-
-	// for ii := 0; ii < 8; ii++ {
-	// 	count += <-responses // will block until one has been sent...
-	// }
-	// return count
 }
 
 // rationalToPoint returns an image.Point representation of a rational number.
@@ -329,12 +236,54 @@ func rationalToPoint(rational *big.Rat) image.Point {
 // If both width and height are non-positive
 // the function returns an already closed channel.
 // If only the height is positive, return (0,1).
-//
-// TODO: Optimize. Current algorithm brute forces by iterating thru
-// lcmUpto(width) and lcmUpto(height).
-// Average case is exponential time!
-// (https://math.stackexchange.com/questions/1111334/reason-for-lcm-of-all-numbers-from-1-n-equals-roughly-en)
 func generateSisonPoints(width, height int) chan image.Point {
+	channel := make(chan image.Point, 4) // 4 is a good enough size
+
+	go func() {
+		// okay what if width and height are -1
+		if width <= 0 && height <= 0 {
+			close(channel)
+			return
+		}
+
+		// if height is positive?
+		channel <- image.Pt(0, 1)
+		if width <= 0 {
+			close(channel)
+			return
+		}
+
+		// Let's grab all points from (1,1) to (width, height).
+		// That's width*height points
+		allPoints := make([]image.Point, 0, width*height/3) // good estimate
+		for ii := 1; ii <= width; ii++ {
+			for jj := 1; jj <= height; jj++ {
+				pt := image.Pt(ii, jj)
+				if isCoprime(pt) {
+					allPoints = append(allPoints, pt)
+				}
+			}
+		}
+
+		// sort them all together...
+		sort.Slice(allPoints, func(i, j int) bool {
+			pi := allPoints[i]
+			pj := allPoints[j]
+			return (pi.X)*(pj.Y) < (pj.X)*(pi.Y)
+		})
+
+		for _, pt := range allPoints {
+			channel <- pt
+		}
+		close(channel)
+	}()
+
+	return channel
+}
+
+// generateSisonPointsSlow generates Sison points slowly
+// by brute forcing through lcmUpTo(width) and lcmUpTo(height).
+func generateSisonPointsSlow(width, height int) chan image.Point {
 	channel := make(chan image.Point, 4)
 
 	go func() {
@@ -351,7 +300,7 @@ func generateSisonPoints(width, height int) chan image.Point {
 			return
 		}
 
-		denom := lcmUpto(height)
+		denom := lcmUpTo(height)
 		pointer := big.NewRat(0, int64(denom))
 		for pointer.Cmp(big.NewRat(1, 1)) < 0 { // while less than 1
 			// note that two checks are performed here,
@@ -366,7 +315,7 @@ func generateSisonPoints(width, height int) chan image.Point {
 			pointer.Add(pointer, big.NewRat(1, int64(denom)))
 		}
 		// okay now let's go from 1,1 to 0,0
-		denom = lcmUpto(width)
+		denom = lcmUpTo(width)
 		for pointer.Cmp(big.NewRat(0, 1)) > 0 { // while greater than 0
 			if pointer.Denom().Int64() <= int64(width) &&
 				pointer.Num().Int64() <= int64(height) {
@@ -399,23 +348,18 @@ func (field *asteroidField) sweepClockwise(relativeTo image.Point) chan image.Po
 	channel := make(chan image.Point, 4) // 4 elements is good enough
 
 	// now how do we generate Sison points...
-	go func() {
+	clockwiseGenerator := func() {
 		func() { // generate for upper-right quadrant
 			quarterWidth := field.width - relativeTo.X - 1
 			quarterHeight := relativeTo.Y
-			glog.Infof("For %v quadrant, width: %v, height:%v", "upper-right", quarterWidth, quarterHeight)
 			for sisonPoint := range generateSisonPoints(quarterWidth, quarterHeight) {
 				addend := image.Pt(sisonPoint.X, -sisonPoint.Y)
-				glog.Infof("generated addend %v", addend)
 				for absolute := relativeTo.Add(addend); absolute.In(field.bounds()); absolute = absolute.Add(addend) {
-					glog.Infof("absolute position is %v", absolute)
-					if field.at(absolute) {
-						glog.Infof("%v saw %v at upper right\n", relativeTo, absolute)
+					if field.get(absolute) {
 						channel <- absolute
 						break
 					}
 				}
-				glog.Infof("Hey thanks!")
 			}
 		}()
 
@@ -426,12 +370,10 @@ func (field *asteroidField) sweepClockwise(relativeTo image.Point) chan image.Po
 			// and the width of the Generator would be the vertical distance based on field.height.
 			quarterWidth := field.height - relativeTo.Y - 1
 			quarterHeight := field.width - relativeTo.X - 1
-			glog.Infof("For %v quadrant, width: %v, height:%v", "lower-right", quarterWidth, quarterHeight)
 			for sisonPont := range generateSisonPoints(quarterWidth, quarterHeight) {
 				addend := image.Pt(+sisonPont.Y, +sisonPont.X)
 				for absolute := relativeTo.Add(addend); absolute.In(field.bounds()); absolute = absolute.Add(addend) {
-					if field.at(absolute) {
-						glog.Infof("%v saw %v at lower right\n", relativeTo, absolute)
+					if field.get(absolute) {
 						channel <- absolute
 						break
 					}
@@ -442,12 +384,10 @@ func (field *asteroidField) sweepClockwise(relativeTo image.Point) chan image.Po
 		func() { // generate for the lower-left quadrant
 			quarterWidth := relativeTo.X
 			quarterHeight := field.height - relativeTo.Y - 1
-			glog.Infof("For %v quadrant, width: %v, height:%v", "lower-left", quarterWidth, quarterHeight)
 			for sisonPoint := range generateSisonPoints(quarterWidth, quarterHeight) {
 				addend := image.Pt(-sisonPoint.X, +sisonPoint.Y)
 				for absolute := relativeTo.Add(addend); absolute.In(field.bounds()); absolute = absolute.Add(addend) {
-					if field.at(absolute) {
-						glog.Infof("%v saw %v at lower left\n", relativeTo, absolute)
+					if field.get(absolute) {
 						channel <- absolute
 						break
 					}
@@ -460,12 +400,10 @@ func (field *asteroidField) sweepClockwise(relativeTo image.Point) chan image.Po
 			// the quarter width and height appear flipped
 			quarterWidth := relativeTo.Y
 			quarterHeight := relativeTo.X
-			glog.Infof("For %v quadrant, width: %v, height:%v", "upper-left", quarterWidth, quarterHeight)
 			for sisonPoint := range generateSisonPoints(quarterWidth, quarterHeight) {
 				addend := image.Pt(-sisonPoint.Y, -sisonPoint.X)
 				for absolute := relativeTo.Add(addend); absolute.In(field.bounds()); absolute = absolute.Add(addend) {
-					if field.at(absolute) {
-						glog.Infof("%v saw %v at upper left\n", relativeTo, absolute)
+					if field.get(absolute) {
 						channel <- absolute
 						break
 					}
@@ -474,18 +412,29 @@ func (field *asteroidField) sweepClockwise(relativeTo image.Point) chan image.Po
 		}()
 
 		close(channel) // oh right... close the channel.
-	}()
+	}
+	go clockwiseGenerator()
 
 	return channel
 }
 
-// sweepAsteroids vaporizes some number of asteroids from the north
-// and returns the coordinates of the last vaporized asteroid
-func (field *asteroidField) sweepAsteroids(station image.Point, toVaporize int) image.Point {
-	// how do we do this...
-	// vaporizedCount := 0 // number that has been vaporized
-
-	return image.Point{}
+// sweepAsteroids vaporizes some number of asteroids from the north clockwise
+// and returns the coordinates of the last vaporized asteroid.
+// If toVaporize is 0 return image.Point{0,0}.
+func (field *asteroidField) sweepAsteroids(station image.Point, toVaporize uint) image.Point {
+	if toVaporize == 0 {
+		return image.Pt(0, 0)
+	}
+	var vaporized uint
+	for {
+		for pt := range field.sweepClockwise(station) {
+			field.set(pt, false)
+			vaporized++
+			if vaporized == toVaporize {
+				return pt
+			}
+		}
+	}
 }
 
 // Day10 solves the tenth day problem
@@ -501,14 +450,13 @@ func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	bestAsteroid := image.Pt(0, 0)
 	for ii := 0; ii < asteroids.width; ii++ {
 		for jj := 0; jj < asteroids.height; jj++ {
-			if !asteroids.at(image.Pt(ii, jj)) {
+			if !asteroids.get(image.Pt(ii, jj)) {
 				continue // don't care about non-asteroids
 			}
 			// for range asteroids.sweepClockwise(image.Pt(ii, jj)) {
 			// 	/// do nothing...
 			// }
 			if seen := asteroids.countLineOfSight(image.Pt(ii, jj)); seen > mostSeen {
-				glog.Infof("asteroid %v sees %v\n", image.Pt(ii, jj), seen)
 				mostSeen = seen
 				bestAsteroid = image.Pt(ii, jj)
 			}
@@ -517,15 +465,8 @@ func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	answer1 = strconv.Itoa(mostSeen)
 
 	// now for Part 2
-	// Okay this is epic.
-	// Apparently you can return the points going clockwise/counterclockwise using fractions.
-	// This needs to be more well documented...
-	// allSisons := asteroids.sweepClockwise(bestAsteroid)
-	// for sisonPt := range allSisons {
-	// 	// fmt.Println(sisonPt)
-	// }
-
-	answer2 = fmt.Sprint(bestAsteroid)
+	lastAsteroid := asteroids.sweepAsteroids(bestAsteroid, 200)
+	answer2 = strconv.Itoa(lastAsteroid.X*100 + lastAsteroid.Y)
 
 	return
 }
