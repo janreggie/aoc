@@ -29,11 +29,7 @@ and an applicable error.
 
 == Completion
 
-* [ ] 2015 (8 of 25 completed)
-* [ ] 2016 (1 of 25 completed)
-* [ ] 2017 (1 of 25 completed)
-* [ ] 2018 (1 of 25 completed)
-* [ ] 2019 (8 of 25 completed) (🎉 current year!)
+Please check their individual READMEs.
 
 == License
 See link:LICENSE[].

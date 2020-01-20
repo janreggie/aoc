@@ -50,8 +50,8 @@ func TestDay11(t *testing.T) {
 		{Input: "ghijklmn", Result1: "ghjaabcc"},
 		{Details: "Y2015D11 my input", Input: "hepxcrrq", Result1: "hepxxyzz", Result2: "heqaabcc"},
 	}
-	for _, eachCase := range testCases {
-		eachCase.Test(Day11, assert)
+	for _, tt := range testCases {
+		tt.Test(Day11, assert)
 	}
 }
 

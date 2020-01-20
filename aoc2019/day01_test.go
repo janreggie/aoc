@@ -40,7 +40,7 @@ func TestDay01(t *testing.T) {
 			Result1: "3330521",
 			Result2: "4992931"},
 	}
-	for _, eachCase := range testCases {
-		eachCase.Test(Day01, assert)
+	for _, tt := range testCases {
+		tt.Test(Day01, assert)
 	}
 }

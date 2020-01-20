@@ -24,7 +24,7 @@ func TestDay01(t *testing.T) {
 			Input:   "(hi)",
 			WantErr: true},
 	}
-	for _, eachCase := range testCases {
-		eachCase.Test(Day01, assert)
+	for _, tt := range testCases {
+		tt.Test(Day01, assert)
 	}
 }

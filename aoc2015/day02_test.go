@@ -1031,8 +1031,8 @@ func TestDay02(t *testing.T) {
 			Input:   "4x2",
 			WantErr: true},
 	}
-	for _, eachCase := range testCases {
-		eachCase.Test(Day02, assert)
+	for _, tt := range testCases {
+		tt.Test(Day02, assert)
 	}
 }
 

@@ -12,19 +12,19 @@ import (
 func TestDay04(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []structs.TestCase{
-		{Input: "abcdef",
-			Result1: "609043",
-			Result2: "6742839"},
-		{Input: "pqrstuv",
-			Result1: "1048970",
-			Result2: "5714438"},
+		// {Input: "abcdef",
+		// 	Result1: "609043",
+		// 	Result2: "6742839"},
+		// {Input: "pqrstuv",
+		// 	Result1: "1048970",
+		// 	Result2: "5714438"},
 		{Details: "Y2015D04 my input",
 			Input:   "iwrupvqb",
 			Result1: "346386",
 			Result2: "9958218"},
 	}
-	for _, eachCase := range testCases {
-		eachCase.Test(Day04, assert)
+	for _, tt := range testCases {
+		tt.Test(Day04, assert)
 	}
 }
 

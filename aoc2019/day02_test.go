@@ -25,7 +25,7 @@ func TestDay02(t *testing.T) {
 			Result1: "3562672",
 			Result2: "8250"}, // my puzzle input
 	}
-	for _, eachCase := range testCases {
-		eachCase.Test(Day02, assert)
+	for _, tt := range testCases {
+		tt.Test(Day02, assert)
 	}
 }
