@@ -456,8 +456,31 @@ func (queue *seatingArrangementQueue) pop() (seatingArrangement, error) {
 	return out, nil
 }
 
-// Day13 solves the thirteenth day puzzle
-// "Knights of the Dinner Table"
+// Day13 solves the thirteenth day puzzle "Knights of the Dinner Table".
+//
+// Input
+//
+// A file describing the happiness loss or gain between two visitors
+// in a group of eight visitors. For example:
+//
+//	Alice would gain 2 happiness units by sitting next to Bob.
+//	Alice would gain 26 happiness units by sitting next to Carol.
+//	Alice would lose 82 happiness units by sitting next to David.
+//	Alice would lose 75 happiness units by sitting next to Eric.
+//	Alice would gain 42 happiness units by sitting next to Frank.
+//	Alice would gain 38 happiness units by sitting next to George.
+//	Alice would gain 39 happiness units by sitting next to Mallory.
+//	Bob would gain 40 happiness units by sitting next to Alice.
+//	Bob would lose 61 happiness units by sitting next to Carol.
+//	Bob would lose 15 happiness units by sitting next to David.
+//	(this file continues)
+//
+// If the happiness between one person and another is not provided
+// it is assumed that the former would gain zero happiness
+// units by sitting next to the latter.
+//
+// It is guaranteed that the gain or loss of happiness between any two
+// people is no more than 100.
 func Day13(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scenario, err := newTableScenario(scanner)
 	if err != nil {

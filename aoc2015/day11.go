@@ -104,8 +104,14 @@ func (ps *password) increment() {
 	return
 }
 
-// Day11 solves the eleventh day puzzle
-// "Corporate Policy"
+// Day11 solves the eleventh day puzzle "Corporate Policy".
+//
+// Input
+//
+// A single line containing the password, as described in the puzzle:
+// eight lowercase letters. For example:
+//
+//	hepxcrrq
 func Day11(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// do things
 	scanner.Scan()

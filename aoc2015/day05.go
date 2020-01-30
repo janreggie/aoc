@@ -112,8 +112,26 @@ func checkNiceTwo(input string) bool {
 		checkRepeatPair(input)
 }
 
-// Day05 solves the fifth day puzzle
-// "Doesn't He Have Intern-Elves For This?"
+// Day05 solves the fifth day puzzle "Doesn't He Have Intern-Elves For This?".
+//
+// Input
+//
+// A file containing 1000 lines each of length 16 only containing the
+// lowercase letters 'a' to 'z'. For example:
+//
+//	zvnvprxxjkhnkkpq
+//	nejwxbhjxxdbenid
+//	chryiccsebdbcnkc
+//	guoeefaeafhlgvxh
+//	nzapxrfrrqhsingx
+//	mkzvquzvqvwsejqs
+//	kozmlmbchydtxeeo
+//	keylygnoqhmfzrfp
+//	srwzoxccndoxylxe
+//	uqjzalppoorosxxo
+//	potmkinyuqxsfdfw
+//	qkkwrhpbhypxhiun
+//	wgfvnogarjmdbxyh
 func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var totalNiceOne, totalNiceTwo int64
 	// Is it more worth to check each ind := range currentString?

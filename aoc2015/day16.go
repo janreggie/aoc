@@ -227,8 +227,24 @@ func (aunt auntSue) howSimilarRecalibrated(another auntSue) uint {
 	return score
 }
 
-// Day16 solves the sixteenth day puzzle
-// "Aunt Sue"
+// Day16 solves the sixteenth day puzzle "Aunt Sue".
+//
+// Input
+//
+// A file containing 500 lines, each of which describes an Aunt Sue
+// of a certain number, as well as three things that the
+// person knows about a particular Sue. For example:
+//
+//	Sue 436: samoyeds: 3, trees: 2, cars: 6
+//	Sue 437: children: 9, akitas: 0, pomeranians: 3
+//	Sue 438: perfumes: 10, akitas: 2, cars: 7
+//	Sue 439: perfumes: 10, samoyeds: 6, akitas: 10
+//	Sue 440: vizslas: 10, trees: 2, akitas: 8
+//
+// It is guaranteed that the keys will be three of the following:
+// "children", "cats", "samoyeds", "pomerians", "akitas",
+// "vizslas", "goldfish", "trees", "cars", and "perfumes",
+// and that the values are non-negative integers no more than 10.
 func Day16(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// basis...
 	var basis = auntSue{

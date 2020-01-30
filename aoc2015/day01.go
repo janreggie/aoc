@@ -6,8 +6,14 @@ import (
 	"strconv"
 )
 
-// Day01 solves the first day puzzle
-// "Not Quite Lisp"
+// Day01 solves the first day puzzle "Not Quite Lisp".
+//
+// Input
+//
+// A single line of length 7000 containing nothing but the characters ')' and '('.
+// For example:
+//
+//	()((()((()(()()())(())()()()((())())))((()()(()()((()(())()()())(((()(()()))))(())))(()(()())()))()()))))))()))))((((
 func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	currentFloor := 0
 	position := 1

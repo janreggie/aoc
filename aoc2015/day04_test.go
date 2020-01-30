@@ -5,13 +5,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay04(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		// {Input: "abcdef",
 		// 	Result1: "609043",
 		// 	Result2: "6742839"},

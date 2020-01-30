@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"github.com/janreggie/AdventOfCode/aoc2018"
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay01(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Input: "+1 -2 +3 +1",
 			Result1: "3",
 			Result2: "2"},

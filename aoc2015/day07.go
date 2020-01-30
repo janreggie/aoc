@@ -407,8 +407,42 @@ func (imap *instructionMap) traverse(f func(id identifier)) {
 	}
 }
 
-// Day07 solves the seventh day puzzle
-// "Some Assembly Required"
+// Day07 solves the seventh day puzzle "Some Assembly Required".
+//
+// Input
+//
+// A file containing several lines where each line represents an instruction.
+// An instruction can be any of the following:
+//
+// Assignment instruction
+//	VALUE -> IDENT
+//	123 -> x
+//
+// AND instruction
+//	IDENT AND IDENT -> IDENT
+//	x AND y -> z
+//
+// OR instruction
+//	IDENT OR IDENT -> IDENT
+//	bj OR bi -> bk
+//
+// NOT instruction
+//	NOT IDENT -> IDENT
+//	NOT e -> f
+//
+// LSHIFT instruction
+//	IDENT LSHIFT VALUE -> IDENT
+//	p LSHIFT 2 -> q
+//
+// RSHIFT instruction
+//	IDENT RSHIFT VALUE -> IDENT
+//	p RSHIFT 2 -> q
+//
+// Note that IDENT is any alphabetic string at most length 2
+// that represents a Signal, a 16-bit unsigned integer,
+// and VALUE represents a raw Signal.
+// Also note that VALUE is only a parameter for the LSHIFT, RSHIFT, and
+// Assignment instructions.
 func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wires := make(map[identifier]signal) // map of all wires and their signal values
 	imap1 := newInstructionMap()

@@ -3,7 +3,7 @@ package intcode_test
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs/intcode"
+	"github.com/janreggie/AdventOfCode/tools/intcode"
 	"github.com/stretchr/testify/assert"
 )
 

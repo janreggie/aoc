@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -921,7 +921,7 @@ func Test_instructionMap_lookup(t *testing.T) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Details: "Y2016D07 my input",
 			Input: "NOT dq -> dr\n" +
 				"kg OR kf -> kh\n" +

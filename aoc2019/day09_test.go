@@ -3,13 +3,13 @@ package aoc2019
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay09(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Details: "Y2019D09 my input",
 			Input: "1102,34463338,34463338,63,1007,63,34463338,63,1005,63,53,1102,1,3,1000,109,988,209," +
 				"12,9,1000,209,6,209,3,203,0,1008,1000,1,63,1005,63,65,1008,1000," +

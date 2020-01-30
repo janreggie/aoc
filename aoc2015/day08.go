@@ -7,8 +7,20 @@ import (
 	"github.com/golang/glog"
 )
 
-// Day08 solves the eighth day puzzle
-// "Matchsticks"
+// Day08 solves the eighth day puzzle "Matchsticks".
+//
+// Input
+//
+// A file containing 300 lines where each line represents a "string literal",
+// which contains combinations such as '\"' and '\x27'. For example:
+//
+//	"ubgxxcvnltzaucrzg\\xcez"
+//	"pnocjvo\\yt"
+//	"fcabrtqog\"a\"zj"
+//	"o\\bha\\mzxmrfltnflv\xea"
+//	"isos\x6azbnkojhxoopzetbj\xe1yd"
+//
+// Each line is observed to start and end with a double-quotation mark '"'.
 func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var representedDiff uint64 // character difference (representation and actual) for answer 1
 	var encodedDiff uint64     // character difference (literal and encoded) for answer 2

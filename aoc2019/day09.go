@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/golang/glog"
-	"github.com/janreggie/AdventOfCode/structs/intcode"
+	"github.com/janreggie/AdventOfCode/tools/intcode"
 )
 
 // Day09 solves the ninth day puzzle

@@ -2,7 +2,6 @@ package aoc2015
 
 import (
 	"bufio"
-	"sort"
 	"strconv"
 	"sync"
 
@@ -22,7 +21,6 @@ type containerCount uint
 // contain tries to contain some amount of eggnog into containers
 // that can hold a variable amount of eggnog
 // and returns the number of possibilities.
-// Assume that containers is sorted largest first.
 func contain(amount eggnog, containers []eggnog) containerCount {
 	if amount < 0 {
 		return 0
@@ -58,8 +56,22 @@ func leastContainers(amount eggnog, containers []eggnog) containerCount {
 	return 0
 }
 
-// Day17 solves the seventeenth day puzzle
-// "No Such Thing as Too Much"
+// Day17 solves the seventeenth day puzzle "No Such Thing as Too Much".
+//
+// Input
+//
+// A file containing 20 lines each of which describes
+// a container and how much it contains.
+// For example:
+//
+//	50
+//	44
+//	11
+//	49
+//	42
+//
+// There are no guarantees that the list in the input containers have been
+// sorted. All containers should be non-negative integers no more than 150.
 func Day17(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	containers := make([]eggnog, 0)
 	for scanner.Scan() {
@@ -71,10 +83,10 @@ func Day17(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		containers = append(containers, eggnog(size))
 	}
 
-	// sort these out
-	sort.Slice(containers, func(i, j int) bool {
-		return containers[i] > containers[j] // sort ascendingly!
-	})
+	// sort these out (there's apparently no need to do this!)
+	// sort.Slice(containers, func(i, j int) bool {
+	// 	return containers[i] > containers[j] // sort ascendingly!
+	// })
 
 	var wg sync.WaitGroup
 	wg.Add(2)

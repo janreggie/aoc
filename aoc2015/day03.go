@@ -20,8 +20,14 @@ func iterateCoordinate(location *image.Point, input string) {
 	}
 }
 
-// Day03 solves the third day puzzle
-// "Perfectly Spherical Houses in a Vacuum"
+// Day03 solves the third day puzzle "Perfectly Spherical Houses in a Vacuum".
+//
+// Input
+//
+// A single line of length 8192 containing only the characters '<', '>', '^', and 'v',
+// representing direction. For example:
+//
+//	v^>>v>v>>>>^^>v<^v^>><<^<>>v><^><<^>^<vv^^<><<>><vvvv^>^^<><^^
 func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Split(bufio.ScanBytes)
 

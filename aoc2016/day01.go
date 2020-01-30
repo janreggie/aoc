@@ -83,8 +83,19 @@ func movePosition(old image.Point, dir direction, amt int64) image.Point {
 	return new
 }
 
-// Day01 solves the first day puzzle
-// "No Time for a Taxicab"
+// Day01 solves the first day puzzle "No Time for a Taxicab".
+//
+// Input
+//
+// A single line containing 161 instructions separated by ", ",
+// where each instruction describes a turn direction and the distance to travel.
+// For example:
+//
+//	R5, L5, R5, R3
+//
+// It is guaranteed that the distance to travel per instruction
+// is no greater than 200. It is also guaranteed that each
+// instruction is prefixed by either "R" or "L".
 func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	currentDirection := north
 	current := image.Pt(0, 0) // current position

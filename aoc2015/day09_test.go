@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -331,7 +331,7 @@ func Test_townPathQueue_pushAndPop(t *testing.T) {
 
 func TestDay09(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Input: "London to Dublin = 464\n" +
 			"London to Belfast = 518\n" +
 			"Dublin to Belfast = 141\n",

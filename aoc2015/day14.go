@@ -141,8 +141,20 @@ func (olympics *reindeerOlympics) iterateUntil(time uint) {
 	}
 }
 
-// Day14 solves the fourteenth day puzzle
-// "Reindeer Olympics"
+// Day14 solves the fourteenth day puzzle "Reindeer Olympics".
+//
+// Input
+//
+// A file containing nine lines, each of which
+// describes the flying speed, flying time, and resting time for
+// a particular reindeer. For example:
+//
+//	Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.
+//	Rudolph can fly 3 km/s for 15 seconds, but then must rest for 28 seconds.
+//	Donner can fly 19 km/s for 9 seconds, but then must rest for 164 seconds.
+//
+// It is guaranteed that the numbers are non-negative integers,
+// each no more than 200.
 func Day14(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	allReindeer := make([]racingReindeer, 0)
 	for scanner.Scan() {

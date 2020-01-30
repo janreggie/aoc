@@ -3,7 +3,7 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -59,7 +59,7 @@ func Test_factors_countDivisors(t *testing.T) {
 
 func TestDay20(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Details: "Y2015D20 my input",
 			Input:   "29000000",
 			Result1: "665280",

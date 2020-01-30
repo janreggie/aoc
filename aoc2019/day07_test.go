@@ -3,7 +3,7 @@ package aoc2019
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -101,7 +101,7 @@ func (q *queue) pop() (val int64) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Details: "Y2019D07 my input",
 			Input: "3,8,1001,8,10,8,105,1,0,0,21,42,67,84,109,122,203,284,365,446," +
 				"99999,3,9,1002,9,3,9,1001,9,5,9,102,4,9,9,1001,9,3,9,4," +

@@ -51,8 +51,15 @@ func (factors factors) countDivisors() uint {
 	return out
 }
 
-// Day20 solves the twentieth day puzzle
-// "Infinite Elves and Infinite Houses"
+// Day20 solves the twentieth day puzzle "Infinite Elves and Infinite Houses".
+//
+// Input
+//
+// A single line describing a number of presents. For example:
+//
+//	29000000
+//
+// It is guaranteed that the input is a non-negative int32.
 func Day20(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Scan()
 	inputRaw, err := strconv.ParseUint(scanner.Text(), 10, 32)

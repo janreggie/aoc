@@ -76,8 +76,18 @@ func extractSumButRed(value *jason.Value) int64 {
 	return 0
 }
 
-// Day12 solves the twelfth day puzzle
-// "JSAbacusFramework.io"
+// Day12 solves the twelfth day puzzle "JSAbacusFramework.io".
+//
+// Input
+//
+// A single line representing a JSON value. For example:
+//
+//	{"d":"red","e":[1,2,3,4],"f":5}
+//
+// Do note that it is not guaranteed that the input is a JSON object.
+// It could be any JSON "value": string, number, object, array, or boolean.
+// Do note that all numbers in the input are integers,
+// that is, there are no floating-points.
 func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// let's read everything first...
 	result := ""
@@ -86,15 +96,19 @@ func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		return
 	}
 	result = scanner.Text() // just scan one line of text
-	data, err := jason.NewObjectFromBytes([]byte(result))
+	data, err := jason.NewValueFromBytes([]byte(result))
+	if err != nil {
+		err = errors.Wrap(err, "could not create value from text")
+		return
+	}
 
 	// but how do we read the data?
 	var totalSum int64
 	var antiCommunistSum int64 // answer2 (because not red)
-	for _, vv := range data.Map() {
-		totalSum += extractSum(vv)
-		antiCommunistSum += extractSumButRed(vv)
-	}
+
+	totalSum += extractSum(data)
+	antiCommunistSum += extractSumButRed(data)
+
 	answer1 = strconv.FormatInt(totalSum, 10)
 	answer2 = strconv.FormatInt(antiCommunistSum, 10)
 

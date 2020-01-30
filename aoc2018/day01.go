@@ -5,11 +5,32 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 )
 
-// Day01 solves the first day puzzle
-// "Chronal Calibration"
+// Day01 solves the first day puzzle "Chronal Calibration".
+//
+// Input
+//
+// A file containing 958 lines, each of which is either the character `+`
+// or `-` followed by a number. For example:
+//
+//	-19
+//	-18
+//	+13
+//	+14
+//	+7
+//	-3
+//	+14
+//	+5
+//	-11
+//	-13
+//	-22
+//	+4
+//	+12
+//
+// It is guaranteeed that the absolute values of these numbers
+// will be no more than 100000.
 func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Split(bufio.ScanWords)
 	var frequency int64   // both actually
@@ -17,7 +38,7 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var repdFreq int64    // answer2
 	hasRepeated := false  // answer2 (has repeated?)
 	allInstr := []int64{} // answer2 (in case hasn't repeated)
-	allFreqs := structs.NewBinaryTree(0)
+	allFreqs := tools.NewBinaryTree(0)
 	repeatCycle := func() {
 		// will repeat until when hasRepeated has become false or something's found
 		if hasRepeated == false && allFreqs.Update(frequency) == true {

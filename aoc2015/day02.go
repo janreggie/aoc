@@ -7,8 +7,30 @@ import (
 	"strings"
 )
 
-// Day02 solves the second day puzzle
-// "I Was Told There Would Be No Math"
+// Day02 solves the second day puzzle "I Was Told There Would Be No Math".
+//
+// Input
+//
+// A file containing 1000 lines, each of which is in the format LxWxH,
+// where L, W, and H are positive integers no more than 32,
+// and x is the character 'x'. For example:
+//
+//	7x4x10
+//	22x24x29
+//	30x1x2
+//	19x2x5
+//	11x9x22
+//	23x15x10
+//	11x11x10
+//	30x28x5
+//	22x5x4
+//	6x26x20
+//	16x12x30
+//	10x20x5
+//	25x14x24
+//	16x17x22
+//	11x28x26
+//	1x11x10
 func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// initialize important variables
 	splitDims := make([]string, 3)

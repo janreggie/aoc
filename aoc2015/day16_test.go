@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -513,7 +513,7 @@ Sue 500: cats: 2, goldfish: 9, children: 8
 
 func TestDay16(t *testing.T) {
 	assert := assert.New(t)
-	testCase := structs.TestCase{
+	testCase := tools.TestCase{
 		Details: "Y2015D16 my test case",
 		Input:   day16myInput,
 		Result1: "40",

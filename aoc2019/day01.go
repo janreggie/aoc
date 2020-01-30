@@ -5,8 +5,23 @@ import (
 	"strconv"
 )
 
-// Day01 solves the first day puzzle
-// "The Tyranny of the Rocket Equation"
+// Day01 solves the first day puzzle "The Tyranny of the Rocket Equation".
+//
+// Input
+//
+// A file containing 100 lines each representing a number. For example:
+//
+//	108808
+//	87954
+//	148957
+//	110182
+//	126668
+//	148024
+//	96915
+//	117727
+//	147378
+//
+// It is guaranteed that all numbers are no more than six digits long.
 func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var totalFuel int64 // total fuel required
 	var cumuFuel int64  // answer2 (where fuel requires fuel!)

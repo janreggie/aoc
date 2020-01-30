@@ -3,13 +3,13 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay06(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Input: "toggle 936,774 through 937,775\n" + // ans1 += 4; ans2 += 8
 			"turn off 116,843 through 533,934\n" + // nothing
 			"turn on 950,906 through 986,993\n", // ans1 += 3256; ans2 += 3256
@@ -330,7 +330,7 @@ func TestDay06(t *testing.T) {
 }
 func TestDay06Deux(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Input: "toggle 936,774 through 937,775\n" + // ans1 += 4; ans2 += 8
 			"turn off 116,843 through 533,934\n" + // nothing
 			"turn on 950,906 through 986,993\n", // ans1 += 3256; ans2 += 3256

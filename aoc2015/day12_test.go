@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/antonholmquist/jason"
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,7 +52,7 @@ func Test_extractSumButRed(t *testing.T) {
 }
 func TestDay12(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Details: "Y2015D12 my input",
 			Input:
 			// This is supposed to be convoluted.

@@ -19,12 +19,12 @@ func checkHash(n int, augend string, addend int) bool {
 	// Let us consider the ii'th nibble as the LSBs and MSBs of hash[ii/2].
 	for ii := 0; ii < n; ii++ {
 		concern := hash[ii/2]
-		if ii%2 == 0 { // LSBs
-			if concern&0x0F != 0 {
+		if ii%2 == 0 { // MSBs
+			if concern&0xF0 != 0 {
 				return false
 			}
-		} else { // MSBs
-			if concern&0xF0 != 0 {
+		} else { // LSBs
+			if concern&0x0F != 0 {
 				return false
 			}
 		}
@@ -34,8 +34,14 @@ func checkHash(n int, augend string, addend int) bool {
 	return true
 }
 
-// Day04 solves the fourth day puzzle
-// "The Ideal Stocking Stuffer"
+// Day04 solves the fourth day puzzle "The Ideal Stocking Stuffer".
+//
+// Input
+//
+// A string of length 8 containing only the lowercase
+// letters 'a' to 'z'. For example:
+//
+//	iwrupvqb
 func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// the entire scanner is read.
 	input := ""

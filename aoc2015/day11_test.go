@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,7 +45,7 @@ func Test_increment(t *testing.T) {
 
 func TestDay11(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Input: "abcdefgh", Result1: "abcdffaa"},
 		{Input: "ghijklmn", Result1: "ghjaabcc"},
 		{Details: "Y2015D11 my input", Input: "hepxcrrq", Result1: "hepxxyzz", Result2: "heqaabcc"},

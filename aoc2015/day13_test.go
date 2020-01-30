@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/structs"
+	"github.com/janreggie/AdventOfCode/tools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -237,7 +237,7 @@ func Test_seatingArrangementQueue(t *testing.T) {
 
 func TestDay13(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []structs.TestCase{
+	testCases := []tools.TestCase{
 		{Details: "Y2015D13 sample input",
 			Input: "Alice would gain 54 happiness units by sitting next to Bob.\n" +
 				"Alice would lose 79 happiness units by sitting next to Carol.\n" +

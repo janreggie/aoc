@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"strconv"
 
-	"github.com/janreggie/AdventOfCode/structs/intcode"
+	"github.com/janreggie/AdventOfCode/tools/intcode"
 )
 
 // Day02 solves the second day puzzle

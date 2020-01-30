@@ -48,8 +48,15 @@ func lookAndSay(input string) string {
 	return total.String()
 }
 
-// Day10 solves the tenth day puzzle
-// "Elves Look, Elves Say"
+// Day10 solves the tenth day puzzle "Elves Look, Elves Say".
+//
+// Input
+//
+// A single line containing the "seed". For example:
+//
+//	3113322113
+//
+// It is guaranteed that the input represents an integer.
 func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// the entire scanner is read.
 	input := ""
