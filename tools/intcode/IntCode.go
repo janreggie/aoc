@@ -12,14 +12,14 @@ import (
 )
 
 // Halt is a module that is built in to the Intcode
-var Halt *Module = &Module{
-	opcode:        99,
-	mnemonic:      "HALT",
-	parameterized: false,
-	function: func(ic *Intcode) error {
+var Halt *Module = NewModule(ModuleConfig{
+	Opcode:        99,
+	Mnemonic:      "HALT",
+	Parameterized: false,
+	Function: func(ic *Intcode) error {
 		return NewHaltError("HALT (99)") // that's its literally function
 	},
-}
+})
 
 // Intcode implements an "Intcode" computer
 // consisting of a program counter and a tape of memory

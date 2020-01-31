@@ -103,12 +103,12 @@ func getFromMemory(flags int64, parameters []int64, ic *Intcode, writeEnable boo
 // Procedure:
 //  mem[ARG3] = mem[ARG1]+mem[ARG2]
 //  pc += 4
-var SimpleAdder *Module = &Module{
+var SimpleAdder = NewModule(ModuleConfig{
 	// mem: 1 ARG1 ARG2 ARG3
 	// add: mem[ARG3] = mem[ARG1]+mem[ARG2]
-	opcode:   1,
-	mnemonic: "ADD",
-	function: func(ic *Intcode) (err error) {
+	Opcode:   1,
+	Mnemonic: "ADD",
+	Function: func(ic *Intcode) (err error) {
 		// assume that Current() is 1
 		// Now check if the next ones are in memory
 		var params []int64
@@ -126,7 +126,7 @@ var SimpleAdder *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
-}
+})
 
 // SimpleMultiplier is a simple program that adds values.
 // Adapted from https://adventofcode.com/2019/day/2.
@@ -137,12 +137,12 @@ var SimpleAdder *Module = &Module{
 //  mem[ARG3] = mem[ARG1]*mem[ARG2]
 //  pc += 4
 //
-var SimpleMultiplier *Module = &Module{
+var SimpleMultiplier = NewModule(ModuleConfig{
 	// mem: 2 ARG1 ARG2 ARG3
 	// mul: mem[ARG3] = mem[ARG1]*mem[ARG2]
-	opcode:   2,
-	mnemonic: "MUL",
-	function: func(ic *Intcode) (err error) {
+	Opcode:   2,
+	Mnemonic: "MUL",
+	Function: func(ic *Intcode) (err error) {
 		// assume that Current() is 2
 		// Now check if the next ones are in memory
 		var params []int64
@@ -160,7 +160,7 @@ var SimpleMultiplier *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
-}
+})
 
 // Adder is a module that adds values with support for parameterized mode.
 // Adapted from https://adventofcode.com/2019/day/5.
@@ -170,11 +170,11 @@ var SimpleMultiplier *Module = &Module{
 // Procedure:
 //  mem[ARG3] = mem[ARG1]+mem[ARG2]
 //  pc += 4
-var Adder *Module = &Module{
-	opcode:        1,
-	mnemonic:      "ADD",
-	parameterized: true,
-	function: func(ic *Intcode) (err error) {
+var Adder = NewModule(ModuleConfig{
+	Opcode:        1,
+	Mnemonic:      "ADD",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -187,7 +187,7 @@ var Adder *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
-}
+})
 
 // Multiplier is a module that adds values with support for parameterized mode.
 // Adapted from https://adventofcode.com/2019/day/5.
@@ -197,11 +197,11 @@ var Adder *Module = &Module{
 // Procedure:
 //  mem[ARG3] = mem[ARG1]*mem[ARG2]
 //  pc += 4
-var Multiplier *Module = &Module{
-	opcode:        2,
-	mnemonic:      "MUL",
-	parameterized: true,
-	function: func(ic *Intcode) (err error) {
+var Multiplier = NewModule(ModuleConfig{
+	Opcode:        2,
+	Mnemonic:      "MUL",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -214,7 +214,7 @@ var Multiplier *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
-}
+})
 
 // Inputter reads from the input and sets it to a specific address
 //
@@ -223,11 +223,11 @@ var Multiplier *Module = &Module{
 // Procedure:
 //  mem[ARG1], err = ic.GetInput()
 //  pc += 2
-var Inputter *Module = &Module{
-	opcode:        3,
-	parameterized: true, // because apparently 203 exists...
-	mnemonic:      "INPUT",
-	function: func(ic *Intcode) (err error) {
+var Inputter = NewModule(ModuleConfig{
+	Opcode:        3,
+	Mnemonic:      "INPUT",
+	Parameterized: true, // because apparently 203 exists...
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		var input int64
 		if params, err = ic.GetNext(1); err != nil {
@@ -244,7 +244,7 @@ var Inputter *Module = &Module{
 		}
 		return ic.Increment(2)
 	},
-}
+})
 
 // Outputter is a module that outputs the value at its only parameter.
 //
@@ -253,11 +253,11 @@ var Inputter *Module = &Module{
 // Procedure:
 //  output = append(output, mem[ARG1])
 //  pc += 2
-var Outputter *Module = &Module{
-	opcode:        4,
-	parameterized: true,
-	mnemonic:      "OUTPUT",
-	function: func(ic *Intcode) (err error) {
+var Outputter = NewModule(ModuleConfig{
+	Opcode:        4,
+	Mnemonic:      "OUTPUT",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -268,15 +268,15 @@ var Outputter *Module = &Module{
 		ic.PushToOutput(params[0])
 		return ic.Increment(2)
 	},
-}
+})
 
 // OutputToInput is a moule that, instead of pushing its parameter to Output,
 // it pushes the value to Input
-var OutputToInput *Module = &Module{
-	opcode:        4,
-	parameterized: true,
-	mnemonic:      "OUTPUT",
-	function: func(ic *Intcode) (err error) {
+var OutputToInput = NewModule(ModuleConfig{
+	Opcode:        4,
+	Mnemonic:      "OUTPUT",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -287,7 +287,7 @@ var OutputToInput *Module = &Module{
 		ic.PushToInput(params[0])
 		return ic.Increment(2)
 	},
-}
+})
 
 // OutputAndHalt is a module that outputs the value at its only parameter
 // and, if non-zero, will halt immediately. Used for aoc2019.Day05.
@@ -298,11 +298,11 @@ var OutputToInput *Module = &Module{
 //  output = append(output, mem[ARG1])
 //  if mem[ARG1] != 0 then halt
 //  pc += 2
-var OutputAndHalt *Module = &Module{
-	opcode:        4,
-	parameterized: true,
-	mnemonic:      "OUTPUT",
-	function: func(ic *Intcode) (err error) {
+var OutputAndHalt = NewModule(ModuleConfig{
+	Opcode:        4,
+	Mnemonic:      "OUTPUT",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -316,7 +316,7 @@ var OutputAndHalt *Module = &Module{
 		}
 		return ic.Increment(2)
 	},
-}
+})
 
 // JumpIfTrue is a module that sets the instruction pointer to the second parameter
 // if the first parameter is non-zero
@@ -326,11 +326,11 @@ var OutputAndHalt *Module = &Module{
 // Procedure:
 //  if mem[ARG1] != 0 then jump(mem[ARG2])
 //  pc += 3
-var JumpIfTrue *Module = &Module{
-	opcode:        5,
-	parameterized: true,
-	mnemonic:      "JUMPIFTRUE",
-	function: func(ic *Intcode) (err error) {
+var JumpIfTrue = NewModule(ModuleConfig{
+	Opcode:        5,
+	Mnemonic:      "JUMPIFTRUE",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(2); err != nil {
 			return
@@ -345,7 +345,7 @@ var JumpIfTrue *Module = &Module{
 		}
 		return ic.Increment(3)
 	},
-}
+})
 
 // JumpIfFalse is a module that sets the instruction pointer to the second parameter
 // if the first parameter is zero
@@ -355,11 +355,11 @@ var JumpIfTrue *Module = &Module{
 // Procedure:
 //  if mem[ARG1] == 0 then jump(mem[ARG2])
 //  pc += 3
-var JumpIfFalse *Module = &Module{
-	opcode:        6,
-	parameterized: true,
-	mnemonic:      "JUMPIFTRUE",
-	function: func(ic *Intcode) (err error) {
+var JumpIfFalse = NewModule(ModuleConfig{
+	Opcode:        6,
+	Mnemonic:      "JUMPIFTRUE",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(2); err != nil {
 			return
@@ -374,7 +374,7 @@ var JumpIfFalse *Module = &Module{
 		}
 		return ic.Increment(3)
 	},
-}
+})
 
 // LessThan is a module that stores 1 in the third parameter
 // if the first is less than the second; otherwise it will store 0
@@ -384,11 +384,11 @@ var JumpIfFalse *Module = &Module{
 // Procedure:
 //  if mem[ARG1] < mem[ARG2] then mem[ARG3]=1 else mem[ARG3]=0
 //  pc += 4
-var LessThan *Module = &Module{
-	opcode:        7,
-	parameterized: true,
-	mnemonic:      "LESSTHAN",
-	function: func(ic *Intcode) (err error) {
+var LessThan = NewModule(ModuleConfig{
+	Opcode:        7,
+	Mnemonic:      "LESSTHAN",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -408,7 +408,7 @@ var LessThan *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
-}
+})
 
 // Equals is a module that stores 1 in the third parameter
 // if the first equals the second; otherwise it will store 0
@@ -418,11 +418,11 @@ var LessThan *Module = &Module{
 // Procedure:
 //  if mem[ARG1] == mem[ARG2] then mem[ARG3]=1 else mem[ARG3]=0
 //  pc += 4
-var Equals *Module = &Module{
-	opcode:        8,
-	parameterized: true,
-	mnemonic:      "EQUALS",
-	function: func(ic *Intcode) (err error) {
+var Equals = NewModule(ModuleConfig{
+	Opcode:        8,
+	Mnemonic:      "EQUALS",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -442,7 +442,7 @@ var Equals *Module = &Module{
 		}
 		return ic.Increment(4)
 	},
-}
+})
 
 // ChangeRelativeBase adjusts the relative base of the computer
 // by its parameter.
@@ -452,11 +452,11 @@ var Equals *Module = &Module{
 // Procedure:
 //  relativeBase += mem[ARG1]
 //  pc += 2
-var ChangeRelativeBase *Module = &Module{
-	opcode:        9,
-	parameterized: true,
-	mnemonic:      "RELBASE",
-	function: func(ic *Intcode) (err error) {
+var ChangeRelativeBase = NewModule(ModuleConfig{
+	Opcode:        9,
+	Mnemonic:      "RELBASE",
+	Parameterized: true,
+	Function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -468,7 +468,7 @@ var ChangeRelativeBase *Module = &Module{
 		ic.AdjustRelativeBase(params[0])
 		return ic.Increment(2)
 	},
-}
+})
 
 // InstallAdderMultiplier installs the Adder and Multiplier modules
 // to the Intcode computer
