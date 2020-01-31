@@ -16,10 +16,10 @@ func ExampleNewModule() {
 		Opcode        int64
 		Mnemonic      string
 		Parameterized bool
-		Function      func(ic *intcode.IntCode) error
+		Function      func(ic *intcode.Intcode) error
 	}{
 		Opcode: 1, Mnemonic: "ADD",
-		Function: func(ic *intcode.IntCode) (err error) {
+		Function: func(ic *intcode.Intcode) (err error) {
 			// assume that Current() is 1
 			// Now check if the next ones are in memory
 			var params []int64
@@ -43,10 +43,10 @@ func ExampleNewModule() {
 		Opcode        int64
 		Mnemonic      string
 		Parameterized bool
-		Function      func(ic *intcode.IntCode) error
+		Function      func(ic *intcode.Intcode) error
 	}{
 		Opcode: 2, Mnemonic: "MUL",
-		Function: func(ic *intcode.IntCode) (err error) {
+		Function: func(ic *intcode.Intcode) (err error) {
 			// assume that Current() is 2
 			// Now check if the next ones are in memory
 			var params []int64

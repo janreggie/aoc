@@ -3,20 +3,20 @@ package intcode
 import "fmt"
 
 // Module is a module with an opcode and a ParamCount
-// which does something to an ic computer *IntCode using the next ParamCount memory locations.
+// which does something to an ic computer *Intcode using the next ParamCount memory locations.
 // Calling function can return an error if its params turns out to be invalid
 // e.g., accessing an invalid memory address.
 //
 // It is assumed that calling function only happens if ic.Current() equals the opcode,
 // unless if the Module supports "parameter modes",
 // where in that case ic.Current()%100 is checked instead.
-// Note that function will affect the IntCode computer
+// Note that function will affect the Intcode computer
 // e.g., changing its memory, inputs and outputs.
 type Module struct {
 	opcode        int64                   // opcode (if 0 then check will occur in function)
 	mnemonic      string                  // "name" of the opcode
 	parameterized bool                    // should module support parameter modes?
-	function      func(ic *IntCode) error // what does it do to the computer?
+	function      func(ic *Intcode) error // what does it do to the computer?
 }
 
 // ModuleConfig is a structure representing the configuration of a module
@@ -24,7 +24,7 @@ type ModuleConfig struct {
 	Opcode        int64                   // opcode (if 0 then check will occur in function)
 	Mnemonic      string                  // "name" of the opcode
 	Parameterized bool                    // should module support parameter modes?
-	Function      func(ic *IntCode) error // what does it do to the computer?
+	Function      func(ic *Intcode) error // what does it do to the computer?
 }
 
 // NewModule generates a module object with several attributes using a config struct
@@ -37,7 +37,7 @@ func NewModule(config ModuleConfig) *Module {
 	}
 }
 
-// getFromMemory turns an int flags (opcode without 2 LSDs), a slice of parameters, and an IntCode reel
+// getFromMemory turns an int flags (opcode without 2 LSDs), a slice of parameters, and an Intcode reel
 // into the appropriate parameters, depending on slice inputs.
 // The parameters are taken from the memory, raw,
 // that is, the flags are unknown.
@@ -57,7 +57,7 @@ func NewModule(config ModuleConfig) *Module {
 //
 //
 // May return an error if OutOfBounds.
-func getFromMemory(flags int64, parameters []int64, ic *IntCode, writeEnable bool) (err error) {
+func getFromMemory(flags int64, parameters []int64, ic *Intcode, writeEnable bool) (err error) {
 	parameterCount := len(parameters)
 	// to ignore or not to ignore parameters[len(parameters)-1]?
 	// check writeEnable
@@ -108,7 +108,7 @@ var SimpleAdder *Module = &Module{
 	// add: mem[ARG3] = mem[ARG1]+mem[ARG2]
 	opcode:   1,
 	mnemonic: "ADD",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		// assume that Current() is 1
 		// Now check if the next ones are in memory
 		var params []int64
@@ -142,7 +142,7 @@ var SimpleMultiplier *Module = &Module{
 	// mul: mem[ARG3] = mem[ARG1]*mem[ARG2]
 	opcode:   2,
 	mnemonic: "MUL",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		// assume that Current() is 2
 		// Now check if the next ones are in memory
 		var params []int64
@@ -174,7 +174,7 @@ var Adder *Module = &Module{
 	opcode:        1,
 	mnemonic:      "ADD",
 	parameterized: true,
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -201,7 +201,7 @@ var Multiplier *Module = &Module{
 	opcode:        2,
 	mnemonic:      "MUL",
 	parameterized: true,
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -227,7 +227,7 @@ var Inputter *Module = &Module{
 	opcode:        3,
 	parameterized: true, // because apparently 203 exists...
 	mnemonic:      "INPUT",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		var input int64
 		if params, err = ic.GetNext(1); err != nil {
@@ -257,7 +257,7 @@ var Outputter *Module = &Module{
 	opcode:        4,
 	parameterized: true,
 	mnemonic:      "OUTPUT",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -276,7 +276,7 @@ var OutputToInput *Module = &Module{
 	opcode:        4,
 	parameterized: true,
 	mnemonic:      "OUTPUT",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -302,7 +302,7 @@ var OutputAndHalt *Module = &Module{
 	opcode:        4,
 	parameterized: true,
 	mnemonic:      "OUTPUT",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -330,7 +330,7 @@ var JumpIfTrue *Module = &Module{
 	opcode:        5,
 	parameterized: true,
 	mnemonic:      "JUMPIFTRUE",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(2); err != nil {
 			return
@@ -359,7 +359,7 @@ var JumpIfFalse *Module = &Module{
 	opcode:        6,
 	parameterized: true,
 	mnemonic:      "JUMPIFTRUE",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(2); err != nil {
 			return
@@ -388,7 +388,7 @@ var LessThan *Module = &Module{
 	opcode:        7,
 	parameterized: true,
 	mnemonic:      "LESSTHAN",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -422,7 +422,7 @@ var Equals *Module = &Module{
 	opcode:        8,
 	parameterized: true,
 	mnemonic:      "EQUALS",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(3); err != nil {
 			return
@@ -456,7 +456,7 @@ var ChangeRelativeBase *Module = &Module{
 	opcode:        9,
 	parameterized: true,
 	mnemonic:      "RELBASE",
-	function: func(ic *IntCode) (err error) {
+	function: func(ic *Intcode) (err error) {
 		var params []int64
 		if params, err = ic.GetNext(1); err != nil {
 			return
@@ -471,8 +471,8 @@ var ChangeRelativeBase *Module = &Module{
 }
 
 // InstallAdderMultiplier installs the Adder and Multiplier modules
-// to the IntCode computer
-func InstallAdderMultiplier(ic *IntCode) {
+// to the Intcode computer
+func InstallAdderMultiplier(ic *Intcode) {
 	ic.Install(Adder)
 	ic.Install(Multiplier)
 	return
@@ -480,7 +480,7 @@ func InstallAdderMultiplier(ic *IntCode) {
 
 // InstallJumpers installs the
 // JumpIfFalse, JumpIfTrue, LessThan, and Equals modules
-func InstallJumpers(ic *IntCode) {
+func InstallJumpers(ic *Intcode) {
 	ic.Install(JumpIfFalse)
 	ic.Install(JumpIfTrue)
 	ic.Install(LessThan)

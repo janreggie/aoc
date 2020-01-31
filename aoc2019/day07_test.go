@@ -33,7 +33,7 @@ func (q *queue) pop() (val int64) {
 // // Honestly this is just me playing around
 // // with the specifications for Day 07
 // func TestDay07_scratchpad_d1(t *testing.T) {
-// 	var ic *intcode.IntCode
+// 	var ic *intcode.Intcode
 // 	var err error
 // 	var q *queue
 // 	ic = intcode.New([]int64{})
@@ -65,7 +65,7 @@ func (q *queue) pop() (val int64) {
 // }
 
 // func TestDay07_scratchpad_d2(t *testing.T) {
-// 	var ic *intcode.IntCode
+// 	var ic *intcode.Intcode
 // 	var err error
 
 // 	// permutation := []int64{9, 8, 7, 6, 5}

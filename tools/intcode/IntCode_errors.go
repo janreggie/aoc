@@ -3,7 +3,7 @@ package intcode
 import "fmt"
 
 // OutOfBoundsError returns when accessing a memory location
-// that is outside IntCode.mem
+// that is outside Intcode.mem
 type OutOfBoundsError struct {
 	msg          string
 	LookingFor   int64 // what memory location is out of bounds?
@@ -52,7 +52,7 @@ func (e *InvalidOpcodeError) Error() string {
 	return e.msg
 }
 
-// HaltError is an error that essentially stops the IntCode from running
+// HaltError is an error that essentially stops the Intcode from running
 type HaltError struct {
 	From string
 }
@@ -73,7 +73,7 @@ func IsHalt(err error) bool {
 	return result
 }
 
-// OperationError is an error that occurs during the operation of the IntCode computer
+// OperationError is an error that occurs during the operation of the Intcode computer
 type OperationError struct {
 	msg    string
 	Child  error   // a "deeper" error
@@ -85,7 +85,7 @@ type OperationError struct {
 }
 
 // NewOperationError creates an Error object that occurred due to some other error
-func NewOperationError(err error, ic *IntCode) *OperationError {
+func NewOperationError(err error, ic *Intcode) *OperationError {
 	return &OperationError{
 		msg:    fmt.Sprintf("operation error due to %v", err),
 		Child:  err,

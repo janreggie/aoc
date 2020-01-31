@@ -90,8 +90,22 @@ exterloop:
 	return ob1gen + len(ob2parents) - 2
 }
 
-// Day06 solves the sixth day puzzle
-// "Universal Orbit Map"
+// Day06 solves the sixth day puzzle "Universal Orbit Map".
+//
+// Input
+//
+// A file containing several lines each representing an orbit,
+// where each orbit is of the form IDENT)IDENT,
+// where IDENT is an alphanumeric string of at most length 3.
+// For example:
+//
+//	4PT)ZHN
+//	MHG)8YQ
+//	J9M)B25
+//	KGG)845
+//
+// It is assumed that there are no more than 1400 combinations of orbits,
+// and that there is always an IDENT that is "YOU" and "SAN" in the input.
 func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	allSatellites := make(map[string]*orbit, 0)
 	for scanner.Scan() {

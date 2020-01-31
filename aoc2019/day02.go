@@ -7,10 +7,21 @@ import (
 	"github.com/janreggie/AdventOfCode/tools/intcode"
 )
 
-// Day02 solves the second day puzzle
-// "1202 Program Alarm"
+// Day02 solves the second day puzzle "1202 Program Alarm".
+//
+// Input
+//
+// A single line containing several nonnegative integers separated by commas,
+// representing an Intcode problem. For example:
+//
+//	1,9,10,3,2,3,11,0,99,30,40,50
+//
+// If the Intcode program is not valid, the function may return an error.
+// It is assumed that the tape length,
+// that is, the total number of integers,
+// is no more than 200.
 func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	var ic *intcode.IntCode
+	var ic *intcode.Intcode
 	ic, err = intcode.NewFromScanner(scanner)
 	if err != nil {
 		return

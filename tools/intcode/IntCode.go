@@ -1,4 +1,4 @@
-// Package intcode implements programming in "IntCode"
+// Package intcode implements programming in "Intcode"
 // for Advent of Code 2019.
 package intcode
 
@@ -11,22 +11,22 @@ import (
 	"unicode/utf8"
 )
 
-// Halt is a module that is built in to the IntCode
+// Halt is a module that is built in to the Intcode
 var Halt *Module = &Module{
 	opcode:        99,
 	mnemonic:      "HALT",
 	parameterized: false,
-	function: func(ic *IntCode) error {
+	function: func(ic *Intcode) error {
 		return NewHaltError("HALT (99)") // that's its literally function
 	},
 }
 
-// IntCode implements an "IntCode" computer
+// Intcode implements an "Intcode" computer
 // consisting of a program counter and a tape of memory
 // as well as a list of "modules"
-// which are functions that take in an IntCode
+// which are functions that take in an Intcode
 // and may return an error.
-type IntCode struct {
+type Intcode struct {
 	pc           int64     // program counter
 	mem          []int64   // memory
 	modules      []*Module // all modules it has
@@ -35,17 +35,17 @@ type IntCode struct {
 	relativeBase int64     // the "relative base" of the computer
 }
 
-// New generates an IntCode using a memory reel
-func New(mem []int64) (ic *IntCode) {
-	ic = &IntCode{pc: 0, mem: make([]int64, len(mem))}
+// New generates an Intcode using a memory reel
+func New(mem []int64) (ic *Intcode) {
+	ic = &Intcode{pc: 0, mem: make([]int64, len(mem))}
 	copy(ic.mem, mem)
 	ic.Install(Halt)
 	return
 }
 
-// NewFromScanner takes an IntCode from a *bufio.Scanner.
+// NewFromScanner takes an Intcode from a *bufio.Scanner.
 // Originally adapted from aoc2019.Day02
-func NewFromScanner(scanner *bufio.Scanner) (ic *IntCode, err error) {
+func NewFromScanner(scanner *bufio.Scanner) (ic *Intcode, err error) {
 	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 		// Skip leading spaces.
 		start := 0
@@ -72,7 +72,7 @@ func NewFromScanner(scanner *bufio.Scanner) (ic *IntCode, err error) {
 		return start, nil, nil
 	})
 	// now let's start scanning
-	ic = &IntCode{pc: 0, mem: make([]int64, 0)}
+	ic = &Intcode{pc: 0, mem: make([]int64, 0)}
 	for scanner.Scan() {
 		raw := scanner.Text()
 		instr, e := strconv.ParseInt(raw, 10, 64)
@@ -87,20 +87,20 @@ func NewFromScanner(scanner *bufio.Scanner) (ic *IntCode, err error) {
 }
 
 // Install installs a module
-func (ic *IntCode) Install(module *Module) {
+func (ic *Intcode) Install(module *Module) {
 	ic.modules = append(ic.modules, module)
 	return
 }
 
 // UninstallAll removes all modules
-func (ic *IntCode) UninstallAll() {
+func (ic *Intcode) UninstallAll() {
 	ic.modules = make([]*Module, 0)
 	return
 }
 
-// Operate performs instructions on the IntCode computer
+// Operate performs instructions on the Intcode computer
 // depending on the modules it has
-func (ic *IntCode) Operate() (err error) {
+func (ic *Intcode) Operate() (err error) {
 	// run through the modules
 	for ic.pc < int64(len(ic.mem)) { // while we haven't reached the end yet
 		// let's go through all the modules
@@ -133,7 +133,7 @@ func (ic *IntCode) Operate() (err error) {
 }
 
 // Snapshot returns a copy of its memory
-func (ic *IntCode) Snapshot() (mem []int64) {
+func (ic *Intcode) Snapshot() (mem []int64) {
 	mem = make([]int64, ic.Len())
 	for i := range ic.mem {
 		mem[i] = ic.mem[i]
@@ -142,7 +142,7 @@ func (ic *IntCode) Snapshot() (mem []int64) {
 }
 
 // allocateMore allocates number amount of memory locations for ic.mem
-func (ic *IntCode) allocateMore(amount int64) {
+func (ic *Intcode) allocateMore(amount int64) {
 	// make sure amount > 0
 	if amount < 0 {
 		return
@@ -154,7 +154,7 @@ func (ic *IntCode) allocateMore(amount int64) {
 // If location is more than the memory length,
 // ic.mem is reallocated.
 // If location is negative it will simply return an error.
-func (ic *IntCode) GetLocation(location int64) (value int64, err error) {
+func (ic *Intcode) GetLocation(location int64) (value int64, err error) {
 	if location < 0 {
 		err = NewOutOfBoundsError(location, ic.Len())
 	}
@@ -167,7 +167,7 @@ func (ic *IntCode) GetLocation(location int64) (value int64, err error) {
 
 // GetNext returns a fragment of memory after Current()
 // containing the next count locations
-func (ic *IntCode) GetNext(count int64) (mem []int64, err error) {
+func (ic *Intcode) GetNext(count int64) (mem []int64, err error) {
 	mem = make([]int64, count)
 	for ii := int64(0); ii < count; ii++ {
 		if mem[ii], err = ic.GetLocation(ic.pc + ii + 1); err != nil {
@@ -181,7 +181,7 @@ func (ic *IntCode) GetNext(count int64) (mem []int64, err error) {
 // If location is more than the memory length,
 // ic.mem is reallocated.
 // If location is negative it will simply return an error.
-func (ic *IntCode) SetLocation(location, value int64) (err error) {
+func (ic *Intcode) SetLocation(location, value int64) (err error) {
 	if location < 0 {
 		err = NewOutOfBoundsError(location, ic.Len())
 		return
@@ -194,23 +194,23 @@ func (ic *IntCode) SetLocation(location, value int64) (err error) {
 }
 
 // PC returns the current value for the program counter
-func (ic *IntCode) PC() (pc int64) {
+func (ic *Intcode) PC() (pc int64) {
 	pc = ic.pc
 	return
 }
 
 // Current returns the current memory location at the program counter
-func (ic *IntCode) Current() (value int64) {
+func (ic *Intcode) Current() (value int64) {
 	return ic.mem[ic.pc]
 }
 
 // Len returns the length of the memory
-func (ic *IntCode) Len() (length int64) {
+func (ic *Intcode) Len() (length int64) {
 	return int64(len(ic.mem))
 }
 
 // Increment increments the program counter by a set amount
-func (ic *IntCode) Increment(value int64) (err error) {
+func (ic *Intcode) Increment(value int64) (err error) {
 	if (value+ic.pc) > ic.Len() || (value+ic.pc) < 0 {
 		// greater than since we can assume pc equals Len()
 		return NewOutOfBoundsError(value+ic.pc, ic.Len())
@@ -220,7 +220,7 @@ func (ic *IntCode) Increment(value int64) (err error) {
 }
 
 // Jump jumps the program counter to some value
-func (ic *IntCode) Jump(value int64) (err error) {
+func (ic *Intcode) Jump(value int64) (err error) {
 	if value > ic.Len() || value < 0 {
 		// greater than since we can assume pc equals Len() (where it will just halt)
 		return NewOutOfBoundsError(value, ic.Len())
@@ -230,33 +230,33 @@ func (ic *IntCode) Jump(value int64) (err error) {
 }
 
 // RelativeBase returns the relative base of the ic computer
-func (ic *IntCode) RelativeBase() (relativeBase int64) {
+func (ic *Intcode) RelativeBase() (relativeBase int64) {
 	relativeBase = ic.relativeBase
 	return
 }
 
 // AdjustRelativeBase adjusts the relative base by some amount,
 // increasing or decreasing it.
-func (ic *IntCode) AdjustRelativeBase(amount int64) {
+func (ic *Intcode) AdjustRelativeBase(amount int64) {
 	ic.relativeBase += amount
 	return
 }
 
 // SetRelativeBase sets the relative base by some amount.
-func (ic *IntCode) SetRelativeBase(amount int64) {
+func (ic *Intcode) SetRelativeBase(amount int64) {
 	ic.relativeBase = amount
 	return
 }
 
 // Rewind jumps PC to zero
-func (ic *IntCode) Rewind() {
+func (ic *Intcode) Rewind() {
 	ic.Jump(0) // this cannot return any error
 	return
 }
 
 // Format formats the memory, input, and outputs and sets PC and relative base to zero
 // but does not remove installed modules
-func (ic *IntCode) Format(mem []int64) {
+func (ic *Intcode) Format(mem []int64) {
 	ic.mem = make([]int64, len(mem))
 	copy(ic.mem, mem)
 	ic.SetInput()
@@ -267,7 +267,7 @@ func (ic *IntCode) Format(mem []int64) {
 }
 
 // Input returns a copy of its inputs
-func (ic *IntCode) Input() (input []int64) {
+func (ic *Intcode) Input() (input []int64) {
 	input = make([]int64, len(ic.input))
 	for ii := range input {
 		input[ii] = ic.input[ii]
@@ -276,13 +276,13 @@ func (ic *IntCode) Input() (input []int64) {
 }
 
 // PushToInput pushes a value to the input queue
-func (ic *IntCode) PushToInput(input int64) {
+func (ic *Intcode) PushToInput(input int64) {
 	ic.input = append(ic.input, input)
 	return
 }
 
 // SetInput sets the input
-func (ic *IntCode) SetInput(inputs ...int64) {
+func (ic *Intcode) SetInput(inputs ...int64) {
 	ic.input = make([]int64, len(inputs))
 	for ii := range inputs {
 		ic.input[ii] = inputs[ii]
@@ -290,7 +290,7 @@ func (ic *IntCode) SetInput(inputs ...int64) {
 }
 
 // GetInput removes an input from the queue
-func (ic *IntCode) GetInput() (input int64, err error) {
+func (ic *Intcode) GetInput() (input int64, err error) {
 	if len(ic.input) == 0 {
 		err = fmt.Errorf("input is length zero")
 		return
@@ -301,17 +301,17 @@ func (ic *IntCode) GetInput() (input int64, err error) {
 }
 
 // ResetOutput resets the outputs
-func (ic *IntCode) ResetOutput() {
+func (ic *Intcode) ResetOutput() {
 	ic.output = make([]int64, 0)
 }
 
 // PushToOutput pushes a value to its outputs
-func (ic *IntCode) PushToOutput(value int64) {
+func (ic *Intcode) PushToOutput(value int64) {
 	ic.output = append(ic.output, value)
 }
 
 // Output prints the output
-func (ic *IntCode) Output() (output []int64) {
+func (ic *Intcode) Output() (output []int64) {
 	output = make([]int64, len(ic.output))
 	for ii := range output {
 		output[ii] = ic.output[ii]
@@ -320,7 +320,7 @@ func (ic *IntCode) Output() (output []int64) {
 }
 
 // GetOutput removes an output from the stack
-func (ic *IntCode) GetOutput() (output int64, err error) {
+func (ic *Intcode) GetOutput() (output int64, err error) {
 	if len(ic.output) == 0 {
 		err = fmt.Errorf("output is length zero")
 		return

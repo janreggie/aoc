@@ -8,8 +8,18 @@ import (
 	"github.com/janreggie/AdventOfCode/tools/intcode"
 )
 
-// Day09 solves the ninth day puzzle
-// "Sensor Boost"
+// Day09 solves the ninth day puzzle "Sensor Boost".
+//
+// Input
+//
+// A single line containing several integers separated by commas,
+// representing an Intcode program. For example:
+//
+//	104,1125899906842624,99
+//
+// It is assumed that the numbers do not exceed five digits long,
+// and that the tape length is no more than 1000. In addition,
+// the Intcode computer should be able to support BOOST mode.
 func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	ic, err := intcode.NewFromScanner(scanner)
 	if err != nil {

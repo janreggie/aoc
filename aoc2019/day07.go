@@ -8,7 +8,7 @@ import (
 	"github.com/janreggie/AdventOfCode/tools/intcode"
 )
 
-func inspectIntCode(ic *intcode.IntCode) {
+func inspectIntCode(ic *intcode.Intcode) {
 	// let's take a look shall we?
 	glog.Infof("State: PC: %v (%v)\n", ic.PC(), ic.Current())
 	glog.Infof("Memory: %v\n", ic.Snapshot())
@@ -34,10 +34,21 @@ func permuteIntslice(xs []int64) (permuts [][]int64) {
 	return permuts
 }
 
-// Day07 solves the seventh day puzzle
-// "Amplification Circuit"
+// Day07 solves the seventh day puzzle "Amplification Circuit".
+//
+// Input
+//
+// A single line containing several integers separated by commas,
+// representing an Intcode program. For example:
+//
+//	3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0
+//
+// It is assumed that the numbers do not exceed five digits long,
+// and that the tape length is no more than 700.
+//
+// The first opcode of the Intcode program should be an INPUT (3).
 func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	var ic *intcode.IntCode
+	var ic *intcode.Intcode
 	var memory []int64
 	if ic, err = intcode.NewFromScanner(scanner); err != nil {
 		return

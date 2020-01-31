@@ -60,8 +60,19 @@ func checkNonDecreasing(input int) bool {
 	return true
 }
 
-// Day04 solves the fourth day puzzle
-// "Secure Container"
+// Day04 solves the fourth day puzzle "Secure Container".
+//
+// Input
+//
+// A single line representing a range of numbers. For example:
+//
+//	271973-785961
+//
+// It is guaranteed that the numbers are no more than six digits long.
+//
+// Because the problem does not specify so,
+// assume that the lower and upper bounds of the range
+// should be accounted for in counting the number of valid passwords.
 func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var current, lowerBound, upperBound int
 	var count1, count2 int

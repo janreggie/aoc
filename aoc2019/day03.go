@@ -218,13 +218,22 @@ func checkIntersect(trace1, trace2 [][]bool, distance int, origin, maxPoint imag
 	return
 }
 
-// Day03 solves the third day puzzle
-// "Crossed Wires"
+// Day03 solves the third day puzzle "Crossed Wires".
 //
-// WARNING: This may consume half a gigabyte of RAM.
-// But it works. And more often than not that's what matters.
+// Input
 //
-// TODO (janreggie): Optimize.
+// Two lines representing the two "wires".
+// Each wire is represented by a set of commands separated by commas `,`,
+// and every command is represented by a direction `R`, `L`, `U`, or `D`
+// following a number no more than four digits. For example:
+//
+//	R75,D30,R83,U83,L12,D49,R71,U7,L72
+//	U62,R66,U55,R34,D71,R55,D58,R83
+//
+// Issues
+//
+// This function may consume half a gigabyte of RAM. But it works.
+// It just needs a lot of optimization
 func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wire1 := make([]path, 0) // we don't know how long it is just yet
 	wire2 := make([]path, 0)

@@ -14,7 +14,7 @@ type testCase struct {
 	output  []int64
 }
 
-func processCases(cases []testCase, assert *assert.Assertions, ic *intcode.IntCode) {
+func processCases(cases []testCase, assert *assert.Assertions, ic *intcode.Intcode) {
 	for _, eachCase := range cases {
 		ic.Format(eachCase.initial)
 		ic.SetInput(eachCase.input...)

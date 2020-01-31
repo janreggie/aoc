@@ -437,8 +437,38 @@ func (field *asteroidField) sweepAsteroids(station image.Point, toVaporize uint)
 	}
 }
 
-// Day10 solves the tenth day problem
-// "Monitoring Station"
+// Day10 solves the tenth day problem "Monitoring Station".
+//
+// Input
+//
+// An asteroid field containing HEIGHT lines, each of exactly WIDTH characters long
+// and only containing the characters `#` or `.`. For example:
+//
+//	.#..##.###...#######
+//	##.############..##.
+//	.#.######.########.#
+//	.###.#######.####.#.
+//	#####.##.#.##.###.##
+//	..#####..#.#########
+//	####################
+//	#.####....###.#.#.##
+//	##.#################
+//	#####.##.###..####..
+//	..######..##.#######
+//	####.##.####...##..#
+//	.#####..#.######.###
+//	##...#.##########...
+//	#.##########.#######
+//	.####.#.###.###.#.##
+//	....##.##.###..#####
+//	.#.#.###########.###
+//	#.#.#.#####.####.###
+//	###.##.####.##.#..##
+//
+// If the input contains any other character than the ones specified,
+// or if it contains lines of uneven width, it may return an error.
+//
+// It is guaranteed that WIDTH and HEIGHT are both at least 1 and at most 30.
 func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	asteroids, err := newAsteroidField(scanner)
 	if err != nil {
