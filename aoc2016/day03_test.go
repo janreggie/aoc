@@ -1608,7 +1608,7 @@ const day03myInput = `  810  679   10
 919  923  873
 `
 
-func TestDay06(t *testing.T) {
+func TestDay03(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []tools.TestCase{
 		{Details: "Y2016D03 Part 1",
