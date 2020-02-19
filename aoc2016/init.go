@@ -13,12 +13,12 @@ import (
 // so AllSolutions[0] is the solution for Day 1.
 var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 	Day01,         // day 1
-	Unimplemented, // day 2
-	Unimplemented, // day 3
-	Unimplemented, // day 4
-	Unimplemented, // day 5
-	Unimplemented, // day 6
-	Unimplemented, // day 7
+	Day02,         // day 2
+	Day03,         // day 3
+	Day04,         // day 4
+	Day05,         // day 5
+	Day06,         // day 6
+	Day07,         // day 7
 	Unimplemented, // day 8
 	Unimplemented, // day 9
 	Unimplemented, // day 10
