@@ -3,52 +3,60 @@ package aoc2015
 import (
 	"bufio"
 	"math"
+	"sort"
 	"strconv"
 
 	"github.com/pkg/errors"
 )
 
-// factors represents the factorization of a number
-type factors map[uint]uint // prime factors and their powers
+// divisors represents the divisors of a number
+type divisors []uint
 
-// factor factors a number.
-func factor(number uint) factors {
-	out := make(factors)
-	largestPossible := uint(math.Sqrt(float64(number)))
-	for current := uint(2); current < largestPossible; current++ {
-		for number%current == 0 {
-			number /= current
-			out[current]++
+// newDivisors determines the divisors of a number
+func newDivisors(number uint) divisors {
+	if number == 1 {
+		return []uint{1}
+	}
+	result := make(divisors, 2)
+	result[0], result[1] = 1, number
+	for ii := uint(2); ii <= uint(math.Sqrt(float64(number))); ii++ {
+		if number%ii == 0 {
+			result = append(result, ii)
+			if ii != number/ii {
+				result = append(result, number/ii)
+			}
 		}
 	}
-	if number != 1 {
-		out[number]++ // whatever this could be
-	}
-	return out
+	sort.Slice(result, func(i, j int) bool {
+		return result[i] < result[j]
+	})
+	return result
 }
 
-// sumOfDivisors returns the sum of divisors of a factorization
-func (factors factors) sumOfDivisors() uint {
-	var out uint = 1
-	for prime, power := range factors {
-		var sumOnPrime uint = 1
-		var primeToii uint = 1
-		for ii := uint(0); ii < power; ii++ {
-			primeToii *= prime
-			sumOnPrime += primeToii
+// sum returns the sum of divisors
+func (dv divisors) sum() uint {
+	var result uint
+	for _, vv := range dv {
+		result += vv
+	}
+	return result
+}
+
+// count returns the number of divisors
+func (dv divisors) count() uint {
+	return uint(len(dv))
+}
+
+// onlyFifty returns a subset of divisors that are less than the number over fifty
+func (dv divisors) onlyFifty() divisors {
+	result := make(divisors, 0)
+	number := dv[len(dv)-1]
+	for _, vv := range dv {
+		if vv*50 >= number {
+			result = append(result, vv)
 		}
-		out *= sumOnPrime
 	}
-	return out
-}
-
-// countDivisors counts the number of divisors of a factorization
-func (factors factors) countDivisors() uint {
-	var out uint = 1
-	for _, power := range factors {
-		out *= (power + 1)
-	}
-	return out
+	return result
 }
 
 // Day20 solves the twentieth day puzzle "Infinite Elves and Infinite Houses".
@@ -69,17 +77,18 @@ func Day20(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	input := uint(inputRaw)
 
 	// second half is not implemented yet.
-	wroteFirst, wroteSecond := false, true
+	wroteFirst, wroteSecond := false, false
 	for house := uint(1); !wroteFirst || !wroteSecond; house++ {
-		factors := factor(house)
-		if !wroteFirst && factors.sumOfDivisors()*10 >= input {
+		// factors := factor(house)
+		divisors := newDivisors(house)
+		if !wroteFirst && divisors.sum()*10 >= input {
 			answer1 = strconv.FormatUint(uint64(house), 10)
 			wroteFirst = true
 		}
-		// if !wroteSecond && factors.countDivisors() < 50 && factors.sumOfDivisors()*11 >= input {
-		// 	answer2 = strconv.FormatUint(uint64(house), 10)
-		// 	wroteSecond = true
-		// }
+		if !wroteSecond && divisors.onlyFifty().sum()*11 >= input {
+			answer2 = strconv.FormatUint(uint64(house), 10)
+			wroteSecond = true
+		}
 	}
 
 	return
