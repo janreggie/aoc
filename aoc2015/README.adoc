@@ -21,7 +21,7 @@
 * [*] Day 17: No Such Thing as Too Much
 * [ ] Day 18: Like a GIF For Your Yard
 * [ ] Day 19: Medicine for Rudolph
-* [*] Day 20: Infinite Elves and Infinite Houses (**part 1 only**)
+* [*] Day 20: Infinite Elves and Infinite Houses
 * [ ] Day 21: RPG Simulator 20XX
 * [ ] Day 22: Wizard Simulator 20XX
 * [ ] Day 23: Opening the Turing Lock
