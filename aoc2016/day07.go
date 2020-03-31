@@ -110,6 +110,17 @@ func (ipv7 ipv7Address) supportSSL() bool {
 }
 
 // Day07 solves the seventh day puzzle "Internet Protocol Version 7".
+//
+// Input
+//
+// A file containing at most 2000 lines, each line representing an IPv7 address
+// containing the lowercase letters `a` to `z` and the bracket characters `[` and `]`,
+// each line of length at most 150.
+//
+// For example:
+//     abba[mnop]qrst
+//     ioxxoj[asdfgh]zxcvbn
+//     wvwhsvattcfkxsjbif[bkesznrpxrlcnsmhbxv]rdycrgrtwazfqlx[genmoutcoedshrn]ucufntphttrvzmgt
 func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	a1, a2 := 0, 0
 	for scanner.Scan() {
