@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools/intcode"
+	"github.com/janreggie/AdventOfCode/aoc2019/intcode"
 	"github.com/stretchr/testify/assert"
 )
 

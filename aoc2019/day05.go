@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"strconv"
 
-	"github.com/janreggie/AdventOfCode/tools/intcode"
+	"github.com/janreggie/AdventOfCode/aoc2019/intcode"
 )
 
 // Day05 solves the fifth day puzzle "Sunny with a Chance of Asteroids".
