@@ -47,8 +47,28 @@ func (sp *spaceImage) count() (count [3]int) {
 	return
 }
 
-// Day08 solves the eighth day puzzle
-// "Space Image Format"
+// Day08 solves the eighth day puzzle "Space Image Format".
+//
+// Input
+//
+// A string of length 15000, which only consists of '0', '1', and '2'.
+//
+// Notes
+//
+// The second answer should not be used as-is,
+// but requires the interpretation of a human.
+// The output will resemble pixel art made out of blocks,
+// which spells out a word that the user must input manually.
+// My output is as follows:
+//
+// 	 ██ ██  ███  ██ ██ █ ██ █
+// 	 ██ █ ██ █ ██ █ ██ █ ██ █
+// 	 ██ █ ████ ████ ██ █    █
+// 	 ██ █ █  █ ████ ██ █ ██ █
+// 	 ██ █ ██ █ ██ █ ██ █ ██ █
+// 	█  ███   ██  ███  ██ ██ █
+//
+// It may be hard to read but it does spell out UGCUH.
 func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	allLayers := make([]spaceImage, 0)
 	// scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {

@@ -105,6 +105,9 @@ func decompress(input string) (string, error) {
 //
 // A single line, containing a sequence of bytes representing the experimental format.
 // It is assumed that the data is valid, and it does not contain more than 15,000 characters.
+// For example:
+//
+//	(6x1)(1x3)A
 func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var sb strings.Builder
 	for scanner.Scan() {

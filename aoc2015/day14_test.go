@@ -3,8 +3,20 @@ package aoc2015
 import (
 	"testing"
 
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
+
+const day14myInput = `Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.
+Rudolph can fly 3 km/s for 15 seconds, but then must rest for 28 seconds.
+Donner can fly 19 km/s for 9 seconds, but then must rest for 164 seconds.
+Blitzen can fly 19 km/s for 9 seconds, but then must rest for 158 seconds.
+Comet can fly 13 km/s for 7 seconds, but then must rest for 82 seconds.
+Cupid can fly 25 km/s for 6 seconds, but then must rest for 145 seconds.
+Dasher can fly 14 km/s for 3 seconds, but then must rest for 38 seconds.
+Dancer can fly 3 km/s for 16 seconds, but then must rest for 37 seconds.
+Prancer can fly 25 km/s for 6 seconds, but then must rest for 143 seconds.
+`
 
 func Test_newRacingReindeer(t *testing.T) {
 	assert := assert.New(t)
@@ -140,4 +152,21 @@ func Test_reindeerOlympics_iterate(t *testing.T) {
 		assert.Equalf(tt.wantPoints, points{olympics.points[0], olympics.points[1]}, "points after %v sec", tt.time)
 		olympics.reset()
 	}
+}
+
+func TestDay14(t *testing.T) {
+	assert := assert.New(t)
+	testCases := []internal.TestCase{
+		{Details: "Y2015D14 my input",
+			Input:   day14myInput,
+			Result1: "2660",
+			Result2: "1256"},
+	}
+	for _, tt := range testCases {
+		tt.Test(Day14, assert)
+	}
+}
+
+func BenchmarkDay14(b *testing.B) {
+	internal.Benchmark(Day14, b, day14myInput)
 }

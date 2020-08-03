@@ -27,24 +27,20 @@ func (e *OutOfBoundsError) Error() string {
 // InvalidOpcodeError returns when the opcode being read
 // is not valid.
 type InvalidOpcodeError struct {
-	msg      string
-	Opcode   int64  // what opcode did it see?
-	Wants    int64  // what does a Module want?
-	At       int64  // program counter?
-	Mnemonic string // name of a Module
+	msg    string
+	Opcode int64 // what opcode did it see?
+	At     int64 // program counter?
 }
 
 // NewInvalidOpcodeError returns an InvalidOpcodeError
-// with message "invalid opcode opcode, wants Wants (mnemonic)"
-func NewInvalidOpcodeError(opcode int64, position int64, module *Module) error {
+// with message "invalid opcode OPCODE at position POSITION"
+func NewInvalidOpcodeError(opcode, position int64) error {
 	var msg string
-	msg = fmt.Sprintf("invalid opcode %v at position %v, wants %v (%v)", opcode, position, module.opcode, module.mnemonic)
+	msg = fmt.Sprintf("invalid opcode %d at position %d", opcode, position)
 	return &InvalidOpcodeError{
-		msg:      msg,
-		Opcode:   opcode,
-		Wants:    module.opcode,
-		At:       position,
-		Mnemonic: module.mnemonic,
+		msg:    msg,
+		Opcode: opcode,
+		At:     position,
 	}
 }
 

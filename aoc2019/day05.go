@@ -21,7 +21,8 @@ import (
 //
 // The Intcode computer should now be able to support the following Opcodes:
 // INPUT (3), OUTPUT (4), JUMP-IF-TRUE (5), JUMP-IF-FALSE (6), LESSTHAN (7),
-// and EQUALS (8). In addition, it should be able to support parameter modes.
+// and EQUALS (8).
+// In addition, it should be able to support parameter modes.
 //
 // The first Opcode of the Intcode program should be an INPUT (3).
 func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {

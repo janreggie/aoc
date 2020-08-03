@@ -1,10 +1,9 @@
-package intcode_test
+package intcode
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/aoc2019/intcode"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,14 +11,14 @@ import (
 func ExampleNewModule() {
 	// mem: 1 LOC1 LOC2 LOC3
 	// add: mem[LOC3] = mem[LOC1]+mem[LOC2]
-	add := intcode.NewModule(struct {
+	add := NewModule(struct {
 		Opcode        int64
 		Mnemonic      string
 		Parameterized bool
-		Function      func(ic *intcode.Intcode) error
+		Function      func(ic *Intcode) error
 	}{
 		Opcode: 1, Mnemonic: "ADD",
-		Function: func(ic *intcode.Intcode) (err error) {
+		Function: func(ic *Intcode) (err error) {
 			// assume that Current() is 1
 			// Now check if the next ones are in memory
 			var params []int64
@@ -39,14 +38,14 @@ func ExampleNewModule() {
 		}})
 	// mem: 2 LOC1 LOC2 LOC3
 	// mul: mem[LOC3] = mem[LOC1]*mem[LOC2]
-	mul := intcode.NewModule(struct {
+	mul := NewModule(struct {
 		Opcode        int64
 		Mnemonic      string
 		Parameterized bool
-		Function      func(ic *intcode.Intcode) error
+		Function      func(ic *Intcode) error
 	}{
 		Opcode: 2, Mnemonic: "MUL",
-		Function: func(ic *intcode.Intcode) (err error) {
+		Function: func(ic *Intcode) (err error) {
 			// assume that Current() is 2
 			// Now check if the next ones are in memory
 			var params []int64
@@ -66,11 +65,11 @@ func ExampleNewModule() {
 		},
 	})
 	// let's use a simple computer
-	ic := intcode.New([]int64{1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50})
+	ic := New([]int64{1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50})
 	ic.Install(add)
 	ic.Install(mul)
 	err := ic.Operate()
-	_, isHalt := err.(*intcode.HaltError)
+	_, isHalt := err.(*HaltError)
 	fmt.Printf("halted properly: %v\n", isHalt)
 	fmt.Println(ic.Snapshot())
 	// Output: halted properly: true
@@ -79,9 +78,9 @@ func ExampleNewModule() {
 
 func TestIntCode_Operate(t *testing.T) {
 	assert := assert.New(t)
-	ic := intcode.New([]int64{})
-	ic.Install(intcode.Adder)
-	ic.Install(intcode.Multiplier)
+	ic := New([]int64{})
+	ic.Install(Adder)
+	ic.Install(Multiplier)
 	type testCase struct {
 		name    string
 		initial []int64
@@ -107,18 +106,18 @@ func TestIntCode_Operate(t *testing.T) {
 	for _, eachCase := range cases {
 		ic.Format(eachCase.initial)
 		err := ic.Operate()
-		assert.True(intcode.IsHalt(err), err, eachCase.name)
+		assert.True(IsHalt(err), err, eachCase.name)
 		assert.Equal(eachCase.final, ic.Snapshot(), eachCase.name)
 	}
 }
 
 func TestIntCode_Int64Support(t *testing.T) {
 	assert := assert.New(t)
-	ic := intcode.New([]int64{})
-	intcode.InstallAdderMultiplier(ic)
-	intcode.InstallJumpers(ic)
-	ic.Install(intcode.Inputter)
-	ic.Install(intcode.Outputter)
+	ic := New([]int64{})
+	InstallAdderMultiplier(ic)
+	InstallJumpers(ic)
+	ic.Install(Inputter)
+	ic.Install(Outputter)
 	type testCase struct {
 		name   string
 		memory []int64
@@ -135,18 +134,18 @@ func TestIntCode_Int64Support(t *testing.T) {
 	for _, eachCase := range cases {
 		ic.Format(eachCase.memory)
 		err := ic.Operate()
-		assert.True(intcode.IsHalt(err), err, eachCase.name)
+		assert.True(IsHalt(err), err, eachCase.name)
 		assert.Equal(eachCase.output, ic.Output(), eachCase.name)
 	}
 }
 
 func TestIntCode_DynamicMemory(t *testing.T) {
 	assert := assert.New(t)
-	ic := intcode.New([]int64{})
-	intcode.InstallAdderMultiplier(ic)
-	intcode.InstallJumpers(ic)
-	ic.Install(intcode.Inputter)
-	ic.Install(intcode.Outputter)
+	ic := New([]int64{})
+	InstallAdderMultiplier(ic)
+	InstallJumpers(ic)
+	ic.Install(Inputter)
+	ic.Install(Outputter)
 	type testCase struct {
 		name    string
 		initial []int64
@@ -166,7 +165,7 @@ func TestIntCode_DynamicMemory(t *testing.T) {
 	for _, eachCase := range cases {
 		ic.Format(eachCase.initial)
 		err := ic.Operate()
-		assert.True(intcode.IsHalt(err), err, eachCase.name)
+		assert.True(IsHalt(err), err, eachCase.name)
 		assert.Equal(eachCase.output, ic.Output(), eachCase.name)
 		assert.Equal(eachCase.final, ic.Snapshot(), eachCase.name)
 	}

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/golang/glog"
 	"github.com/pkg/errors"
 )
 
@@ -128,8 +129,10 @@ func (asm *assembunnyComputer) jnz(x, y string) error {
 	return nil
 }
 
-// readInstruction reads an instruction.
-func (asm *assembunnyComputer) readInstruction(instr string) error {
+// ReadInstruction reads an instruction and executes it.
+// It returns an error if the string cannot be parsed properly
+// or if the instruction fails to finish.
+func (asm *assembunnyComputer) ReadInstruction(instr string) error {
 	if len(instr) < 5 { // e.g., "inc a"
 		return fmt.Errorf("%v too short", instr)
 	}
@@ -192,12 +195,16 @@ func (asm *assembunnyComputer) Reset() {
 // ReadMemory reads from a tape of memory represented by a slice of instructions.
 // It does not reset the registers or the instruction pointer.
 func (asm *assembunnyComputer) ReadMemory(memory []string) error {
+	iterCount := 0
 	for asm.GetInstructionPointer() < len(memory) && asm.GetInstructionPointer() >= 0 {
 		instr := memory[asm.GetInstructionPointer()]
-		if err := asm.readInstruction(instr); err != nil {
+		if err := asm.ReadInstruction(instr); err != nil {
+			glog.Warningf("Program terminated at %d instructions", iterCount)
 			return errors.Wrapf(err, "could not parse instruction %v at pointer %v", instr, asm.GetInstructionPointer())
 		}
+		iterCount++
 	}
+	glog.Infof("Program terminated at %d instructions", iterCount)
 	return nil
 }
 
@@ -209,12 +216,12 @@ func (asm *assembunnyComputer) ReadMemory(memory []string) error {
 // The number of instructions do not exceed 50.
 // For example:
 //
-// 		cpy 41 a
-// 		inc a
-// 		inc a
-// 		dec a
-// 		jnz a 2
-// 		dec a
+// 	cpy 41 a
+// 	inc a
+// 	inc a
+// 	dec a
+// 	jnz a 2
+// 	dec a
 func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var asm assembunnyComputer
 	memory := make([]string, 0)
@@ -235,7 +242,7 @@ func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// but something's up
 	asm.Reset()
 	if err = asm.Set("c", 1); err != nil {
-		err = errors.Wrapf(err, "could not set reg a")
+		err = errors.Wrapf(err, "could not set reg c")
 		return
 	}
 	if err = asm.ReadMemory(memory); err != nil {

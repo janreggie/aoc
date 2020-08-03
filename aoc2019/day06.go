@@ -85,8 +85,7 @@ exterloop:
 		}
 		ob2parents = append(ob2parents, ptr)
 	}
-	_ = lca
-	fmt.Println("stop!")
+	_ = lca // we didn't really use this did we?
 	return ob1gen + len(ob2parents) - 2
 }
 

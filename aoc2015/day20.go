@@ -47,15 +47,33 @@ func (dv divisors) count() uint {
 	return uint(len(dv))
 }
 
-// onlyFifty returns a subset of divisors that are less than the number over fifty
+// last returns the final number of divisors, which should be the number pertaining to the divisors
+func (dv divisors) last() uint {
+	return dv[dv.count()-1]
+}
+
+// onlyFifty returns a subset of divisors that are greater than the number
+// when multiplied by fifty.
+// It is guaranteed that dv is sorted.
 func (dv divisors) onlyFifty() divisors {
-	result := make(divisors, 0)
-	number := dv[len(dv)-1]
-	for _, vv := range dv {
-		if vv*50 >= number {
-			result = append(result, vv)
+	// result := make(divisors, 0)
+	// number := dv[len(dv)-1]
+	// for _, vv := range dv {
+	// 	if vv*50 >= number {
+	// 		result = append(result, vv)
+	// 	}
+	// }
+	// return result
+	ind := 0
+	basis := dv[len(dv)-1]
+	for ; ind < len(dv); ind++ {
+		if dv[ind]*50 >= basis {
+			break
 		}
 	}
+	// dv[ind:] contains all what you'd want
+	result := make(divisors, len(dv[ind:]))
+	copy(result, dv[ind:])
 	return result
 }
 
@@ -72,24 +90,48 @@ func Day20(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Scan()
 	inputRaw, err := strconv.ParseUint(scanner.Text(), 10, 32)
 	if err != nil {
-		err = errors.Wrapf(err, "could not read inpout %v", scanner.Text())
+		err = errors.Wrapf(err, "could not read input %v", scanner.Text())
 	}
 	input := uint(inputRaw)
 
-	// second half is not implemented yet.
+	divisorChan := make(chan divisors, 10)
+	done := make(chan struct{})
+
+	// iterator for house counts
+	iterator := make(chan uint, 10)
+	go func() {
+		for ii := uint(1); ; ii++ {
+			select {
+			case <-done:
+				return
+			default:
+				iterator <- ii
+			}
+		}
+	}()
+
+	// generate divisors in parallel
+	for ii := 0; ii < 8; ii++ {
+		go func() {
+			for house := range iterator {
+				divisorChan <- newDivisors(house)
+			}
+		}()
+	}
+
 	wroteFirst, wroteSecond := false, false
-	for house := uint(1); !wroteFirst || !wroteSecond; house++ {
-		// factors := factor(house)
-		divisors := newDivisors(house)
+	for !wroteFirst || !wroteSecond {
+		divisors := <-divisorChan
 		if !wroteFirst && divisors.sum()*10 >= input {
-			answer1 = strconv.FormatUint(uint64(house), 10)
+			answer1 = strconv.FormatUint(uint64(divisors.last()), 10)
 			wroteFirst = true
 		}
 		if !wroteSecond && divisors.onlyFifty().sum()*11 >= input {
-			answer2 = strconv.FormatUint(uint64(house), 10)
+			answer2 = strconv.FormatUint(uint64(divisors.last()), 10)
 			wroteSecond = true
 		}
 	}
+	done <- struct{}{}
 
 	return
 }

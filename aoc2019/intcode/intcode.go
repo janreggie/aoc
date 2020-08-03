@@ -4,7 +4,6 @@ package intcode
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"strconv"
 	"unicode"
@@ -100,36 +99,32 @@ func (ic *Intcode) UninstallAll() {
 
 // Operate performs instructions on the Intcode computer
 // depending on the modules it has
-func (ic *Intcode) Operate() (err error) {
+func (ic *Intcode) Operate() error {
 	// run through the modules
 	for ic.pc < int64(len(ic.mem)) { // while we haven't reached the end yet
 		// let's go through all the modules
+		isFound := false
 		for _, module := range ic.modules {
 			opcode := ic.Current()
 			if module.parameterized {
 				opcode = opcode % 100 // we only care about the last two
 			}
-			if module.opcode != opcode {
-				err = NewInvalidOpcodeError(opcode, ic.pc, module)
-				continue
+			if module.opcode == opcode {
+				if err := module.function(ic); err != nil {
+					if !IsHalt(err) {
+						return NewOperationError(err, ic)
+					}
+					return err
+				}
+				isFound = true
+				break // out of the loop once we found a module
 			}
-			// but hey it's equal now!!
-			err = module.function(ic)
-			break // out of the loop once we found a module
 		}
-		if err != nil {
-			if IsHalt(err) {
-				return err // I mean... it's a halt. that's okay.
-			}
-			if _, isInvalid := err.(*InvalidOpcodeError); isInvalid {
-				err = NewOperationError(errors.New("could not find a suitable opcode"), ic)
-				return
-			}
-			err = NewOperationError(err, ic)
-			return // either something happened in module.function or it cannot find a module
+		if !isFound {
+			return NewInvalidOpcodeError(ic.Current(), ic.pc)
 		}
 	}
-	return
+	return nil
 }
 
 // Snapshot returns a copy of its memory

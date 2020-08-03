@@ -191,9 +191,12 @@ func (e littleScreenError) Error() string {
 // Input
 //
 // A series of card instructions that look like the following:
+//
 //	rect AxB
 //	rotate row y=A by B
 //	rotate column x=A by B
+//
+// An invalid instruction will cause an error.
 func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var ls littleScreen
 	for scanner.Scan() {
