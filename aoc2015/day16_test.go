@@ -1,11 +1,9 @@
 package aoc2015
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -513,17 +511,17 @@ Sue 500: cats: 2, goldfish: 9, children: 8
 
 func TestDay16(t *testing.T) {
 	assert := assert.New(t)
-	testCase := tools.TestCase{
-		Details: "Y2015D16 my test case",
-		Input:   day16myInput,
-		Result1: "40",
-		Result2: "241",
+	testCases := []internal.TestCase{
+		{Details: "Y2015D16 my test case",
+			Input:   day16myInput,
+			Result1: "40",
+			Result2: "241"},
 	}
-	testCase.Test(Day16, assert)
+	for _, tt := range testCases {
+		tt.Test(Day16, assert)
+	}
 }
 
 func BenchmarkDay16(b *testing.B) {
-	for ii := 0; ii < b.N; ii++ {
-		Day16(bufio.NewScanner(strings.NewReader(day16myInput)))
-	}
+	internal.Benchmark(Day16, b, day16myInput)
 }

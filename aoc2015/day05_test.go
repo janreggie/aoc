@@ -3,13 +3,1014 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
+const day05myInput = `zgsnvdmlfuplrubt
+vlhagaovgqjmgvwq
+ffumlmqwfcsyqpss
+zztdcqzqddaazdjp
+eavfzjajkjesnlsb
+urrvucyrzzzooxhx
+xdwduffwgcptfwad
+orbryxwrmvkrsxsr
+jzfeybjlgqikjcow
+mayoqiswqqryvqdi
+iiyrkoujhgpgkcvx
+egcgupjkqwfiwsjl
+zbgtglaqqolttgng
+eytquncjituzzhsx
+dtfkgggvqadhqbwb
+zettygjpcoedwyio
+rwgwbwzebsnjmtln
+esbplxhvzzgawctn
+vnvshqgmbotvoine
+wflxwmvbhflkqxvo
+twdjikcgtpvlctte
+minfkyocskvgubvm
+sfxhhdhaopajbzof
+sofkjdtalvhgwpql
+uqfpeauqzumccnrc
+tdflsbtiiepijanf
+dhfespzrhecigzqb
+xobfthcuuzhvhzpn
+olgjglxaotocvrhw
+jhkzpfcskutwlwge
+zurkakkkpchzxjhq
+hekxiofhalvmmkdl
+azvxuwwfmjdpjskj
+arsvmfznblsqngvb
+ldhkzhejofreaucc
+adrphwlkehqkrdmo
+wmveqrezfkaivvaw
+iyphmphgntinfezg
+blomkvgslfnvspem
+cgpaqjvzhbumckwo
+ydhqjcuotkeyurpx
+sbtzboxypnmdaefr
+vxrkhvglynljgqrg
+ttgrkjjrxnxherxd
+hinyfrjdiwytetkw
+sufltffwqbugmozk
+tohmqlzxxqzinwxr
+jbqkhxfokaljgrlg
+fvjeprbxyjemyvuq
+gmlondgqmlselwah
+ubpwixgxdloqnvjp
+lxjfhihcsajxtomj
+qouairhvrgpjorgh
+nloszcwcxgullvxb
+myhsndsttanohnjn
+zjvivcgtjwenyilz
+qaqlyoyouotsmamm
+tadsdceadifqthag
+mafgrbmdhpnlbnks
+aohjxahenxaermrq
+ovvqestjhbuhrwlr
+lnakerdnvequfnqb
+agwpwsgjrtcjjikz
+lhlysrshsmzryzes
+xopwzoaqtlukwwdu
+xsmfrfteyddrqufn
+ohnxbykuvvlbbxpf
+bbdlivmchvzfuhoc
+vtacidimfcfyobhf
+tinyzzddgcnmiabd
+tcjzxftqcqrivqhn
+vgnduqyfpokbmzim
+revkvaxnsxospyow
+ydpgwxxoxlywxcgi
+wzuxupbzlpzmikel
+nscghlafavnsycjh
+xorwbquzmgmcapon
+asmtiycegeobfxrn
+eqjzvgkxgtlyuxok
+mmjrskloposgjoqu
+gceqosugbkvytfto
+khivvoxkvhrgwzjl
+qtmejuxbafroifjt
+ttmukbmpoagthtfl
+bxqkvuzdbehtduwv
+gvblrpzjylanoggj
+cltewhyjxdbmbtqj
+fbkgedqvomdipklj
+uxvuplhenqawfcjt
+fkdjmayiawdkycva
+gnloqfgbnibzyidh
+kyzorvtopjiyyyqg
+drckpekhpgrioblt
+tvhrkmbnpmkkrtki
+khaldwntissbijiz
+aoojqakosnaxosom
+xfptccznbgnpfyqw
+moqdwobwhjxhtrow
+chfwivedutskovri
+gprkyalfnpljcrmi
+pwyshpwjndasykst
+xuejivogihttzimd
+bugepxgpgahtsttl
+zufmkmuujavcskpq
+urybkdyvsrosrfro
+isjxqmlxwtqmulbg
+pxctldxgqjqhulgz
+hclsekryiwhqqhir
+hbuihpalwuidjpcq
+ejyqcxmfczqfhbxa
+xljdvbucuxnnaysv
+irqceqtqwemostbb
+anfziqtpqzqdttnz
+cgfklbljeneeqfub
+zudyqkuqqtdcpmuo
+iuvhylvznmhbkbgg
+mpgppmgfdzihulnd
+argwmgcvqqkxkrdi
+pdhrfvdldkfihlou
+cbvqnjrvrsnqzfob
+lkvovtsqanohzcmm
+vxoxjdyoylqcnyzt
+kurdpaqiaagiwjle
+gwklwnazaxfkuekn
+rbaamufphjsjhbdl
+tzbrvaqvizhsisbd
+pbcqlbfjvlideiub
+hiwoetbfywaeddtx
+fjirczxtuupfywyf
+omeoegeyyospreem
+ozbbpupqpsskvrjh
+pzvcxkvjdiyeyhxa
+odclumkenabcsfzr
+npdyqezqdjqaszvm
+yodkwzmrhtexfrqa
+rjcmmggjtactfrxz
+mioxfingsfoimual
+aqskaxjjborspfaa
+wientdsttkevjtkf
+tdaswkzckmxnfnct
+voucjhzvkkhuwoqk
+boaaruhalgaamqmh
+iufzxutxymorltvb
+pfbyvbayvnrpijpo
+obztirulgyfthgcg
+ntrenvhwxypgtjwy
+ephlkipjfnjfjrns
+pkjhurzbmobhszpx
+gqbnjvienzqfbzvj
+wjelolsrbginwnno
+votanpqpccxqricj
+bxyuyiglnmbtvehi
+qyophcjfknbcbjrb
+anoqkkbcdropskhj
+tcnyqaczcfffkrtl
+rsvqimuqbuddozrf
+meppxdrenexxksdt
+tyfhfiynzwadcord
+wayrnykevdmywycf
+mhowloqnppswyzbu
+tserychksuwrgkxz
+xycjvvsuaxsbrqal
+fkrdsgaoqdcqwlpn
+vrabcmlhuktigecp
+xgxtdsvpaymzhurx
+ciabcqymnchhsxkc
+eqxadalcxzocsgtr
+tsligrgsjtrnzrex
+qeqgmwipbspkbbfq
+vzkzsjujltnqwliw
+ldrohvodgbxokjxz
+jkoricsxhipcibrq
+qzquxawqmupeujrr
+mizpuwqyzkdbahvk
+suupfxbtoojqvdca
+ywfmuogvicpywpwm
+uevmznxmsxozhobl
+vjbyhsemwfwdxfxk
+iyouatgejvecmtin
+tcchwpuouypllcxe
+lgnacnphdiobdsef
+uoxjfzmdrmpojgbf
+lqbxsxbqqhpjhfxj
+knpwpcnnimyjlsyz
+fezotpoicsrshfnh
+dkiwkgpmhudghyhk
+yzptxekgldksridv
+pckmzqzyiyzdbcts
+oqshafncvftvwvsi
+yynihvdywxupqmbt
+iwmbeunfiuhjaaic
+pkpkrqjvgocvaxjs
+ieqspassuvquvlyz
+xshhahjaxjoqsjtl
+fxrrnaxlqezdcdvd
+pksrohfwlaqzpkdd
+ravytrdnbxvnnoyy
+atkwaifeobgztbgo
+inkcabgfdobyeeom
+ywpfwectajohqizp
+amcgorhxjcybbisv
+mbbwmnznhafsofvr
+wofcubucymnhuhrv
+mrsamnwvftzqcgta
+tlfyqoxmsiyzyvgv
+ydceguvgotylwtea
+btyvcjqhsygunvle
+usquiquspcdppqeq
+kifnymikhhehgote
+ybvkayvtdpgxfpyn
+oulxagvbavzmewnx
+tvvpekhnbhjskzpj
+azzxtstaevxurboa
+nfmwtfgrggmqyhdf
+ynyzypdmysfwyxgr
+iaobtgubrcyqrgmk
+uyxcauvpyzabbzgv
+fbasfnwiguasoedc
+mgmjoalkbvtljilq
+szgkxiqkufdvtksb
+xgfzborpavdmhiuj
+hmuiwnsonvfgcrva
+zolcffdtobfntifb
+mvzgcsortkugvqjr
+pbbpgraaldqvzwhs
+zvsxegchksgnhpuv
+kdpdboaxsuxfswhx
+jdfggigejfupabth
+tpeddioybqemyvqz
+mxsntwuesonybjby
+tzltdsiojfvocige
+ubtdrneozoejiqrv
+fusyucnhncoxqzql
+nlifgomoftdvkpby
+pyikzbxoapffbqjw
+hzballplvzcsgjug
+ymjyigsfehmdsvgz
+vpqgyxknniunksko
+ffkmaqsjxgzclsnq
+jcuxthbedplxhslk
+ymlevgofmharicfs
+nyhbejkndhqcoisy
+rjntxasfjhnlizgm
+oqlnuxtzhyiwzeto
+tntthdowhewszitu
+rmxyoceuwhsvfcua
+qpgsjzwenzbxyfgw
+sumguxpdkocyagpu
+ymfrbxwrawejkduu
+hetgrtmojolbmsuf
+qzqizpiyfasgttex
+qnmoemcpuckzsshx
+ddyqiihagcmnxccu
+oirwxyfxxyktgheo
+phpaoozbdogbushy
+uctjdavsimsrnvjn
+aurbbphvjtzipnuh
+hpbtrubopljmltep
+pyyvkthqfsxqhrxg
+jdxaiqzkepxbfejk
+ukgnwbnysrzvqzlw
+lfkatkvcssnlpthd
+ucsyecgshklhqmsc
+rwdcbdchuahkvmga
+rxkgqakawgpwokum
+hbuyxeylddfgorgu
+tbllspqozaqzglkz
+rqfwizjlbwngdvvi
+xuxduyzscovachew
+kouiuxckkvmetvdy
+ycyejrpwxyrweppd
+trctlytzwiisjamx
+vtvpjceydunjdbez
+gmtlejdsrbfofgqy
+jgfbgtkzavcjlffj
+tyudxlpgraxzchdk
+gyecxacqitgozzgd
+rxaocylfabmmjcvt
+tornfzkzhjyofzqa
+kocjcrqcsvagmfqv
+zfrswnskuupivzxb
+cunkuvhbepztpdug
+pmpfnmklqhcmrtmf
+tfebzovjwxzumxap
+xpsxgaswavnzkzye
+lmwijdothmxclqbr
+upqxhmctbltxkarl
+axspehytmyicthmq
+xdwrhwtuooikehbk
+tpggalqsytvmwerj
+jodysbwnymloeqjf
+rxbazvwuvudqlydn
+ibizqysweiezhlqa
+uexgmotsqjfauhzp
+ldymyvumyhyamopg
+vbxvlvthgzgnkxnf
+pyvbrwlnatxigbrp
+azxynqididtrwokb
+lwafybyhpfvoawto
+ogqoivurfcgspytw
+cinrzzradwymqcgu
+sgruxdvrewgpmypu
+snfnsbywuczrshtd
+xfzbyqtyxuxdutpw
+fmpvjwbulmncykbo
+ljnwoslktrrnffwo
+ceaouqquvvienszn
+yjomrunrxjyljyge
+xpmjsapbnsdnbkdi
+uetoytptktkmewre
+eixsvzegkadkfbua
+afaefrwhcosurprw
+bwzmmvkuaxiymzwc
+gejyqhhzqgsrybni
+gjriqsfrhyguoiiw
+gtfyomppzsruhuac
+ogemfvmsdqqkfymr
+jgzbipsygirsnydh
+zghvlhpjnvqmocgr
+ngvssuwrbtoxtrka
+ietahyupkbuisekn
+gqxqwjizescbufvl
+eiprekzrygkncxzl
+igxfnxtwpyaamkxf
+soqjdkxcupevbren
+fspypobyzdwstxak
+qstcgawvqwtyyidf
+gsccjacboqvezxvd
+bfsblokjvrqzphmc
+srezeptvjmncqkec
+opmopgyabjjjoygt
+msvbufqexfrtecbf
+uiaqweyjiulplelu
+pbkwhjsibtwjvswi
+xwwzstmozqarurrq
+nytptwddwivtbgyq
+ejxvsufbzwhzpabr
+jouozvzuwlfqzdgh
+gfgugjihbklbenrk
+lwmnnhiuxqsfvthv
+bzvwbknfmaeahzhi
+cgyqswikclozyvnu
+udmkpvrljsjiagzi
+zzuhqokgmisguyna
+ekwcdnjzuctsdoua
+eueqkdrnzqcaecyd
+lnibwxmokbxhlris
+fdrbftgjljpzwhea
+iabvuhhjsxmqfwld
+qgogzkynrgejakta
+mfcqftytemgnpupp
+klvhlhuqhosvjuqk
+gdokmxcgoqvzvaup
+juududyojcazzgvr
+fyszciheodgmnotg
+yfpngnofceqfvtfs
+cahndkfehjumwavc
+dxsvscqukljxcqyi
+cqukcjtucxwrusji
+vevmmqlehvgebmid
+ahswsogfrumzdofy
+ftasbklvdquaxhxb
+tsdeumygukferuif
+ybfgbwxaaitpwryg
+djyaoycbymezglio
+trzrgxdjqnmlnzpn
+rumwchfihhihpqui
+ffrvnsgrnzemksif
+oizlksxineqknwzd
+cirqcprftpjzrxhk
+zrhemeqegmzrpufd
+kqgatudhxgzlgkey
+syjugymeajlzffhq
+nlildhmgnwlopohp
+flcszztfbesqhnyz
+ohzicmqsajyqptrw
+ebyszucgozsjbelq
+enxbgvvcuqeloxud
+ubwnvecbsmhkxwuk
+noifliyxvlkqphbo
+hazlqpetgugxxsiz
+ihdzoerqwqhgajzb
+ivrdwdquxzhdrzar
+synwycdvrupablib
+mqkdjkntblnmtvxj
+qmmvoylxymyovrnq
+pjtuxskkowutltlq
+gchrqtloggkrjciz
+namzqovvsdipazae
+yfokqhkmakyjzmys
+iapxlbuoiwqfnozm
+fbcmlcekgfdurqxe
+ednzgtczbplwxjlq
+gdvsltzpywffelsp
+oaitrrmpqdvduqej
+gseupzwowmuuibjo
+dfzsffsqpaqoixhh
+tclhzqpcvbshxmgx
+cfqkptjrulxiabgo
+iraiysmwcpmtklhf
+znwjlzodhktjqwlm
+lcietjndlbgxzjht
+gdkcluwjhtaaprfo
+vbksxrfznjzwvmmt
+vpfftxjfkeltcojl
+thrmzmeplpdespnh
+yafopikiqswafsit
+xxbqgeblfruklnhs
+qiufjijzbcpfdgig
+ikksmllfyvhyydmi
+sknufchjdvccccta
+wpdcrramajdoisxr
+grnqkjfxofpwjmji
+lkffhxonjskyccoh
+npnzshnoaqayhpmb
+fqpvaamqbrnatjia
+oljkoldhfggkfnfc
+ihpralzpqfrijynm
+gvaxadkuyzgbjpod
+onchdguuhrhhspen
+uefjmufwlioenaus
+thifdypigyihgnzo
+ugqblsonqaxycvkg
+yevmbiyrqdqrmlbw
+bvpvwrhoyneorcmm
+gbyjqzcsheaxnyib
+knhsmdjssycvuoqf
+nizjxiwdakpfttyh
+nwrkbhorhfqqoliz
+ynsqwvwuwzqpzzwp
+yitscrgexjfclwwh
+dhajwxqdbtrfltzz
+bmrfylxhthiaozpv
+frvatcvgknjhcndw
+xlvtdmpvkpcnmhya
+pxpemuzuqzjlmtoc
+dijdacfteteypkoq
+knrcdkrvywagglnf
+fviuajtspnvnptia
+xvlqzukmwbcjgwho
+bazlsjdsjoeuvgoz
+nslzmlhosrjarndj
+menvuwiuymknunwm
+uavfnvyrjeiwqmuu
+yrfowuvasupngckz
+taevqhlrcohlnwye
+skcudnogbncusorn
+omtnmkqnqedsajfv
+yqmgsqdgsuysqcts
+odsnbtyimikkbmdd
+vuryaohxdvjllieb
+dhaxldeywwsfamlo
+opobvtchezqnxpak
+pzfnegouvsrfgvro
+rzkcgpxdslzrdktu
+ksztdtqzxvhuryam
+ctnqnhkcooqipgkh
+pyqbbvrzdittqbgm
+koennvmolejeftij
+rvzlreqikqlgyczj
+xrnujfoyhonzkdgd
+mmsmhkxaiqupfjil
+ypjwoemqizddvyfd
+qgugcxnbhvgahykj
+cviodlsrtimbkgmy
+xbfbbechhmrjxhnw
+psuipaoucfczfxkp
+hdhwcpeuptgqqvim
+gsxlruhjeaareilr
+vgyqonnljuznyrhk
+eewezahlumervpyu
+iiolebrxfadtnigy
+tdadlrodykrdfscn
+ocvdtzjxrhtjurpo
+gidljbuvuovkhhrf
+qwfcpilbjwzboohd
+xzohxonlezuiupbg
+vslpbkkqgvgbcbix
+pivzqrzfxosbstzn
+fyqcfboevcqmbhhs
+yqsrneacnlxswojx
+heicqpxxyrwcbsjz
+yzynmnnoumkmlbeh
+bncadbjdvvmczylw
+hlnjskgfzbgmigfn
+fphpszymugpcykka
+zbifcktanxpmufvy
+saklpkhoyfeqbguy
+nqtqfcfxmpivnjyo
+locygrwerxlsvzqm
+qqflecydqvlogjme
+njklmixvgkzpgppf
+ugzkpjwjflaswyma
+lriousvkbeftslcy
+nsvsauxzfbbotgmh
+tblcpuhjyybrlica
+hqwshxcilwtmxrsf
+xojwroydfeoqupup
+tikuzsrogpnohpib
+layenyqgxdfggloc
+nqsvjvbrpuxkqvmq
+ivchgxkdlfjdzxmk
+uoghiuosiiwiwdws
+twsgsfzyszsfinlc
+waixcmadmhtqvcmd
+zkgitozgrqehtjkw
+xbkmyxkzqyktmpfi
+qlyapfmlybmatwxn
+ntawlvcpuaebuypf
+clhebxqdkcyndyof
+nrcxuceywiklpemc
+lmurgiminxpapzmq
+obalwqlkykzflxou
+huvcudpiryefbcye
+zlxbddpnyuyapach
+gqfwzfislmwzyegy
+jhynkjtxedmemlob
+hmrnvjodnsfiukex
+pstmikjykzyavfef
+wuwpnscrwzsyalyt
+hksvadripgdgwynm
+tvpfthzjleqfxwkh
+xpmrxxepkrosnrco
+qjkqecsnevlhqsly
+jjnrfsxzzwkhnwdm
+pehmzrzsjngccale
+bsnansnfxduritrr
+ejzxkefwmzmbxhlb
+pceatehnizeujfrs
+jtidrtgxopyeslzl
+sytaoidnamfwtqcr
+iabjnikomkgmyirr
+eitavndozoezojsi
+wtsbhaftgrbqfsmm
+vvusvrivsmhtfild
+qifbtzszfyzsjzyx
+ifhhjpaqatpbxzau
+etjqdimpyjxiuhty
+fvllmbdbsjozxrip
+tjtgkadqkdtdlkpi
+xnydmjleowezrecn
+vhcbhxqalroaryfn
+scgvfqsangfbhtay
+lbufpduxwvdkwhmb
+tshipehzspkhmdoi
+gtszsebsulyajcfl
+dlrzswhxajcivlgg
+kgjruggcikrfrkrw
+xxupctxtmryersbn
+hljjqfjrubzozxts
+giaxjhcwazrenjzs
+tyffxtpufpxylpye
+jfugdxxyfwkzqmgv
+kbgufbosjghahacw
+xpbhhssgegmthwxb
+npefofiharjypyzk
+velxsseyxuhrpycy
+sglslryxsiwwqzfw
+susohnlpelojhklv
+lfnpqfvptqhogdmk
+vtcrzetlekguqyle
+jlyggqdtamcjiuxn
+olxxqfgizjmvigvl
+cyypypveppxxxfuq
+hewmxtlzfqoqznwd
+jzgxxybfeqfyzsmp
+xzvvndrhuejnzesx
+esiripjpvtqqwjkv
+xnhrwhjtactofwrd
+knuzpuogbzplofqx
+tihycsdwqggxntqk
+xkfywvvugkdalehs
+cztwdivxagtqjjel
+dsaslcagopsbfioy
+gmowqtkgrlqjimbl
+ctcomvdbiatdvbsd
+gujyrnpsssxmqjhz
+nygeovliqjfauhjf
+mmgmcvnuppkbnonz
+bhipnkoxhzcotwel
+wkwpgedgxvpltqid
+mliajvpdocyzcbot
+kqjhsipuibyjuref
+zqdczykothbgxwsy
+koirtljkuqzxioaz
+audpjvhmqzvhzqas
+cxyhxlhntyidldfx
+iasgocejboxjgtkx
+abehujmqotwcufxp
+fmlrzqmazajxeedl
+knswpkekbacuxfby
+yvyalnvrxgstqhxm
+sjnrljfrfuyqfwuw
+ssaqruwarlvxrqzm
+iaxbpeqqzlcwfqjz
+uwyxshjutkanvvsc
+uxwrlwbblcianvnb
+nodtifgrxdojhneh
+mloxjfusriktxrms
+lkfzrwulbctupggc
+gcrjljatfhitcgfj
+tkdfxeanwskaivqs
+ypyjxqtmitwubbgt
+ssxbygzbjsltedjj
+zdrsnoorwqfalnha
+xlgmissaiqmowppd
+azhbwhiopwpguiuo
+fydlahgxtekbweet
+qtaveuqpifprdoiy
+kpubqyepxqleucem
+wlqrgqmnupwiuory
+rwyocktuqkuhdwxz
+abzjfsdevoygctqv
+zsofhaqqghncmzuw
+lqbjwjqxqbfgdckc
+bkhyxjkrqbbunido
+yepxfjnnhldidsjb
+builayfduxbppafc
+wedllowzeuswkuez
+gverfowxwtnvgrmo
+tpxycfumxdqgntwf
+lqzokaoglwnfcolw
+yqsksyheyspmcdqt
+vufvchcjjcltwddl
+saeatqmuvnoacddt
+dxjngeydvsjbobjs
+ucrcxoakevhsgcep
+cajgwjsfxkasbayt
+hknzmteafsfemwuv
+xxwhxwiinchqqudr
+usfenmavvuevevgr
+kxcobcwhsgyizjok
+vhqnydeboeunnvyk
+bgxbwbxypnxvaacw
+bwjzdypacwgervgk
+rrioqjluawwwnjcr
+fiaeyggmgijnasot
+xizotjsoqmkvhbzm
+uzphtrpxwfnaiidz
+kihppzgvgyoncptg
+hfbkfrxwejdeuwbz
+zgqthtuaqyrxicdy
+zitqdjnnwhznftze
+jnzlplsrwovxlqsn
+bmwrobuhwnwivpca
+uuwsvcdnoyovxuhn
+nmfvoqgoppoyosaj
+hxjkcppaisezygpe
+icvnysgixapvtoos
+vbvzajjgrmjygkhu
+jinptbqkyqredaos
+dpmknzhkhleawfvz
+ouwwkfhcedsgqqxe
+owroouiyptrijzgv
+bewnckpmnbrmhfyu
+evdqxevdacsbfbjb
+catppmrovqavxstn
+dqsbjibugjkhgazg
+mkcldhjochtnvvne
+sblkmhtifwtfnmsx
+lynnaujghehmpfpt
+vrseaozoheawffoq
+ytysdzbpbazorqes
+sezawbudymfvziff
+vrlfhledogbgxbau
+bipdlplesdezbldn
+ermaenjunjtbekeo
+eyaedubkthdecxjq
+gbzurepoojlwucuy
+rsiaqiiipjlouecx
+beqjhvroixhiemtw
+buzlowghhqbcbdwv
+ldexambveeosaimo
+fpyjzachgrhxcvnx
+komgvqejojpnykol
+fxebehjoxdujwmfu
+jnfgvheocgtvmvkx
+qmcclxxgnclkuspx
+rsbelzrfdblatmzu
+vexzwqjqrsenlrhm
+tnfbkclwetommqmh
+lzoskleonvmprdri
+nnahplxqscvtgfwi
+ubqdsflhnmiayzrp
+xtiyqxhfyqonqzrn
+omdtmjeqhmlfojfr
+cnimgkdbxkkcnmkb
+tapyijgmxzbmqnks
+byacsxavjboovukk
+awugnhcrygaoppjq
+yxcnwrvhojpuxehg
+btjdudofhxmgqbao
+nzqlfygiysfuilou
+nubwfjdxavunrliq
+vqxmmhsbmhlewceh
+ygavmcybepzfevrp
+kgflmrqsvxprkqgq
+iaqyqmcaedscmakk
+cvbojnbfmrawxzkh
+jjjrprbnlijzatuw
+lcsudrrfnnggbrmk
+qzgxbiavunawfibc
+gnnalgfvefdfdwwg
+nokmiitzrigxavsc
+etzoxwzxqkkhvais
+urxxfacgjccieufi
+lqrioqhuvgcotuec
+dydbaeyoypsbftra
+hhrotenctylggzaf
+evctqvzjnozpdxzu
+tbpvithmorujxlcp
+pllbtcbrtkfpvxcw
+fzyxdqilyvqreowv
+xdleeddxwvqjfmmt
+fcldzthqqpbswoin
+sgomzrpjfmvgwlzi
+axjyskmtdjbxpwoz
+hcvaevqxsmabvswh
+lfdlsfcwkwicizfk
+isjbwpzdognhoxvm
+oqnexibqxlyxpluh
+zqfbgodsfzwgcwuf
+kvmnwruwsjllbldz
+kghazimdyiyhmokj
+uiktgpsxpoahofxn
+zkdwawxargcmidct
+ftbixlyiprshrjup
+nofhmbxififwroeg
+mcdaqrhplffxrcdt
+fbjxnwojcvlawmlb
+rizoftvwfdhiwyac
+eduogrtyhxfwyars
+zoikunqxgjwfqqwr
+zxwbbpmvctzezaqh
+nghujwyeabwdqnop
+vcxamijpoyyksogn
+jnckdbuteoqlsdae
+jurfqqawafmsiqwv
+inepmztrzehfafie
+tznzkyvzodbrtscf
+xewbavjeppflwscl
+ucndzsorexjlnplo
+jpxbctscngxgusvu
+mfmygcllauzuoaok
+oibkuxhjmhxhhzby
+zjkslwagmeoisunw
+avnnxmopdgvmukuu
+jmaargejcwboqhkt
+yacmpeosarsrfkrv
+iqhgupookcaovwgh
+ebjkdnxwtikqzufc
+imdhbarytcscbsvb
+ifyibukeffkbqvcr
+aloighmyvwybtxhx
+yszqwrutbkiwkxjg
+xyholyzlltjhsuhp
+gykhmrwucneoxcrf
+badkdgqrpjzbabet
+sunaucaucykwtkjj
+pumqkglgfdhneero
+usgtyuestahlydxq
+xmfhflphzeudjsjm
+knywgmclisgpootg
+mtojnyrnvxtweuzb
+uuxufbwfegysabww
+vobhwwocqttlbsik
+yuydfezeqgqxqmnd
+wbqgqkwbibiilhzc
+sfdmgxsbuzsawush
+ilhbxcfgordyxwvp
+ahqoavuysblnqaeg
+plwgtvpgotskmsey
+ewjcmzkcnautrrmp
+tyekgzbznlikcyqj
+bqzctiuaxpriuiga
+bimvbfjkiupyqiys
+mpqtbcxfhwymxncw
+htemlptvqhharjgb
+mqbsmsruwzzxgcxc
+zjyedjwhnvteuaid
+pzoelkoidwglpttc
+efydnsvlfimvwxhx
+gfyhgoeiyjcgfyze
+deqtomhwopmzvjlt
+casafubtkoopuaju
+yylsfarntbucfulg
+mgjwsormkjsrrxan
+lkkenpupgmjpnqqd
+tegweszyohsoluot
+lihsfdwxmxvwdxna
+rrefrjjxerphejwb
+guuazonjoebhymtm
+ysofqzmfmyneziki
+lmjgaliatcpduoal
+qzthcpjwtgahbebr
+wvakvephyukmpemm
+simxacxxzfoaeddw
+aetgqmiqzxbvbviz
+jxlmhdmqggevrxes
+mmuglnjmuddzgaik
+svopsqhtrslgycgc
+xnvcsiiqrcjkvecn
+kkvumxtvashxcops
+bduflsdyeectvcgl
+vfrxbwmmytjvqnsj
+eeqtdneiyiaiofxw
+crtbgknfacjtwkfl
+uuutuoxdsxolpbhd
+lcrztwzreaswovtn
+htorkvnvujmjdqzj
+wttzuzvrzlyhfzyf
+oraewznfwgdsnhuk
+rctlkqqvkwbgrcgk
+cfehrsrqhzyiwtmz
+kbvxwcumjkhvjpui
+xxlocexbmniiakfo
+gtknkkzvykmlqghl
+kcjuxvkuimhwqrtk
+vohekwkuyuoacuww
+vorctgughscysyfo
+zmjevqplngzswxyq
+qhswdrhrijnatkyo
+joakcwpfggtitizs
+juzlwjijcmtswdtq
+icbyaqohpkemhkip
+rpdxgpzxncedmvzh
+rozkmimbqhbhcddv
+wkkypomlvyglpfpf
+jcaqyaqvsefwtaya
+ghvmtecoxlebdwnf
+lqrcyiykkkpkxvqt
+eqlarfazchmzotev
+vqwndafvmpguggef
+dbfxzrdkkrusmdke
+cmjpjjgndozcmefj
+hbrdcwjuyxapyhlo
+mmforetykbosdwce
+zynfntqwblbnfqik
+sodwujfwlasznaiz
+yyvrivjiqnxzqkfp
+uldbskmmjbqllpnm
+fyhhrmrsukeptynl
+hpfjekktvdkgdkzl
+bozhkoekcxzeorob
+uvpptyfrzkvmtoky
+hkhfprmjdpjvfkcb
+igxzwktwsqhsivqu
+qceomwysgkcylipb
+cglateoynluyeqgc
+xcsdfkpeguxgvpfh
+owjhxlcncdgkqyia
+rpbmrpcesiakqpna
+lueszxiourxsmezb
+zelvsowimzkxliwc
+vzxbttoobtvdtkca
+pfxvzphzwscqkzsi
+edsjorainowytbzu
+ipsegdaluoiphmnz
+mkhueokfpemywvuw
+urxdnumhylpafdlc
+ggluurzavsxkvwkl
+ctclphidqgteakox
+tfobosynxsktajuk
+jzrmemhxqmzhllif
+eemwekimdfvqslsx
+yjkwpzrbanoaajgq
+rlxghzanuyeimfhx
+hozbgdoorhthlqpv
+obkbmflhyanxilnx
+xojrippyxjmpzmsz
+ukykmbfheixuviue
+qivlmdexwucqkres
+rmyxxipqkarpjmox
+fgaftctbvcvnrror
+raawxozucfqvasru
+dinpjbdfjfizexdh
+gybxubwnnbuyvjcr
+qrqitdvyoneqyxcg
+jqzcfggayzyoqteo
+cikqpvxizpdbmppm
+stfpldgyhfmucjjv
+slzbcuihmimpduri
+aufajwfrsorqqsnl
+iylmzraibygmgmqj
+lcdyfpcqlktudfmu
+pmomzzsdpvgkkliw
+zpplirgtscfhbrkj
+mvhyerxfiljlotjl
+ofkvrorwwhusyxjx
+xngzmvcgkqfltjpe
+yxfxaqipmysahqqq
+sdqafdzgfdjuabup
+qcqajmerahcdgxfv
+xqimrqtupbapawro
+qfvkqwidzzrehsbl
+himixxvueksiqfdf
+vgtfqpuzxxmhrvvd
+adiioqeiejguaost
+jnzxuycjxvxehbvm
+xedbpxdhphamoodk
+jsrioscmwlsfuxrg
+mtsynnfxunuohbnf
+enamqzfzjunnnkpe
+uwcvfecunobyhces
+ciygixtgbsccpftq
+ewjgcronizkcsfjy
+wztjkoipxsikoimv
+jrgalyvfelwxforw
+imylyalawbqwkrwb
+yflwqfnuuvgjsgcj
+wkysyzusldlojoue
+zopllxnidcffcuau
+bscgwxuprxaerskj
+zvnvprxxjkhnkkpq
+nejwxbhjxxdbenid
+chryiccsebdbcnkc
+guoeefaeafhlgvxh
+nzapxrfrrqhsingx
+mkzvquzvqvwsejqs
+kozmlmbchydtxeeo
+keylygnoqhmfzrfp
+srwzoxccndoxylxe
+uqjzalppoorosxxo
+potmkinyuqxsfdfw
+qkkwrhpbhypxhiun
+wgfvnogarjmdbxyh
+gkidtvepcvxopzuf
+atwhvmmdvmewhzty
+pybxizvuiwwngqej
+zfumwnazxwwxtiry
+keboraqttctosemx
+vtlzxaqdetbhclib
+wjiecykptzexuayl
+ejatfnyjjdawepyk
+mpcrobansyssvmju
+gqukndzganeueabm
+ukzscvomorucdnqd
+wfydhtbzehgwfazx
+mtwqdzlephqvxqmx
+dltmlfxbjopefibh
+atcfrowdflluqtbi
+vowawlophlxaqonw
+vblgdjzvwnocdipw
+uzerzksmkvnlvlhm
+ytjwhpaylohorvxd
+siprvfxvnxcdgofz
+cbhjupewcyjhvtgs
+apqtozaofusmfqli
+tmssrtlxfouowqnr
+ntutrvwnzzgmokes
+zrsgpwdzokztdpis
+nrobvmsxtfmrqdhv
+kadkaftffaziqdze
+yrovbgcyqtlsnoux
+modheiwuhntdecqs
+gzhjypwddizemnys
+gaputpwpcsvzxjho
+bgmouxwoajgaozau
+oxuapfrjcpyakiwt
+kntwbvhuaahdixzj
+epqjdjbnkxdnaccx
+dspltdvznhypykri
+tdrgqmbnagrxdwtt
+njfqawzjggmemtbg
+chpemsgwpzjpdnkk
+fpsrobmbqbmigmwk
+flxptsrqaazmprnl
+nzdunrxlcbfklshm
+miuwljvtkgzdlbnn
+xbhjakklmbhsdmdt
+xwxhsbnrwnegwcov
+pwosflhodjaiexwq
+fhgepuluczttfvqh
+tldxcacbvxyamvkt
+gffxatrjglkcehim
+tzotkdrpxkucsdps
+wxheftdepysvmzbe
+qfooyczdzoewrmku
+rvlwikuqdbpjuvoo
+bcbrnbtfrdgijtzt
+vaxqmvuogsxonlgq
+ibsolflngegravgo
+txntccjmqakcoorp
+vrrbmqaxfbarmlmc
+dzspqmttgsuhczto
+pikcscjunxlwqtiw
+lwzyogwxqitqfqlv
+gsgjsuaqejtzglym
+feyeqguxbgmcmgpp
+gmttebyebdwvprkn
+mzuuwbhzdjfdryxu
+fganrbnplymqbzjx
+cvsrbdcvhtxxdmro
+scmgkjlkqukoamyp
+fkgrqbyqpqcworqc
+hjsrvkdibdjarxxb
+sztzziuqroeidcus
+pxdfvcpvwaddrzwv
+phdqqxleqdjfgfbg
+cqfikbgxvjmnfncy`
+
 func TestDay05(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		// Note that the results represent how many nice strings there are.
 		// And since there is only one input,
 		// a result of 0 means that the string is naughty (at least in Part One or Two)
@@ -39,1006 +1040,7 @@ func TestDay05(t *testing.T) {
 			Result1: "0",
 			Result2: "0"},
 		{Details: "Y2015D05 my input",
-			Input: "zgsnvdmlfuplrubt\n" +
-				"vlhagaovgqjmgvwq\n" +
-				"ffumlmqwfcsyqpss\n" +
-				"zztdcqzqddaazdjp\n" +
-				"eavfzjajkjesnlsb\n" +
-				"urrvucyrzzzooxhx\n" +
-				"xdwduffwgcptfwad\n" +
-				"orbryxwrmvkrsxsr\n" +
-				"jzfeybjlgqikjcow\n" +
-				"mayoqiswqqryvqdi\n" +
-				"iiyrkoujhgpgkcvx\n" +
-				"egcgupjkqwfiwsjl\n" +
-				"zbgtglaqqolttgng\n" +
-				"eytquncjituzzhsx\n" +
-				"dtfkgggvqadhqbwb\n" +
-				"zettygjpcoedwyio\n" +
-				"rwgwbwzebsnjmtln\n" +
-				"esbplxhvzzgawctn\n" +
-				"vnvshqgmbotvoine\n" +
-				"wflxwmvbhflkqxvo\n" +
-				"twdjikcgtpvlctte\n" +
-				"minfkyocskvgubvm\n" +
-				"sfxhhdhaopajbzof\n" +
-				"sofkjdtalvhgwpql\n" +
-				"uqfpeauqzumccnrc\n" +
-				"tdflsbtiiepijanf\n" +
-				"dhfespzrhecigzqb\n" +
-				"xobfthcuuzhvhzpn\n" +
-				"olgjglxaotocvrhw\n" +
-				"jhkzpfcskutwlwge\n" +
-				"zurkakkkpchzxjhq\n" +
-				"hekxiofhalvmmkdl\n" +
-				"azvxuwwfmjdpjskj\n" +
-				"arsvmfznblsqngvb\n" +
-				"ldhkzhejofreaucc\n" +
-				"adrphwlkehqkrdmo\n" +
-				"wmveqrezfkaivvaw\n" +
-				"iyphmphgntinfezg\n" +
-				"blomkvgslfnvspem\n" +
-				"cgpaqjvzhbumckwo\n" +
-				"ydhqjcuotkeyurpx\n" +
-				"sbtzboxypnmdaefr\n" +
-				"vxrkhvglynljgqrg\n" +
-				"ttgrkjjrxnxherxd\n" +
-				"hinyfrjdiwytetkw\n" +
-				"sufltffwqbugmozk\n" +
-				"tohmqlzxxqzinwxr\n" +
-				"jbqkhxfokaljgrlg\n" +
-				"fvjeprbxyjemyvuq\n" +
-				"gmlondgqmlselwah\n" +
-				"ubpwixgxdloqnvjp\n" +
-				"lxjfhihcsajxtomj\n" +
-				"qouairhvrgpjorgh\n" +
-				"nloszcwcxgullvxb\n" +
-				"myhsndsttanohnjn\n" +
-				"zjvivcgtjwenyilz\n" +
-				"qaqlyoyouotsmamm\n" +
-				"tadsdceadifqthag\n" +
-				"mafgrbmdhpnlbnks\n" +
-				"aohjxahenxaermrq\n" +
-				"ovvqestjhbuhrwlr\n" +
-				"lnakerdnvequfnqb\n" +
-				"agwpwsgjrtcjjikz\n" +
-				"lhlysrshsmzryzes\n" +
-				"xopwzoaqtlukwwdu\n" +
-				"xsmfrfteyddrqufn\n" +
-				"ohnxbykuvvlbbxpf\n" +
-				"bbdlivmchvzfuhoc\n" +
-				"vtacidimfcfyobhf\n" +
-				"tinyzzddgcnmiabd\n" +
-				"tcjzxftqcqrivqhn\n" +
-				"vgnduqyfpokbmzim\n" +
-				"revkvaxnsxospyow\n" +
-				"ydpgwxxoxlywxcgi\n" +
-				"wzuxupbzlpzmikel\n" +
-				"nscghlafavnsycjh\n" +
-				"xorwbquzmgmcapon\n" +
-				"asmtiycegeobfxrn\n" +
-				"eqjzvgkxgtlyuxok\n" +
-				"mmjrskloposgjoqu\n" +
-				"gceqosugbkvytfto\n" +
-				"khivvoxkvhrgwzjl\n" +
-				"qtmejuxbafroifjt\n" +
-				"ttmukbmpoagthtfl\n" +
-				"bxqkvuzdbehtduwv\n" +
-				"gvblrpzjylanoggj\n" +
-				"cltewhyjxdbmbtqj\n" +
-				"fbkgedqvomdipklj\n" +
-				"uxvuplhenqawfcjt\n" +
-				"fkdjmayiawdkycva\n" +
-				"gnloqfgbnibzyidh\n" +
-				"kyzorvtopjiyyyqg\n" +
-				"drckpekhpgrioblt\n" +
-				"tvhrkmbnpmkkrtki\n" +
-				"khaldwntissbijiz\n" +
-				"aoojqakosnaxosom\n" +
-				"xfptccznbgnpfyqw\n" +
-				"moqdwobwhjxhtrow\n" +
-				"chfwivedutskovri\n" +
-				"gprkyalfnpljcrmi\n" +
-				"pwyshpwjndasykst\n" +
-				"xuejivogihttzimd\n" +
-				"bugepxgpgahtsttl\n" +
-				"zufmkmuujavcskpq\n" +
-				"urybkdyvsrosrfro\n" +
-				"isjxqmlxwtqmulbg\n" +
-				"pxctldxgqjqhulgz\n" +
-				"hclsekryiwhqqhir\n" +
-				"hbuihpalwuidjpcq\n" +
-				"ejyqcxmfczqfhbxa\n" +
-				"xljdvbucuxnnaysv\n" +
-				"irqceqtqwemostbb\n" +
-				"anfziqtpqzqdttnz\n" +
-				"cgfklbljeneeqfub\n" +
-				"zudyqkuqqtdcpmuo\n" +
-				"iuvhylvznmhbkbgg\n" +
-				"mpgppmgfdzihulnd\n" +
-				"argwmgcvqqkxkrdi\n" +
-				"pdhrfvdldkfihlou\n" +
-				"cbvqnjrvrsnqzfob\n" +
-				"lkvovtsqanohzcmm\n" +
-				"vxoxjdyoylqcnyzt\n" +
-				"kurdpaqiaagiwjle\n" +
-				"gwklwnazaxfkuekn\n" +
-				"rbaamufphjsjhbdl\n" +
-				"tzbrvaqvizhsisbd\n" +
-				"pbcqlbfjvlideiub\n" +
-				"hiwoetbfywaeddtx\n" +
-				"fjirczxtuupfywyf\n" +
-				"omeoegeyyospreem\n" +
-				"ozbbpupqpsskvrjh\n" +
-				"pzvcxkvjdiyeyhxa\n" +
-				"odclumkenabcsfzr\n" +
-				"npdyqezqdjqaszvm\n" +
-				"yodkwzmrhtexfrqa\n" +
-				"rjcmmggjtactfrxz\n" +
-				"mioxfingsfoimual\n" +
-				"aqskaxjjborspfaa\n" +
-				"wientdsttkevjtkf\n" +
-				"tdaswkzckmxnfnct\n" +
-				"voucjhzvkkhuwoqk\n" +
-				"boaaruhalgaamqmh\n" +
-				"iufzxutxymorltvb\n" +
-				"pfbyvbayvnrpijpo\n" +
-				"obztirulgyfthgcg\n" +
-				"ntrenvhwxypgtjwy\n" +
-				"ephlkipjfnjfjrns\n" +
-				"pkjhurzbmobhszpx\n" +
-				"gqbnjvienzqfbzvj\n" +
-				"wjelolsrbginwnno\n" +
-				"votanpqpccxqricj\n" +
-				"bxyuyiglnmbtvehi\n" +
-				"qyophcjfknbcbjrb\n" +
-				"anoqkkbcdropskhj\n" +
-				"tcnyqaczcfffkrtl\n" +
-				"rsvqimuqbuddozrf\n" +
-				"meppxdrenexxksdt\n" +
-				"tyfhfiynzwadcord\n" +
-				"wayrnykevdmywycf\n" +
-				"mhowloqnppswyzbu\n" +
-				"tserychksuwrgkxz\n" +
-				"xycjvvsuaxsbrqal\n" +
-				"fkrdsgaoqdcqwlpn\n" +
-				"vrabcmlhuktigecp\n" +
-				"xgxtdsvpaymzhurx\n" +
-				"ciabcqymnchhsxkc\n" +
-				"eqxadalcxzocsgtr\n" +
-				"tsligrgsjtrnzrex\n" +
-				"qeqgmwipbspkbbfq\n" +
-				"vzkzsjujltnqwliw\n" +
-				"ldrohvodgbxokjxz\n" +
-				"jkoricsxhipcibrq\n" +
-				"qzquxawqmupeujrr\n" +
-				"mizpuwqyzkdbahvk\n" +
-				"suupfxbtoojqvdca\n" +
-				"ywfmuogvicpywpwm\n" +
-				"uevmznxmsxozhobl\n" +
-				"vjbyhsemwfwdxfxk\n" +
-				"iyouatgejvecmtin\n" +
-				"tcchwpuouypllcxe\n" +
-				"lgnacnphdiobdsef\n" +
-				"uoxjfzmdrmpojgbf\n" +
-				"lqbxsxbqqhpjhfxj\n" +
-				"knpwpcnnimyjlsyz\n" +
-				"fezotpoicsrshfnh\n" +
-				"dkiwkgpmhudghyhk\n" +
-				"yzptxekgldksridv\n" +
-				"pckmzqzyiyzdbcts\n" +
-				"oqshafncvftvwvsi\n" +
-				"yynihvdywxupqmbt\n" +
-				"iwmbeunfiuhjaaic\n" +
-				"pkpkrqjvgocvaxjs\n" +
-				"ieqspassuvquvlyz\n" +
-				"xshhahjaxjoqsjtl\n" +
-				"fxrrnaxlqezdcdvd\n" +
-				"pksrohfwlaqzpkdd\n" +
-				"ravytrdnbxvnnoyy\n" +
-				"atkwaifeobgztbgo\n" +
-				"inkcabgfdobyeeom\n" +
-				"ywpfwectajohqizp\n" +
-				"amcgorhxjcybbisv\n" +
-				"mbbwmnznhafsofvr\n" +
-				"wofcubucymnhuhrv\n" +
-				"mrsamnwvftzqcgta\n" +
-				"tlfyqoxmsiyzyvgv\n" +
-				"ydceguvgotylwtea\n" +
-				"btyvcjqhsygunvle\n" +
-				"usquiquspcdppqeq\n" +
-				"kifnymikhhehgote\n" +
-				"ybvkayvtdpgxfpyn\n" +
-				"oulxagvbavzmewnx\n" +
-				"tvvpekhnbhjskzpj\n" +
-				"azzxtstaevxurboa\n" +
-				"nfmwtfgrggmqyhdf\n" +
-				"ynyzypdmysfwyxgr\n" +
-				"iaobtgubrcyqrgmk\n" +
-				"uyxcauvpyzabbzgv\n" +
-				"fbasfnwiguasoedc\n" +
-				"mgmjoalkbvtljilq\n" +
-				"szgkxiqkufdvtksb\n" +
-				"xgfzborpavdmhiuj\n" +
-				"hmuiwnsonvfgcrva\n" +
-				"zolcffdtobfntifb\n" +
-				"mvzgcsortkugvqjr\n" +
-				"pbbpgraaldqvzwhs\n" +
-				"zvsxegchksgnhpuv\n" +
-				"kdpdboaxsuxfswhx\n" +
-				"jdfggigejfupabth\n" +
-				"tpeddioybqemyvqz\n" +
-				"mxsntwuesonybjby\n" +
-				"tzltdsiojfvocige\n" +
-				"ubtdrneozoejiqrv\n" +
-				"fusyucnhncoxqzql\n" +
-				"nlifgomoftdvkpby\n" +
-				"pyikzbxoapffbqjw\n" +
-				"hzballplvzcsgjug\n" +
-				"ymjyigsfehmdsvgz\n" +
-				"vpqgyxknniunksko\n" +
-				"ffkmaqsjxgzclsnq\n" +
-				"jcuxthbedplxhslk\n" +
-				"ymlevgofmharicfs\n" +
-				"nyhbejkndhqcoisy\n" +
-				"rjntxasfjhnlizgm\n" +
-				"oqlnuxtzhyiwzeto\n" +
-				"tntthdowhewszitu\n" +
-				"rmxyoceuwhsvfcua\n" +
-				"qpgsjzwenzbxyfgw\n" +
-				"sumguxpdkocyagpu\n" +
-				"ymfrbxwrawejkduu\n" +
-				"hetgrtmojolbmsuf\n" +
-				"qzqizpiyfasgttex\n" +
-				"qnmoemcpuckzsshx\n" +
-				"ddyqiihagcmnxccu\n" +
-				"oirwxyfxxyktgheo\n" +
-				"phpaoozbdogbushy\n" +
-				"uctjdavsimsrnvjn\n" +
-				"aurbbphvjtzipnuh\n" +
-				"hpbtrubopljmltep\n" +
-				"pyyvkthqfsxqhrxg\n" +
-				"jdxaiqzkepxbfejk\n" +
-				"ukgnwbnysrzvqzlw\n" +
-				"lfkatkvcssnlpthd\n" +
-				"ucsyecgshklhqmsc\n" +
-				"rwdcbdchuahkvmga\n" +
-				"rxkgqakawgpwokum\n" +
-				"hbuyxeylddfgorgu\n" +
-				"tbllspqozaqzglkz\n" +
-				"rqfwizjlbwngdvvi\n" +
-				"xuxduyzscovachew\n" +
-				"kouiuxckkvmetvdy\n" +
-				"ycyejrpwxyrweppd\n" +
-				"trctlytzwiisjamx\n" +
-				"vtvpjceydunjdbez\n" +
-				"gmtlejdsrbfofgqy\n" +
-				"jgfbgtkzavcjlffj\n" +
-				"tyudxlpgraxzchdk\n" +
-				"gyecxacqitgozzgd\n" +
-				"rxaocylfabmmjcvt\n" +
-				"tornfzkzhjyofzqa\n" +
-				"kocjcrqcsvagmfqv\n" +
-				"zfrswnskuupivzxb\n" +
-				"cunkuvhbepztpdug\n" +
-				"pmpfnmklqhcmrtmf\n" +
-				"tfebzovjwxzumxap\n" +
-				"xpsxgaswavnzkzye\n" +
-				"lmwijdothmxclqbr\n" +
-				"upqxhmctbltxkarl\n" +
-				"axspehytmyicthmq\n" +
-				"xdwrhwtuooikehbk\n" +
-				"tpggalqsytvmwerj\n" +
-				"jodysbwnymloeqjf\n" +
-				"rxbazvwuvudqlydn\n" +
-				"ibizqysweiezhlqa\n" +
-				"uexgmotsqjfauhzp\n" +
-				"ldymyvumyhyamopg\n" +
-				"vbxvlvthgzgnkxnf\n" +
-				"pyvbrwlnatxigbrp\n" +
-				"azxynqididtrwokb\n" +
-				"lwafybyhpfvoawto\n" +
-				"ogqoivurfcgspytw\n" +
-				"cinrzzradwymqcgu\n" +
-				"sgruxdvrewgpmypu\n" +
-				"snfnsbywuczrshtd\n" +
-				"xfzbyqtyxuxdutpw\n" +
-				"fmpvjwbulmncykbo\n" +
-				"ljnwoslktrrnffwo\n" +
-				"ceaouqquvvienszn\n" +
-				"yjomrunrxjyljyge\n" +
-				"xpmjsapbnsdnbkdi\n" +
-				"uetoytptktkmewre\n" +
-				"eixsvzegkadkfbua\n" +
-				"afaefrwhcosurprw\n" +
-				"bwzmmvkuaxiymzwc\n" +
-				"gejyqhhzqgsrybni\n" +
-				"gjriqsfrhyguoiiw\n" +
-				"gtfyomppzsruhuac\n" +
-				"ogemfvmsdqqkfymr\n" +
-				"jgzbipsygirsnydh\n" +
-				"zghvlhpjnvqmocgr\n" +
-				"ngvssuwrbtoxtrka\n" +
-				"ietahyupkbuisekn\n" +
-				"gqxqwjizescbufvl\n" +
-				"eiprekzrygkncxzl\n" +
-				"igxfnxtwpyaamkxf\n" +
-				"soqjdkxcupevbren\n" +
-				"fspypobyzdwstxak\n" +
-				"qstcgawvqwtyyidf\n" +
-				"gsccjacboqvezxvd\n" +
-				"bfsblokjvrqzphmc\n" +
-				"srezeptvjmncqkec\n" +
-				"opmopgyabjjjoygt\n" +
-				"msvbufqexfrtecbf\n" +
-				"uiaqweyjiulplelu\n" +
-				"pbkwhjsibtwjvswi\n" +
-				"xwwzstmozqarurrq\n" +
-				"nytptwddwivtbgyq\n" +
-				"ejxvsufbzwhzpabr\n" +
-				"jouozvzuwlfqzdgh\n" +
-				"gfgugjihbklbenrk\n" +
-				"lwmnnhiuxqsfvthv\n" +
-				"bzvwbknfmaeahzhi\n" +
-				"cgyqswikclozyvnu\n" +
-				"udmkpvrljsjiagzi\n" +
-				"zzuhqokgmisguyna\n" +
-				"ekwcdnjzuctsdoua\n" +
-				"eueqkdrnzqcaecyd\n" +
-				"lnibwxmokbxhlris\n" +
-				"fdrbftgjljpzwhea\n" +
-				"iabvuhhjsxmqfwld\n" +
-				"qgogzkynrgejakta\n" +
-				"mfcqftytemgnpupp\n" +
-				"klvhlhuqhosvjuqk\n" +
-				"gdokmxcgoqvzvaup\n" +
-				"juududyojcazzgvr\n" +
-				"fyszciheodgmnotg\n" +
-				"yfpngnofceqfvtfs\n" +
-				"cahndkfehjumwavc\n" +
-				"dxsvscqukljxcqyi\n" +
-				"cqukcjtucxwrusji\n" +
-				"vevmmqlehvgebmid\n" +
-				"ahswsogfrumzdofy\n" +
-				"ftasbklvdquaxhxb\n" +
-				"tsdeumygukferuif\n" +
-				"ybfgbwxaaitpwryg\n" +
-				"djyaoycbymezglio\n" +
-				"trzrgxdjqnmlnzpn\n" +
-				"rumwchfihhihpqui\n" +
-				"ffrvnsgrnzemksif\n" +
-				"oizlksxineqknwzd\n" +
-				"cirqcprftpjzrxhk\n" +
-				"zrhemeqegmzrpufd\n" +
-				"kqgatudhxgzlgkey\n" +
-				"syjugymeajlzffhq\n" +
-				"nlildhmgnwlopohp\n" +
-				"flcszztfbesqhnyz\n" +
-				"ohzicmqsajyqptrw\n" +
-				"ebyszucgozsjbelq\n" +
-				"enxbgvvcuqeloxud\n" +
-				"ubwnvecbsmhkxwuk\n" +
-				"noifliyxvlkqphbo\n" +
-				"hazlqpetgugxxsiz\n" +
-				"ihdzoerqwqhgajzb\n" +
-				"ivrdwdquxzhdrzar\n" +
-				"synwycdvrupablib\n" +
-				"mqkdjkntblnmtvxj\n" +
-				"qmmvoylxymyovrnq\n" +
-				"pjtuxskkowutltlq\n" +
-				"gchrqtloggkrjciz\n" +
-				"namzqovvsdipazae\n" +
-				"yfokqhkmakyjzmys\n" +
-				"iapxlbuoiwqfnozm\n" +
-				"fbcmlcekgfdurqxe\n" +
-				"ednzgtczbplwxjlq\n" +
-				"gdvsltzpywffelsp\n" +
-				"oaitrrmpqdvduqej\n" +
-				"gseupzwowmuuibjo\n" +
-				"dfzsffsqpaqoixhh\n" +
-				"tclhzqpcvbshxmgx\n" +
-				"cfqkptjrulxiabgo\n" +
-				"iraiysmwcpmtklhf\n" +
-				"znwjlzodhktjqwlm\n" +
-				"lcietjndlbgxzjht\n" +
-				"gdkcluwjhtaaprfo\n" +
-				"vbksxrfznjzwvmmt\n" +
-				"vpfftxjfkeltcojl\n" +
-				"thrmzmeplpdespnh\n" +
-				"yafopikiqswafsit\n" +
-				"xxbqgeblfruklnhs\n" +
-				"qiufjijzbcpfdgig\n" +
-				"ikksmllfyvhyydmi\n" +
-				"sknufchjdvccccta\n" +
-				"wpdcrramajdoisxr\n" +
-				"grnqkjfxofpwjmji\n" +
-				"lkffhxonjskyccoh\n" +
-				"npnzshnoaqayhpmb\n" +
-				"fqpvaamqbrnatjia\n" +
-				"oljkoldhfggkfnfc\n" +
-				"ihpralzpqfrijynm\n" +
-				"gvaxadkuyzgbjpod\n" +
-				"onchdguuhrhhspen\n" +
-				"uefjmufwlioenaus\n" +
-				"thifdypigyihgnzo\n" +
-				"ugqblsonqaxycvkg\n" +
-				"yevmbiyrqdqrmlbw\n" +
-				"bvpvwrhoyneorcmm\n" +
-				"gbyjqzcsheaxnyib\n" +
-				"knhsmdjssycvuoqf\n" +
-				"nizjxiwdakpfttyh\n" +
-				"nwrkbhorhfqqoliz\n" +
-				"ynsqwvwuwzqpzzwp\n" +
-				"yitscrgexjfclwwh\n" +
-				"dhajwxqdbtrfltzz\n" +
-				"bmrfylxhthiaozpv\n" +
-				"frvatcvgknjhcndw\n" +
-				"xlvtdmpvkpcnmhya\n" +
-				"pxpemuzuqzjlmtoc\n" +
-				"dijdacfteteypkoq\n" +
-				"knrcdkrvywagglnf\n" +
-				"fviuajtspnvnptia\n" +
-				"xvlqzukmwbcjgwho\n" +
-				"bazlsjdsjoeuvgoz\n" +
-				"nslzmlhosrjarndj\n" +
-				"menvuwiuymknunwm\n" +
-				"uavfnvyrjeiwqmuu\n" +
-				"yrfowuvasupngckz\n" +
-				"taevqhlrcohlnwye\n" +
-				"skcudnogbncusorn\n" +
-				"omtnmkqnqedsajfv\n" +
-				"yqmgsqdgsuysqcts\n" +
-				"odsnbtyimikkbmdd\n" +
-				"vuryaohxdvjllieb\n" +
-				"dhaxldeywwsfamlo\n" +
-				"opobvtchezqnxpak\n" +
-				"pzfnegouvsrfgvro\n" +
-				"rzkcgpxdslzrdktu\n" +
-				"ksztdtqzxvhuryam\n" +
-				"ctnqnhkcooqipgkh\n" +
-				"pyqbbvrzdittqbgm\n" +
-				"koennvmolejeftij\n" +
-				"rvzlreqikqlgyczj\n" +
-				"xrnujfoyhonzkdgd\n" +
-				"mmsmhkxaiqupfjil\n" +
-				"ypjwoemqizddvyfd\n" +
-				"qgugcxnbhvgahykj\n" +
-				"cviodlsrtimbkgmy\n" +
-				"xbfbbechhmrjxhnw\n" +
-				"psuipaoucfczfxkp\n" +
-				"hdhwcpeuptgqqvim\n" +
-				"gsxlruhjeaareilr\n" +
-				"vgyqonnljuznyrhk\n" +
-				"eewezahlumervpyu\n" +
-				"iiolebrxfadtnigy\n" +
-				"tdadlrodykrdfscn\n" +
-				"ocvdtzjxrhtjurpo\n" +
-				"gidljbuvuovkhhrf\n" +
-				"qwfcpilbjwzboohd\n" +
-				"xzohxonlezuiupbg\n" +
-				"vslpbkkqgvgbcbix\n" +
-				"pivzqrzfxosbstzn\n" +
-				"fyqcfboevcqmbhhs\n" +
-				"yqsrneacnlxswojx\n" +
-				"heicqpxxyrwcbsjz\n" +
-				"yzynmnnoumkmlbeh\n" +
-				"bncadbjdvvmczylw\n" +
-				"hlnjskgfzbgmigfn\n" +
-				"fphpszymugpcykka\n" +
-				"zbifcktanxpmufvy\n" +
-				"saklpkhoyfeqbguy\n" +
-				"nqtqfcfxmpivnjyo\n" +
-				"locygrwerxlsvzqm\n" +
-				"qqflecydqvlogjme\n" +
-				"njklmixvgkzpgppf\n" +
-				"ugzkpjwjflaswyma\n" +
-				"lriousvkbeftslcy\n" +
-				"nsvsauxzfbbotgmh\n" +
-				"tblcpuhjyybrlica\n" +
-				"hqwshxcilwtmxrsf\n" +
-				"xojwroydfeoqupup\n" +
-				"tikuzsrogpnohpib\n" +
-				"layenyqgxdfggloc\n" +
-				"nqsvjvbrpuxkqvmq\n" +
-				"ivchgxkdlfjdzxmk\n" +
-				"uoghiuosiiwiwdws\n" +
-				"twsgsfzyszsfinlc\n" +
-				"waixcmadmhtqvcmd\n" +
-				"zkgitozgrqehtjkw\n" +
-				"xbkmyxkzqyktmpfi\n" +
-				"qlyapfmlybmatwxn\n" +
-				"ntawlvcpuaebuypf\n" +
-				"clhebxqdkcyndyof\n" +
-				"nrcxuceywiklpemc\n" +
-				"lmurgiminxpapzmq\n" +
-				"obalwqlkykzflxou\n" +
-				"huvcudpiryefbcye\n" +
-				"zlxbddpnyuyapach\n" +
-				"gqfwzfislmwzyegy\n" +
-				"jhynkjtxedmemlob\n" +
-				"hmrnvjodnsfiukex\n" +
-				"pstmikjykzyavfef\n" +
-				"wuwpnscrwzsyalyt\n" +
-				"hksvadripgdgwynm\n" +
-				"tvpfthzjleqfxwkh\n" +
-				"xpmrxxepkrosnrco\n" +
-				"qjkqecsnevlhqsly\n" +
-				"jjnrfsxzzwkhnwdm\n" +
-				"pehmzrzsjngccale\n" +
-				"bsnansnfxduritrr\n" +
-				"ejzxkefwmzmbxhlb\n" +
-				"pceatehnizeujfrs\n" +
-				"jtidrtgxopyeslzl\n" +
-				"sytaoidnamfwtqcr\n" +
-				"iabjnikomkgmyirr\n" +
-				"eitavndozoezojsi\n" +
-				"wtsbhaftgrbqfsmm\n" +
-				"vvusvrivsmhtfild\n" +
-				"qifbtzszfyzsjzyx\n" +
-				"ifhhjpaqatpbxzau\n" +
-				"etjqdimpyjxiuhty\n" +
-				"fvllmbdbsjozxrip\n" +
-				"tjtgkadqkdtdlkpi\n" +
-				"xnydmjleowezrecn\n" +
-				"vhcbhxqalroaryfn\n" +
-				"scgvfqsangfbhtay\n" +
-				"lbufpduxwvdkwhmb\n" +
-				"tshipehzspkhmdoi\n" +
-				"gtszsebsulyajcfl\n" +
-				"dlrzswhxajcivlgg\n" +
-				"kgjruggcikrfrkrw\n" +
-				"xxupctxtmryersbn\n" +
-				"hljjqfjrubzozxts\n" +
-				"giaxjhcwazrenjzs\n" +
-				"tyffxtpufpxylpye\n" +
-				"jfugdxxyfwkzqmgv\n" +
-				"kbgufbosjghahacw\n" +
-				"xpbhhssgegmthwxb\n" +
-				"npefofiharjypyzk\n" +
-				"velxsseyxuhrpycy\n" +
-				"sglslryxsiwwqzfw\n" +
-				"susohnlpelojhklv\n" +
-				"lfnpqfvptqhogdmk\n" +
-				"vtcrzetlekguqyle\n" +
-				"jlyggqdtamcjiuxn\n" +
-				"olxxqfgizjmvigvl\n" +
-				"cyypypveppxxxfuq\n" +
-				"hewmxtlzfqoqznwd\n" +
-				"jzgxxybfeqfyzsmp\n" +
-				"xzvvndrhuejnzesx\n" +
-				"esiripjpvtqqwjkv\n" +
-				"xnhrwhjtactofwrd\n" +
-				"knuzpuogbzplofqx\n" +
-				"tihycsdwqggxntqk\n" +
-				"xkfywvvugkdalehs\n" +
-				"cztwdivxagtqjjel\n" +
-				"dsaslcagopsbfioy\n" +
-				"gmowqtkgrlqjimbl\n" +
-				"ctcomvdbiatdvbsd\n" +
-				"gujyrnpsssxmqjhz\n" +
-				"nygeovliqjfauhjf\n" +
-				"mmgmcvnuppkbnonz\n" +
-				"bhipnkoxhzcotwel\n" +
-				"wkwpgedgxvpltqid\n" +
-				"mliajvpdocyzcbot\n" +
-				"kqjhsipuibyjuref\n" +
-				"zqdczykothbgxwsy\n" +
-				"koirtljkuqzxioaz\n" +
-				"audpjvhmqzvhzqas\n" +
-				"cxyhxlhntyidldfx\n" +
-				"iasgocejboxjgtkx\n" +
-				"abehujmqotwcufxp\n" +
-				"fmlrzqmazajxeedl\n" +
-				"knswpkekbacuxfby\n" +
-				"yvyalnvrxgstqhxm\n" +
-				"sjnrljfrfuyqfwuw\n" +
-				"ssaqruwarlvxrqzm\n" +
-				"iaxbpeqqzlcwfqjz\n" +
-				"uwyxshjutkanvvsc\n" +
-				"uxwrlwbblcianvnb\n" +
-				"nodtifgrxdojhneh\n" +
-				"mloxjfusriktxrms\n" +
-				"lkfzrwulbctupggc\n" +
-				"gcrjljatfhitcgfj\n" +
-				"tkdfxeanwskaivqs\n" +
-				"ypyjxqtmitwubbgt\n" +
-				"ssxbygzbjsltedjj\n" +
-				"zdrsnoorwqfalnha\n" +
-				"xlgmissaiqmowppd\n" +
-				"azhbwhiopwpguiuo\n" +
-				"fydlahgxtekbweet\n" +
-				"qtaveuqpifprdoiy\n" +
-				"kpubqyepxqleucem\n" +
-				"wlqrgqmnupwiuory\n" +
-				"rwyocktuqkuhdwxz\n" +
-				"abzjfsdevoygctqv\n" +
-				"zsofhaqqghncmzuw\n" +
-				"lqbjwjqxqbfgdckc\n" +
-				"bkhyxjkrqbbunido\n" +
-				"yepxfjnnhldidsjb\n" +
-				"builayfduxbppafc\n" +
-				"wedllowzeuswkuez\n" +
-				"gverfowxwtnvgrmo\n" +
-				"tpxycfumxdqgntwf\n" +
-				"lqzokaoglwnfcolw\n" +
-				"yqsksyheyspmcdqt\n" +
-				"vufvchcjjcltwddl\n" +
-				"saeatqmuvnoacddt\n" +
-				"dxjngeydvsjbobjs\n" +
-				"ucrcxoakevhsgcep\n" +
-				"cajgwjsfxkasbayt\n" +
-				"hknzmteafsfemwuv\n" +
-				"xxwhxwiinchqqudr\n" +
-				"usfenmavvuevevgr\n" +
-				"kxcobcwhsgyizjok\n" +
-				"vhqnydeboeunnvyk\n" +
-				"bgxbwbxypnxvaacw\n" +
-				"bwjzdypacwgervgk\n" +
-				"rrioqjluawwwnjcr\n" +
-				"fiaeyggmgijnasot\n" +
-				"xizotjsoqmkvhbzm\n" +
-				"uzphtrpxwfnaiidz\n" +
-				"kihppzgvgyoncptg\n" +
-				"hfbkfrxwejdeuwbz\n" +
-				"zgqthtuaqyrxicdy\n" +
-				"zitqdjnnwhznftze\n" +
-				"jnzlplsrwovxlqsn\n" +
-				"bmwrobuhwnwivpca\n" +
-				"uuwsvcdnoyovxuhn\n" +
-				"nmfvoqgoppoyosaj\n" +
-				"hxjkcppaisezygpe\n" +
-				"icvnysgixapvtoos\n" +
-				"vbvzajjgrmjygkhu\n" +
-				"jinptbqkyqredaos\n" +
-				"dpmknzhkhleawfvz\n" +
-				"ouwwkfhcedsgqqxe\n" +
-				"owroouiyptrijzgv\n" +
-				"bewnckpmnbrmhfyu\n" +
-				"evdqxevdacsbfbjb\n" +
-				"catppmrovqavxstn\n" +
-				"dqsbjibugjkhgazg\n" +
-				"mkcldhjochtnvvne\n" +
-				"sblkmhtifwtfnmsx\n" +
-				"lynnaujghehmpfpt\n" +
-				"vrseaozoheawffoq\n" +
-				"ytysdzbpbazorqes\n" +
-				"sezawbudymfvziff\n" +
-				"vrlfhledogbgxbau\n" +
-				"bipdlplesdezbldn\n" +
-				"ermaenjunjtbekeo\n" +
-				"eyaedubkthdecxjq\n" +
-				"gbzurepoojlwucuy\n" +
-				"rsiaqiiipjlouecx\n" +
-				"beqjhvroixhiemtw\n" +
-				"buzlowghhqbcbdwv\n" +
-				"ldexambveeosaimo\n" +
-				"fpyjzachgrhxcvnx\n" +
-				"komgvqejojpnykol\n" +
-				"fxebehjoxdujwmfu\n" +
-				"jnfgvheocgtvmvkx\n" +
-				"qmcclxxgnclkuspx\n" +
-				"rsbelzrfdblatmzu\n" +
-				"vexzwqjqrsenlrhm\n" +
-				"tnfbkclwetommqmh\n" +
-				"lzoskleonvmprdri\n" +
-				"nnahplxqscvtgfwi\n" +
-				"ubqdsflhnmiayzrp\n" +
-				"xtiyqxhfyqonqzrn\n" +
-				"omdtmjeqhmlfojfr\n" +
-				"cnimgkdbxkkcnmkb\n" +
-				"tapyijgmxzbmqnks\n" +
-				"byacsxavjboovukk\n" +
-				"awugnhcrygaoppjq\n" +
-				"yxcnwrvhojpuxehg\n" +
-				"btjdudofhxmgqbao\n" +
-				"nzqlfygiysfuilou\n" +
-				"nubwfjdxavunrliq\n" +
-				"vqxmmhsbmhlewceh\n" +
-				"ygavmcybepzfevrp\n" +
-				"kgflmrqsvxprkqgq\n" +
-				"iaqyqmcaedscmakk\n" +
-				"cvbojnbfmrawxzkh\n" +
-				"jjjrprbnlijzatuw\n" +
-				"lcsudrrfnnggbrmk\n" +
-				"qzgxbiavunawfibc\n" +
-				"gnnalgfvefdfdwwg\n" +
-				"nokmiitzrigxavsc\n" +
-				"etzoxwzxqkkhvais\n" +
-				"urxxfacgjccieufi\n" +
-				"lqrioqhuvgcotuec\n" +
-				"dydbaeyoypsbftra\n" +
-				"hhrotenctylggzaf\n" +
-				"evctqvzjnozpdxzu\n" +
-				"tbpvithmorujxlcp\n" +
-				"pllbtcbrtkfpvxcw\n" +
-				"fzyxdqilyvqreowv\n" +
-				"xdleeddxwvqjfmmt\n" +
-				"fcldzthqqpbswoin\n" +
-				"sgomzrpjfmvgwlzi\n" +
-				"axjyskmtdjbxpwoz\n" +
-				"hcvaevqxsmabvswh\n" +
-				"lfdlsfcwkwicizfk\n" +
-				"isjbwpzdognhoxvm\n" +
-				"oqnexibqxlyxpluh\n" +
-				"zqfbgodsfzwgcwuf\n" +
-				"kvmnwruwsjllbldz\n" +
-				"kghazimdyiyhmokj\n" +
-				"uiktgpsxpoahofxn\n" +
-				"zkdwawxargcmidct\n" +
-				"ftbixlyiprshrjup\n" +
-				"nofhmbxififwroeg\n" +
-				"mcdaqrhplffxrcdt\n" +
-				"fbjxnwojcvlawmlb\n" +
-				"rizoftvwfdhiwyac\n" +
-				"eduogrtyhxfwyars\n" +
-				"zoikunqxgjwfqqwr\n" +
-				"zxwbbpmvctzezaqh\n" +
-				"nghujwyeabwdqnop\n" +
-				"vcxamijpoyyksogn\n" +
-				"jnckdbuteoqlsdae\n" +
-				"jurfqqawafmsiqwv\n" +
-				"inepmztrzehfafie\n" +
-				"tznzkyvzodbrtscf\n" +
-				"xewbavjeppflwscl\n" +
-				"ucndzsorexjlnplo\n" +
-				"jpxbctscngxgusvu\n" +
-				"mfmygcllauzuoaok\n" +
-				"oibkuxhjmhxhhzby\n" +
-				"zjkslwagmeoisunw\n" +
-				"avnnxmopdgvmukuu\n" +
-				"jmaargejcwboqhkt\n" +
-				"yacmpeosarsrfkrv\n" +
-				"iqhgupookcaovwgh\n" +
-				"ebjkdnxwtikqzufc\n" +
-				"imdhbarytcscbsvb\n" +
-				"ifyibukeffkbqvcr\n" +
-				"aloighmyvwybtxhx\n" +
-				"yszqwrutbkiwkxjg\n" +
-				"xyholyzlltjhsuhp\n" +
-				"gykhmrwucneoxcrf\n" +
-				"badkdgqrpjzbabet\n" +
-				"sunaucaucykwtkjj\n" +
-				"pumqkglgfdhneero\n" +
-				"usgtyuestahlydxq\n" +
-				"xmfhflphzeudjsjm\n" +
-				"knywgmclisgpootg\n" +
-				"mtojnyrnvxtweuzb\n" +
-				"uuxufbwfegysabww\n" +
-				"vobhwwocqttlbsik\n" +
-				"yuydfezeqgqxqmnd\n" +
-				"wbqgqkwbibiilhzc\n" +
-				"sfdmgxsbuzsawush\n" +
-				"ilhbxcfgordyxwvp\n" +
-				"ahqoavuysblnqaeg\n" +
-				"plwgtvpgotskmsey\n" +
-				"ewjcmzkcnautrrmp\n" +
-				"tyekgzbznlikcyqj\n" +
-				"bqzctiuaxpriuiga\n" +
-				"bimvbfjkiupyqiys\n" +
-				"mpqtbcxfhwymxncw\n" +
-				"htemlptvqhharjgb\n" +
-				"mqbsmsruwzzxgcxc\n" +
-				"zjyedjwhnvteuaid\n" +
-				"pzoelkoidwglpttc\n" +
-				"efydnsvlfimvwxhx\n" +
-				"gfyhgoeiyjcgfyze\n" +
-				"deqtomhwopmzvjlt\n" +
-				"casafubtkoopuaju\n" +
-				"yylsfarntbucfulg\n" +
-				"mgjwsormkjsrrxan\n" +
-				"lkkenpupgmjpnqqd\n" +
-				"tegweszyohsoluot\n" +
-				"lihsfdwxmxvwdxna\n" +
-				"rrefrjjxerphejwb\n" +
-				"guuazonjoebhymtm\n" +
-				"ysofqzmfmyneziki\n" +
-				"lmjgaliatcpduoal\n" +
-				"qzthcpjwtgahbebr\n" +
-				"wvakvephyukmpemm\n" +
-				"simxacxxzfoaeddw\n" +
-				"aetgqmiqzxbvbviz\n" +
-				"jxlmhdmqggevrxes\n" +
-				"mmuglnjmuddzgaik\n" +
-				"svopsqhtrslgycgc\n" +
-				"xnvcsiiqrcjkvecn\n" +
-				"kkvumxtvashxcops\n" +
-				"bduflsdyeectvcgl\n" +
-				"vfrxbwmmytjvqnsj\n" +
-				"eeqtdneiyiaiofxw\n" +
-				"crtbgknfacjtwkfl\n" +
-				"uuutuoxdsxolpbhd\n" +
-				"lcrztwzreaswovtn\n" +
-				"htorkvnvujmjdqzj\n" +
-				"wttzuzvrzlyhfzyf\n" +
-				"oraewznfwgdsnhuk\n" +
-				"rctlkqqvkwbgrcgk\n" +
-				"cfehrsrqhzyiwtmz\n" +
-				"kbvxwcumjkhvjpui\n" +
-				"xxlocexbmniiakfo\n" +
-				"gtknkkzvykmlqghl\n" +
-				"kcjuxvkuimhwqrtk\n" +
-				"vohekwkuyuoacuww\n" +
-				"vorctgughscysyfo\n" +
-				"zmjevqplngzswxyq\n" +
-				"qhswdrhrijnatkyo\n" +
-				"joakcwpfggtitizs\n" +
-				"juzlwjijcmtswdtq\n" +
-				"icbyaqohpkemhkip\n" +
-				"rpdxgpzxncedmvzh\n" +
-				"rozkmimbqhbhcddv\n" +
-				"wkkypomlvyglpfpf\n" +
-				"jcaqyaqvsefwtaya\n" +
-				"ghvmtecoxlebdwnf\n" +
-				"lqrcyiykkkpkxvqt\n" +
-				"eqlarfazchmzotev\n" +
-				"vqwndafvmpguggef\n" +
-				"dbfxzrdkkrusmdke\n" +
-				"cmjpjjgndozcmefj\n" +
-				"hbrdcwjuyxapyhlo\n" +
-				"mmforetykbosdwce\n" +
-				"zynfntqwblbnfqik\n" +
-				"sodwujfwlasznaiz\n" +
-				"yyvrivjiqnxzqkfp\n" +
-				"uldbskmmjbqllpnm\n" +
-				"fyhhrmrsukeptynl\n" +
-				"hpfjekktvdkgdkzl\n" +
-				"bozhkoekcxzeorob\n" +
-				"uvpptyfrzkvmtoky\n" +
-				"hkhfprmjdpjvfkcb\n" +
-				"igxzwktwsqhsivqu\n" +
-				"qceomwysgkcylipb\n" +
-				"cglateoynluyeqgc\n" +
-				"xcsdfkpeguxgvpfh\n" +
-				"owjhxlcncdgkqyia\n" +
-				"rpbmrpcesiakqpna\n" +
-				"lueszxiourxsmezb\n" +
-				"zelvsowimzkxliwc\n" +
-				"vzxbttoobtvdtkca\n" +
-				"pfxvzphzwscqkzsi\n" +
-				"edsjorainowytbzu\n" +
-				"ipsegdaluoiphmnz\n" +
-				"mkhueokfpemywvuw\n" +
-				"urxdnumhylpafdlc\n" +
-				"ggluurzavsxkvwkl\n" +
-				"ctclphidqgteakox\n" +
-				"tfobosynxsktajuk\n" +
-				"jzrmemhxqmzhllif\n" +
-				"eemwekimdfvqslsx\n" +
-				"yjkwpzrbanoaajgq\n" +
-				"rlxghzanuyeimfhx\n" +
-				"hozbgdoorhthlqpv\n" +
-				"obkbmflhyanxilnx\n" +
-				"xojrippyxjmpzmsz\n" +
-				"ukykmbfheixuviue\n" +
-				"qivlmdexwucqkres\n" +
-				"rmyxxipqkarpjmox\n" +
-				"fgaftctbvcvnrror\n" +
-				"raawxozucfqvasru\n" +
-				"dinpjbdfjfizexdh\n" +
-				"gybxubwnnbuyvjcr\n" +
-				"qrqitdvyoneqyxcg\n" +
-				"jqzcfggayzyoqteo\n" +
-				"cikqpvxizpdbmppm\n" +
-				"stfpldgyhfmucjjv\n" +
-				"slzbcuihmimpduri\n" +
-				"aufajwfrsorqqsnl\n" +
-				"iylmzraibygmgmqj\n" +
-				"lcdyfpcqlktudfmu\n" +
-				"pmomzzsdpvgkkliw\n" +
-				"zpplirgtscfhbrkj\n" +
-				"mvhyerxfiljlotjl\n" +
-				"ofkvrorwwhusyxjx\n" +
-				"xngzmvcgkqfltjpe\n" +
-				"yxfxaqipmysahqqq\n" +
-				"sdqafdzgfdjuabup\n" +
-				"qcqajmerahcdgxfv\n" +
-				"xqimrqtupbapawro\n" +
-				"qfvkqwidzzrehsbl\n" +
-				"himixxvueksiqfdf\n" +
-				"vgtfqpuzxxmhrvvd\n" +
-				"adiioqeiejguaost\n" +
-				"jnzxuycjxvxehbvm\n" +
-				"xedbpxdhphamoodk\n" +
-				"jsrioscmwlsfuxrg\n" +
-				"mtsynnfxunuohbnf\n" +
-				"enamqzfzjunnnkpe\n" +
-				"uwcvfecunobyhces\n" +
-				"ciygixtgbsccpftq\n" +
-				"ewjgcronizkcsfjy\n" +
-				"wztjkoipxsikoimv\n" +
-				"jrgalyvfelwxforw\n" +
-				"imylyalawbqwkrwb\n" +
-				"yflwqfnuuvgjsgcj\n" +
-				"wkysyzusldlojoue\n" +
-				"zopllxnidcffcuau\n" +
-				"bscgwxuprxaerskj\n" +
-				"zvnvprxxjkhnkkpq\n" +
-				"nejwxbhjxxdbenid\n" +
-				"chryiccsebdbcnkc\n" +
-				"guoeefaeafhlgvxh\n" +
-				"nzapxrfrrqhsingx\n" +
-				"mkzvquzvqvwsejqs\n" +
-				"kozmlmbchydtxeeo\n" +
-				"keylygnoqhmfzrfp\n" +
-				"srwzoxccndoxylxe\n" +
-				"uqjzalppoorosxxo\n" +
-				"potmkinyuqxsfdfw\n" +
-				"qkkwrhpbhypxhiun\n" +
-				"wgfvnogarjmdbxyh\n" +
-				"gkidtvepcvxopzuf\n" +
-				"atwhvmmdvmewhzty\n" +
-				"pybxizvuiwwngqej\n" +
-				"zfumwnazxwwxtiry\n" +
-				"keboraqttctosemx\n" +
-				"vtlzxaqdetbhclib\n" +
-				"wjiecykptzexuayl\n" +
-				"ejatfnyjjdawepyk\n" +
-				"mpcrobansyssvmju\n" +
-				"gqukndzganeueabm\n" +
-				"ukzscvomorucdnqd\n" +
-				"wfydhtbzehgwfazx\n" +
-				"mtwqdzlephqvxqmx\n" +
-				"dltmlfxbjopefibh\n" +
-				"atcfrowdflluqtbi\n" +
-				"vowawlophlxaqonw\n" +
-				"vblgdjzvwnocdipw\n" +
-				"uzerzksmkvnlvlhm\n" +
-				"ytjwhpaylohorvxd\n" +
-				"siprvfxvnxcdgofz\n" +
-				"cbhjupewcyjhvtgs\n" +
-				"apqtozaofusmfqli\n" +
-				"tmssrtlxfouowqnr\n" +
-				"ntutrvwnzzgmokes\n" +
-				"zrsgpwdzokztdpis\n" +
-				"nrobvmsxtfmrqdhv\n" +
-				"kadkaftffaziqdze\n" +
-				"yrovbgcyqtlsnoux\n" +
-				"modheiwuhntdecqs\n" +
-				"gzhjypwddizemnys\n" +
-				"gaputpwpcsvzxjho\n" +
-				"bgmouxwoajgaozau\n" +
-				"oxuapfrjcpyakiwt\n" +
-				"kntwbvhuaahdixzj\n" +
-				"epqjdjbnkxdnaccx\n" +
-				"dspltdvznhypykri\n" +
-				"tdrgqmbnagrxdwtt\n" +
-				"njfqawzjggmemtbg\n" +
-				"chpemsgwpzjpdnkk\n" +
-				"fpsrobmbqbmigmwk\n" +
-				"flxptsrqaazmprnl\n" +
-				"nzdunrxlcbfklshm\n" +
-				"miuwljvtkgzdlbnn\n" +
-				"xbhjakklmbhsdmdt\n" +
-				"xwxhsbnrwnegwcov\n" +
-				"pwosflhodjaiexwq\n" +
-				"fhgepuluczttfvqh\n" +
-				"tldxcacbvxyamvkt\n" +
-				"gffxatrjglkcehim\n" +
-				"tzotkdrpxkucsdps\n" +
-				"wxheftdepysvmzbe\n" +
-				"qfooyczdzoewrmku\n" +
-				"rvlwikuqdbpjuvoo\n" +
-				"bcbrnbtfrdgijtzt\n" +
-				"vaxqmvuogsxonlgq\n" +
-				"ibsolflngegravgo\n" +
-				"txntccjmqakcoorp\n" +
-				"vrrbmqaxfbarmlmc\n" +
-				"dzspqmttgsuhczto\n" +
-				"pikcscjunxlwqtiw\n" +
-				"lwzyogwxqitqfqlv\n" +
-				"gsgjsuaqejtzglym\n" +
-				"feyeqguxbgmcmgpp\n" +
-				"gmttebyebdwvprkn\n" +
-				"mzuuwbhzdjfdryxu\n" +
-				"fganrbnplymqbzjx\n" +
-				"cvsrbdcvhtxxdmro\n" +
-				"scmgkjlkqukoamyp\n" +
-				"fkgrqbyqpqcworqc\n" +
-				"hjsrvkdibdjarxxb\n" +
-				"sztzziuqroeidcus\n" +
-				"pxdfvcpvwaddrzwv\n" +
-				"phdqqxleqdjfgfbg\n" +
-				"cqfikbgxvjmnfncy\n",
+			Input:   day05myInput,
 			Result1: "238",
 			Result2: "69"}, // nice
 	}
@@ -1151,4 +1153,12 @@ func Test_checkNiceTwo(t *testing.T) {
 	for _, tt := range tests {
 		assert.Equal(tt.want, checkNiceTwo(tt.input), tt.input)
 	}
+}
+
+func BenchmarkDay05(b *testing.B) {
+	internal.Benchmark(Day05, b, day05myInput)
+}
+
+func BenchmarkDay05ST(b *testing.B) {
+	internal.Benchmark(Day05ST, b, day05myInput)
 }

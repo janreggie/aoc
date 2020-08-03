@@ -15,7 +15,10 @@ import (
 // For instance:
 // lookAndSay("1") returns "11" (one '1')
 // lookAndSay("111221") returns "312211" (three '1', two '2', one '1')
-// If string is empty it will return an empty string.
+//
+// If input is empty it will return an empty string.
+// If input contains non-integers it may render unexpected behavior,
+// but will nonethtless not panic.
 func lookAndSay(input string) string {
 	if input == "" {
 		return ""

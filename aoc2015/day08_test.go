@@ -3,13 +3,315 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
+const day08myInput = `"azlgxdbljwygyttzkfwuxv"
+"v\xfb\"lgs\"kvjfywmut\x9cr"
+"merxdhj"
+"dwz"
+"d\\gkbqo\\fwukyxab\"u"
+"k\xd4cfixejvkicryipucwurq\x7eq"
+"nvtidemacj\"hppfopvpr"
+"kbngyfvvsdismznhar\\p\"\"gpryt\"jaeh"
+"khre\"o\x0elqfrbktzn"
+"nugkdmqwdq\x50amallrskmrxoyo"
+"jcrkptrsasjp\\\"cwigzynjgspxxv\\vyb"
+"ramf\"skhcmenhbpujbqwkltmplxygfcy"
+"aqjqgbfqaxga\\fkdcahlfi\"pvods"
+"pcrtfb"
+"\x83qg\"nwgugfmfpzlrvty\"ryoxm"
+"fvhvvokdnl\\eap"
+"kugdkrat"
+"seuxwc"
+"vhioftcosshaqtnz"
+"gzkxqrdq\\uko\"mrtst"
+"znjcomvy\x16hhsenmroswr"
+"clowmtra"
+"\xc4"
+"jpavsevmziklydtqqm"
+"egxjqytcttr\\ecfedmmovkyn\"m"
+"mjulrvqgmsvmwf"
+"o\\prxtlfbatxerhev\xf9hcl\x44rzmvklviv"
+"lregjexqaqgwloydxdsc\\o\"dnjfmjcu"
+"lnxluajtk\x8desue\\k\x7abhwokfhh"
+"wrssfvzzn\"llrysjgiu\"npjtdli"
+"\x67lwkks"
+"bifw\"ybvmwiyi\"vhol\"vol\xd4"
+"aywdqhvtvcpvbewtwuyxrix"
+"gc\xd3\"caukdgfdywj"
+"uczy\\fk"
+"bnlxkjvl\x7docehufkj\\\"qoyhag"
+"bidsptalmoicyorbv\\"
+"jorscv\"mufcvvfmcv\"ga"
+"sofpwfal\\a"
+"kcuqtbboaly\"uj\"k"
+"n\\c"
+"x\"\xcaj\\xwwvpdldz"
+"eyukphh"
+"wcyjq"
+"vjx\"\"hjroj\"l\x4cjwbr"
+"xcodsxzfqw\\rowqtuwvjnxupjnrh"
+"yc"
+"fpvzldgbdtca\"hqwa"
+"ymjq\x8ahohvafubra\"hgqoknkuyph"
+"kx\\mkaaklvcup"
+"belddrzegcsxsyfhzyz"
+"fuyswi"
+"\\hubzebo\"ha\\qyr\"dv\\"
+"mxvlz\"fwuvx\"cyk\""
+"ftbh\"ro\\tmcpnpvh\"xx"
+"ygi"
+"rw\"\"wwn\\fgbjumq\"vgvoh\xd0\"mm"
+"\"pat\"\x63kpfc\"\x2ckhfvxk\"uwqzlx"
+"o"
+"d\"hqtsfp\xceaswe\"\xc0lw"
+"zajpvfawqntvoveal\"\"trcdarjua"
+"xzapq"
+"rkmhm"
+"byuq"
+"rwwmt\xe8jg\xc2\"omt"
+"nfljgdmgefvlh\"x"
+"rpjxcexisualz"
+"doxcycmgaiptvd"
+"rq\\\"mohnjdf\\xv\\hrnosdtmvxot"
+"oqvbcenib\"uhy\\npjxg"
+"pkvgnm\\ruayuvpbpd"
+"kknmzpxqfbcdgng"
+"piduhbmaympxdexz"
+"vapczawekhoa\\or"
+"tlwn\"avc\"bycg\"\"xuxea"
+"\xcdvryveteqzxrgopmdmihkcgsuozips"
+"kpzziqt"
+"sdy\\s\"cjq"
+"yujs"
+"qte\"q"
+"qyvpnkhjcqjv\"cclvv\"pclgtg\xeak\"tno"
+"xwx"
+"vibuvv"
+"qq\""
+"wwjduomtbkbdtorhpyalxswisq\"r"
+"afuw\\mfjzctcivwesutxbk\"lk"
+"e\xcef\\hkiu"
+"ftdrgzvygcw\"jwsrcmgxj"
+"zrddqfkx\x21dr\"ju\"elybk\"powj\"\"kpryz"
+"dttdkfvbodkma\""
+"lzygktugpqw"
+"qu\x83tes\\u\"tnid\"ryuz"
+"\\o\"pe\\vqwlsizjklwrjofg\xe2oau\\rd"
+"mikevjzhnwgx\"fozrj\"h\""
+"ligxmxznzvtachvvbahnff"
+"d\\kq"
+"tnbkxpzmcakqhaa"
+"g\\yeakebeyv"
+"cqkcnd\"sxjxfnawy\x31zax\x6ceha"
+"m\x0dtqotffzdnetujtsgjqgwddc"
+"masnugb\"etgmxul\x3bqd\\tmtddnvcy"
+"floediikodfgre\x23wyoxlswxflwecdjpt"
+"zu"
+"r"
+"\"ashzdbd\"pdvba\xeeumkr\\amnj"
+"ckslmuwbtfouwpfwtuiqmeozgspwnhx"
+"t\\qjsjek\xf9gjcxsyco\"r"
+"hoed\x1b\\tcmaqch\"epdy"
+"mgjiojwzc\\ypqcn\xb1njmp\"aeeblxt"
+"\xdf\"h\x5enfracj"
+"\x6fpbpocrb"
+"jbmhrswyyq\\"
+"wtyqtenfwatji\"ls\\"
+"voy"
+"awj"
+"rtbj\"j"
+"hynl"
+"orqqeuaat\\xu\\havsgr\xc5qdk"
+"g\"npyzjfq\"rjefwsk"
+"rk\\kkcirjbixr\\zelndx\"bsnqvqj\""
+"tecoz"
+"dn\"uswngbdk\""
+"qb\\"
+"wpyis\\ebq"
+"ppwue\\airoxzjjdqbvyurhaabetv"
+"fxlvt"
+"ql\"oqsmsvpxcg\"k"
+"vqlhuec\\adw"
+"qzmi\xffberakqqkk"
+"tisjqff\"wf"
+"yhnpudoaybwucvppj"
+"xhfuf\\ehsrhsnfxcwtibd\"ubfpz"
+"ihgjquzhf\""
+"ff\x66dsupesrnusrtqnywoqcn\\"
+"z\x77zpubbjmd"
+"\"vhzlbwq\"xeimjt\\xe\x85umho\"m\"\"bmy"
+"mmuvkioocmzjjysi\"mkfbec\""
+"rpgghowbduw\x2fayslubajinoik\xd0hcfy"
+"xrkyjqul\xdexlojgdphczp\"jfk"
+"mg\x07cnr\x8b\x67xdgszmgiktpjhawho"
+"kdgufhaoab"
+"rlhela\"nldr"
+"wzye\x87u"
+"yif\x75bjhnitgoarmfgqwpmopu"
+"pvlbyez\"wyy\x3dpgr"
+"ezdm\"ovkruthkvdwtqwr\"ibdoawzgu"
+"qubp"
+"b\\kcpegcn\\zgdemgorjnk"
+"gjsva\\kzaor\"\"gtpd"
+"\"kt"
+"rlymwlcodix"
+"qqtmswowxca\"jvv"
+"jni\xebwhozb"
+"zhino\"kzjtmgxpi\"zzexijg"
+"tyrbat\\mejgzplufxixkyg"
+"lhmopxiao\x09\"p\xebl"
+"xefioorxvate"
+"nmcgd\x46xfujt\"w"
+"\xe3wnwpat\"gtimrb"
+"wpq\"xkjuw\xebbohgcagppb"
+"fmvpwaca"
+"mlsw"
+"fdan\\\x9e"
+"\"f\"fmdlzc"
+"nyuj\\jnnfzdnrqmhvjrahlvzl"
+"zn\"f\xcfsshcdaukkimfwk"
+"uayugezzo\\\"e\"blnrgjaupqhik"
+"efd\"apkndelkuvfvwyyatyttkehc"
+"ufxq\\\"m\"bwkh\x93kapbqrvxxzbzp\\"
+"fgypsbgjak\x79qblbeidavqtddfacq\\i\"h"
+"kcfgpiysdxlgejjvgndb\\dovfpqodw"
+"\"onpqnssmighipuqgwx\"nrokzgvg"
+"vhjrrhfrba\"jebdanzsrdusut\\wbs"
+"o\xdakymbaxakys"
+"uwxhhzz\\mtmhghjn\\\\tnhzbejj"
+"yd\\"
+"bpgztp\\lzwpdqju\"it\x35qjhihjv"
+"\\my\\b\"klnnto\\\xb3mbtsh"
+"ezyvknv\"l\x2bdhhfjcvwzhjgmhwbqd\"\\"
+"ftkz\"amoncbsohtaumhl\"wsodemopodq"
+"ifv"
+"dmzfxvzq"
+"sped\"bvmf\"mmevl\"zydannpfny"
+"fjxcjwlv\"pnqyrzatsjwsqfidb"
+"muc\xfdqouwwnmuixru\\zlhjintplvtee"
+"mraqgvmj"
+"njopq\"ftcsryo"
+"enoh\"n"
+"t\"ntjhjc\"nzqh\xf7dcohhlsja\x7dtr"
+"flbqcmcoun"
+"dxkiysrn\\dyuqoaig"
+"nehkzi\"h\"syktzfufotng\xdafqo"
+"dzkjg\\hqjk\\\"zfegssjhn"
+"sadlsjv"
+"vmfnrdb\""
+"ac\\bdp\"n"
+"qt\x89h"
+"lsndeugwvijwde\\vjapbm\\k\\nljuva"
+"twpmltdzyynqt\\z\\tnund\x64hm"
+"hpcyata\"ocylbkzdnhujh"
+"hskzq\"knntuhscex\"q\\y\\vqj\x3an"
+"eekwyufvji\\mqgeroekxeyrmymq"
+"hl\"durthetvri\xebw\\jxu\"rcmiuy"
+"\"fxdnmvnftxwesmvvq\"sjnf\xaabpg\"iary"
+"\"\"nksqso"
+"ruq\xbezugge\"d\"hwvoxmy\"iawikddxn\"x"
+"rxxnlfay"
+"stcu\"mv\xabcqts\\fasff"
+"yrnvwfkfuzuoysfdzl\x02bk"
+"qbdsmlwdbfknivtwijbwtatqfe"
+"\"erqh\\csjph"
+"ikfv"
+"\xd2cuhowmtsxepzsivsvnvsb"
+"vj"
+"d"
+"\\g"
+"porvg\x62qghorthnc\"\\"
+"tiks\\kr\"\x0fuejvuxzswnwdjscrk"
+"xmgfel\"atma\\zaxmlgfjx\"ajmqf"
+"oz\\rnxwljc\\\"umhymtwh"
+"wlsxxhm\x7fqx\\gjoyrvccfiner\\qloluqv"
+"k\\ieq"
+"xidjj\"ksnlgnwxlddf\\s\\kuuleb"
+"wjpnzgprzv\\maub\x0cj"
+"r"
+"y"
+"\"yecqiei\"ire\\jdhlnnlde\xc5u"
+"drvdiycqib"
+"egnrbefezcrhgldrtb"
+"plqodxv\\zm\"uodwjdocri\x55ucaezutm"
+"f\"wexcw\x02ekewx\"alyzn"
+"pqajwuk\\\\oatkfqdyspnrupo"
+"rkczj\"fzntabpnygrhamk\\km\x68xfkmr"
+"wejam\xbac\x37kns"
+"qqmlwjk\"gh"
+"fdcjsxlgx"
+"\\cxvxy\"kb\"\"unubvrsq\\y\\awfhbmarj\\"
+"geunceaqr"
+"tpkg\"svvngk\\sizlsyaqwf"
+"\"pa\\x\x18od\\emgje\\"
+"ffiizogjjptubzqfuh\"cctieqcdh"
+"yikhiyyrpgglpos"
+"h\\"
+"jotqojodcv"
+"ervsz\x87ade\"fevq\\tcqowt"
+"\\y\"fgrxtppkcseeg\\onxjarx\\hyhfn\x5fi"
+"kxndlabn\\wwumctuzdcfiitrbnn"
+"eoosynwhwm"
+"\"c\x04"
+"ny\xf6vuwlec"
+"ubgxxcvnltzaucrzg\\xcez"
+"pnocjvo\\yt"
+"fcabrtqog\"a\"zj"
+"o\\bha\\mzxmrfltnflv\xea"
+"tbfvzwhexsdxjmxejwqqngzixcx"
+"wdptrakok\"rgymturdmwfiwu"
+"reffmj"
+"lqm"
+"\\oc"
+"p\""
+"ygkdnhcuehlx"
+"vsqmv\"bqay\"olimtkewedzm"
+"isos\x6azbnkojhxoopzetbj\xe1yd"
+"yo\\pgayjcyhshztnbdv"
+"fg\"h"
+"vcmcojolfcf\\\\oxveua"
+"w\"vyszhbrr\"jpeddpnrjlca\x69bdbopd\\z"
+"jikeqv"
+"\"dkjdfrtj"
+"is"
+"hgzx"
+"z\""
+"woubquq\\ag\""
+"xvclriqa\xe6ltt"
+"tfxinifmd"
+"mvywzf\"jz"
+"vlle"
+"c\"rf\"wynhye\x25vccvb\""
+"zvuxm"
+"\xf2\"jdstiwqer\"h"
+"kyogyogcknbzv\x9f\\\\e"
+"kspodj\"edpeqgypc"
+"oh\\x\\h"
+"julb"
+"bmcfkidxyilgoy\\xmu\"ig\\qg"
+"veqww\"ea"
+"fkdbemtgtkpqisrwlxutllxc\"mbelhs"
+"e"
+"ecn\x50ooprbstnq"
+"\"\xe8\"ec\xeah\"qo\\g\"iuqxy\"e\"y\xe7xk\xc6d"
+"lwj\"aftrcqj"
+"jduij\x97zk\"rftjrixzgscxxllpqx\"bwwb"
+"fqcditz"
+"f\x19azclj\"rsvaokgvty\"aeq"
+"erse\x9etmzhlmhy\x67yftoti"
+"lsdw\xb3dmiy\\od"
+"x\x6fxbljsjdgd\xaau"
+"hjg\\w\"\x78uoqbsdikbjxpip\"w\"jnhzec"
+"gk"
+"\\zrs\\syur"
+`
+
 func TestDay08(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Input: `""`,
 			Result1: "2",
 			Result2: "4"},
@@ -23,310 +325,15 @@ func TestDay08(t *testing.T) {
 			Result1: "5",
 			Result2: "5"},
 		{Details: "Y2015D08 my input",
-			Input: `"azlgxdbljwygyttzkfwuxv"` + "\n" +
-				`"v\xfb\"lgs\"kvjfywmut\x9cr"` + "\n" +
-				`"merxdhj"` + "\n" +
-				`"dwz"` + "\n" +
-				`"d\\gkbqo\\fwukyxab\"u"` + "\n" +
-				`"k\xd4cfixejvkicryipucwurq\x7eq"` + "\n" +
-				`"nvtidemacj\"hppfopvpr"` + "\n" +
-				`"kbngyfvvsdismznhar\\p\"\"gpryt\"jaeh"` + "\n" +
-				`"khre\"o\x0elqfrbktzn"` + "\n" +
-				`"nugkdmqwdq\x50amallrskmrxoyo"` + "\n" +
-				`"jcrkptrsasjp\\\"cwigzynjgspxxv\\vyb"` + "\n" +
-				`"ramf\"skhcmenhbpujbqwkltmplxygfcy"` + "\n" +
-				`"aqjqgbfqaxga\\fkdcahlfi\"pvods"` + "\n" +
-				`"pcrtfb"` + "\n" +
-				`"\x83qg\"nwgugfmfpzlrvty\"ryoxm"` + "\n" +
-				`"fvhvvokdnl\\eap"` + "\n" +
-				`"kugdkrat"` + "\n" +
-				`"seuxwc"` + "\n" +
-				`"vhioftcosshaqtnz"` + "\n" +
-				`"gzkxqrdq\\uko\"mrtst"` + "\n" +
-				`"znjcomvy\x16hhsenmroswr"` + "\n" +
-				`"clowmtra"` + "\n" +
-				`"\xc4"` + "\n" +
-				`"jpavsevmziklydtqqm"` + "\n" +
-				`"egxjqytcttr\\ecfedmmovkyn\"m"` + "\n" +
-				`"mjulrvqgmsvmwf"` + "\n" +
-				`"o\\prxtlfbatxerhev\xf9hcl\x44rzmvklviv"` + "\n" +
-				`"lregjexqaqgwloydxdsc\\o\"dnjfmjcu"` + "\n" +
-				`"lnxluajtk\x8desue\\k\x7abhwokfhh"` + "\n" +
-				`"wrssfvzzn\"llrysjgiu\"npjtdli"` + "\n" +
-				`"\x67lwkks"` + "\n" +
-				`"bifw\"ybvmwiyi\"vhol\"vol\xd4"` + "\n" +
-				`"aywdqhvtvcpvbewtwuyxrix"` + "\n" +
-				`"gc\xd3\"caukdgfdywj"` + "\n" +
-				`"uczy\\fk"` + "\n" +
-				`"bnlxkjvl\x7docehufkj\\\"qoyhag"` + "\n" +
-				`"bidsptalmoicyorbv\\"` + "\n" +
-				`"jorscv\"mufcvvfmcv\"ga"` + "\n" +
-				`"sofpwfal\\a"` + "\n" +
-				`"kcuqtbboaly\"uj\"k"` + "\n" +
-				`"n\\c"` + "\n" +
-				`"x\"\xcaj\\xwwvpdldz"` + "\n" +
-				`"eyukphh"` + "\n" +
-				`"wcyjq"` + "\n" +
-				`"vjx\"\"hjroj\"l\x4cjwbr"` + "\n" +
-				`"xcodsxzfqw\\rowqtuwvjnxupjnrh"` + "\n" +
-				`"yc"` + "\n" +
-				`"fpvzldgbdtca\"hqwa"` + "\n" +
-				`"ymjq\x8ahohvafubra\"hgqoknkuyph"` + "\n" +
-				`"kx\\mkaaklvcup"` + "\n" +
-				`"belddrzegcsxsyfhzyz"` + "\n" +
-				`"fuyswi"` + "\n" +
-				`"\\hubzebo\"ha\\qyr\"dv\\"` + "\n" +
-				`"mxvlz\"fwuvx\"cyk\""` + "\n" +
-				`"ftbh\"ro\\tmcpnpvh\"xx"` + "\n" +
-				`"ygi"` + "\n" +
-				`"rw\"\"wwn\\fgbjumq\"vgvoh\xd0\"mm"` + "\n" +
-				`"\"pat\"\x63kpfc\"\x2ckhfvxk\"uwqzlx"` + "\n" +
-				`"o"` + "\n" +
-				`"d\"hqtsfp\xceaswe\"\xc0lw"` + "\n" +
-				`"zajpvfawqntvoveal\"\"trcdarjua"` + "\n" +
-				`"xzapq"` + "\n" +
-				`"rkmhm"` + "\n" +
-				`"byuq"` + "\n" +
-				`"rwwmt\xe8jg\xc2\"omt"` + "\n" +
-				`"nfljgdmgefvlh\"x"` + "\n" +
-				`"rpjxcexisualz"` + "\n" +
-				`"doxcycmgaiptvd"` + "\n" +
-				`"rq\\\"mohnjdf\\xv\\hrnosdtmvxot"` + "\n" +
-				`"oqvbcenib\"uhy\\npjxg"` + "\n" +
-				`"pkvgnm\\ruayuvpbpd"` + "\n" +
-				`"kknmzpxqfbcdgng"` + "\n" +
-				`"piduhbmaympxdexz"` + "\n" +
-				`"vapczawekhoa\\or"` + "\n" +
-				`"tlwn\"avc\"bycg\"\"xuxea"` + "\n" +
-				`"\xcdvryveteqzxrgopmdmihkcgsuozips"` + "\n" +
-				`"kpzziqt"` + "\n" +
-				`"sdy\\s\"cjq"` + "\n" +
-				`"yujs"` + "\n" +
-				`"qte\"q"` + "\n" +
-				`"qyvpnkhjcqjv\"cclvv\"pclgtg\xeak\"tno"` + "\n" +
-				`"xwx"` + "\n" +
-				`"vibuvv"` + "\n" +
-				`"qq\""` + "\n" +
-				`"wwjduomtbkbdtorhpyalxswisq\"r"` + "\n" +
-				`"afuw\\mfjzctcivwesutxbk\"lk"` + "\n" +
-				`"e\xcef\\hkiu"` + "\n" +
-				`"ftdrgzvygcw\"jwsrcmgxj"` + "\n" +
-				`"zrddqfkx\x21dr\"ju\"elybk\"powj\"\"kpryz"` + "\n" +
-				`"dttdkfvbodkma\""` + "\n" +
-				`"lzygktugpqw"` + "\n" +
-				`"qu\x83tes\\u\"tnid\"ryuz"` + "\n" +
-				`"\\o\"pe\\vqwlsizjklwrjofg\xe2oau\\rd"` + "\n" +
-				`"mikevjzhnwgx\"fozrj\"h\""` + "\n" +
-				`"ligxmxznzvtachvvbahnff"` + "\n" +
-				`"d\\kq"` + "\n" +
-				`"tnbkxpzmcakqhaa"` + "\n" +
-				`"g\\yeakebeyv"` + "\n" +
-				`"cqkcnd\"sxjxfnawy\x31zax\x6ceha"` + "\n" +
-				`"m\x0dtqotffzdnetujtsgjqgwddc"` + "\n" +
-				`"masnugb\"etgmxul\x3bqd\\tmtddnvcy"` + "\n" +
-				`"floediikodfgre\x23wyoxlswxflwecdjpt"` + "\n" +
-				`"zu"` + "\n" +
-				`"r"` + "\n" +
-				`"\"ashzdbd\"pdvba\xeeumkr\\amnj"` + "\n" +
-				`"ckslmuwbtfouwpfwtuiqmeozgspwnhx"` + "\n" +
-				`"t\\qjsjek\xf9gjcxsyco\"r"` + "\n" +
-				`"hoed\x1b\\tcmaqch\"epdy"` + "\n" +
-				`"mgjiojwzc\\ypqcn\xb1njmp\"aeeblxt"` + "\n" +
-				`"\xdf\"h\x5enfracj"` + "\n" +
-				`"\x6fpbpocrb"` + "\n" +
-				`"jbmhrswyyq\\"` + "\n" +
-				`"wtyqtenfwatji\"ls\\"` + "\n" +
-				`"voy"` + "\n" +
-				`"awj"` + "\n" +
-				`"rtbj\"j"` + "\n" +
-				`"hynl"` + "\n" +
-				`"orqqeuaat\\xu\\havsgr\xc5qdk"` + "\n" +
-				`"g\"npyzjfq\"rjefwsk"` + "\n" +
-				`"rk\\kkcirjbixr\\zelndx\"bsnqvqj\""` + "\n" +
-				`"tecoz"` + "\n" +
-				`"dn\"uswngbdk\""` + "\n" +
-				`"qb\\"` + "\n" +
-				`"wpyis\\ebq"` + "\n" +
-				`"ppwue\\airoxzjjdqbvyurhaabetv"` + "\n" +
-				`"fxlvt"` + "\n" +
-				`"ql\"oqsmsvpxcg\"k"` + "\n" +
-				`"vqlhuec\\adw"` + "\n" +
-				`"qzmi\xffberakqqkk"` + "\n" +
-				`"tisjqff\"wf"` + "\n" +
-				`"yhnpudoaybwucvppj"` + "\n" +
-				`"xhfuf\\ehsrhsnfxcwtibd\"ubfpz"` + "\n" +
-				`"ihgjquzhf\""` + "\n" +
-				`"ff\x66dsupesrnusrtqnywoqcn\\"` + "\n" +
-				`"z\x77zpubbjmd"` + "\n" +
-				`"\"vhzlbwq\"xeimjt\\xe\x85umho\"m\"\"bmy"` + "\n" +
-				`"mmuvkioocmzjjysi\"mkfbec\""` + "\n" +
-				`"rpgghowbduw\x2fayslubajinoik\xd0hcfy"` + "\n" +
-				`"xrkyjqul\xdexlojgdphczp\"jfk"` + "\n" +
-				`"mg\x07cnr\x8b\x67xdgszmgiktpjhawho"` + "\n" +
-				`"kdgufhaoab"` + "\n" +
-				`"rlhela\"nldr"` + "\n" +
-				`"wzye\x87u"` + "\n" +
-				`"yif\x75bjhnitgoarmfgqwpmopu"` + "\n" +
-				`"pvlbyez\"wyy\x3dpgr"` + "\n" +
-				`"ezdm\"ovkruthkvdwtqwr\"ibdoawzgu"` + "\n" +
-				`"qubp"` + "\n" +
-				`"b\\kcpegcn\\zgdemgorjnk"` + "\n" +
-				`"gjsva\\kzaor\"\"gtpd"` + "\n" +
-				`"\"kt"` + "\n" +
-				`"rlymwlcodix"` + "\n" +
-				`"qqtmswowxca\"jvv"` + "\n" +
-				`"jni\xebwhozb"` + "\n" +
-				`"zhino\"kzjtmgxpi\"zzexijg"` + "\n" +
-				`"tyrbat\\mejgzplufxixkyg"` + "\n" +
-				`"lhmopxiao\x09\"p\xebl"` + "\n" +
-				`"xefioorxvate"` + "\n" +
-				`"nmcgd\x46xfujt\"w"` + "\n" +
-				`"\xe3wnwpat\"gtimrb"` + "\n" +
-				`"wpq\"xkjuw\xebbohgcagppb"` + "\n" +
-				`"fmvpwaca"` + "\n" +
-				`"mlsw"` + "\n" +
-				`"fdan\\\x9e"` + "\n" +
-				`"\"f\"fmdlzc"` + "\n" +
-				`"nyuj\\jnnfzdnrqmhvjrahlvzl"` + "\n" +
-				`"zn\"f\xcfsshcdaukkimfwk"` + "\n" +
-				`"uayugezzo\\\"e\"blnrgjaupqhik"` + "\n" +
-				`"efd\"apkndelkuvfvwyyatyttkehc"` + "\n" +
-				`"ufxq\\\"m\"bwkh\x93kapbqrvxxzbzp\\"` + "\n" +
-				`"fgypsbgjak\x79qblbeidavqtddfacq\\i\"h"` + "\n" +
-				`"kcfgpiysdxlgejjvgndb\\dovfpqodw"` + "\n" +
-				`"\"onpqnssmighipuqgwx\"nrokzgvg"` + "\n" +
-				`"vhjrrhfrba\"jebdanzsrdusut\\wbs"` + "\n" +
-				`"o\xdakymbaxakys"` + "\n" +
-				`"uwxhhzz\\mtmhghjn\\\\tnhzbejj"` + "\n" +
-				`"yd\\"` + "\n" +
-				`"bpgztp\\lzwpdqju\"it\x35qjhihjv"` + "\n" +
-				`"\\my\\b\"klnnto\\\xb3mbtsh"` + "\n" +
-				`"ezyvknv\"l\x2bdhhfjcvwzhjgmhwbqd\"\\"` + "\n" +
-				`"ftkz\"amoncbsohtaumhl\"wsodemopodq"` + "\n" +
-				`"ifv"` + "\n" +
-				`"dmzfxvzq"` + "\n" +
-				`"sped\"bvmf\"mmevl\"zydannpfny"` + "\n" +
-				`"fjxcjwlv\"pnqyrzatsjwsqfidb"` + "\n" +
-				`"muc\xfdqouwwnmuixru\\zlhjintplvtee"` + "\n" +
-				`"mraqgvmj"` + "\n" +
-				`"njopq\"ftcsryo"` + "\n" +
-				`"enoh\"n"` + "\n" +
-				`"t\"ntjhjc\"nzqh\xf7dcohhlsja\x7dtr"` + "\n" +
-				`"flbqcmcoun"` + "\n" +
-				`"dxkiysrn\\dyuqoaig"` + "\n" +
-				`"nehkzi\"h\"syktzfufotng\xdafqo"` + "\n" +
-				`"dzkjg\\hqjk\\\"zfegssjhn"` + "\n" +
-				`"sadlsjv"` + "\n" +
-				`"vmfnrdb\""` + "\n" +
-				`"ac\\bdp\"n"` + "\n" +
-				`"qt\x89h"` + "\n" +
-				`"lsndeugwvijwde\\vjapbm\\k\\nljuva"` + "\n" +
-				`"twpmltdzyynqt\\z\\tnund\x64hm"` + "\n" +
-				`"hpcyata\"ocylbkzdnhujh"` + "\n" +
-				`"hskzq\"knntuhscex\"q\\y\\vqj\x3an"` + "\n" +
-				`"eekwyufvji\\mqgeroekxeyrmymq"` + "\n" +
-				`"hl\"durthetvri\xebw\\jxu\"rcmiuy"` + "\n" +
-				`"\"fxdnmvnftxwesmvvq\"sjnf\xaabpg\"iary"` + "\n" +
-				`"\"\"nksqso"` + "\n" +
-				`"ruq\xbezugge\"d\"hwvoxmy\"iawikddxn\"x"` + "\n" +
-				`"rxxnlfay"` + "\n" +
-				`"stcu\"mv\xabcqts\\fasff"` + "\n" +
-				`"yrnvwfkfuzuoysfdzl\x02bk"` + "\n" +
-				`"qbdsmlwdbfknivtwijbwtatqfe"` + "\n" +
-				`"\"erqh\\csjph"` + "\n" +
-				`"ikfv"` + "\n" +
-				`"\xd2cuhowmtsxepzsivsvnvsb"` + "\n" +
-				`"vj"` + "\n" +
-				`"d"` + "\n" +
-				`"\\g"` + "\n" +
-				`"porvg\x62qghorthnc\"\\"` + "\n" +
-				`"tiks\\kr\"\x0fuejvuxzswnwdjscrk"` + "\n" +
-				`"xmgfel\"atma\\zaxmlgfjx\"ajmqf"` + "\n" +
-				`"oz\\rnxwljc\\\"umhymtwh"` + "\n" +
-				`"wlsxxhm\x7fqx\\gjoyrvccfiner\\qloluqv"` + "\n" +
-				`"k\\ieq"` + "\n" +
-				`"xidjj\"ksnlgnwxlddf\\s\\kuuleb"` + "\n" +
-				`"wjpnzgprzv\\maub\x0cj"` + "\n" +
-				`"r"` + "\n" +
-				`"y"` + "\n" +
-				`"\"yecqiei\"ire\\jdhlnnlde\xc5u"` + "\n" +
-				`"drvdiycqib"` + "\n" +
-				`"egnrbefezcrhgldrtb"` + "\n" +
-				`"plqodxv\\zm\"uodwjdocri\x55ucaezutm"` + "\n" +
-				`"f\"wexcw\x02ekewx\"alyzn"` + "\n" +
-				`"pqajwuk\\\\oatkfqdyspnrupo"` + "\n" +
-				`"rkczj\"fzntabpnygrhamk\\km\x68xfkmr"` + "\n" +
-				`"wejam\xbac\x37kns"` + "\n" +
-				`"qqmlwjk\"gh"` + "\n" +
-				`"fdcjsxlgx"` + "\n" +
-				`"\\cxvxy\"kb\"\"unubvrsq\\y\\awfhbmarj\\"` + "\n" +
-				`"geunceaqr"` + "\n" +
-				`"tpkg\"svvngk\\sizlsyaqwf"` + "\n" +
-				`"\"pa\\x\x18od\\emgje\\"` + "\n" +
-				`"ffiizogjjptubzqfuh\"cctieqcdh"` + "\n" +
-				`"yikhiyyrpgglpos"` + "\n" +
-				`"h\\"` + "\n" +
-				`"jotqojodcv"` + "\n" +
-				`"ervsz\x87ade\"fevq\\tcqowt"` + "\n" +
-				`"\\y\"fgrxtppkcseeg\\onxjarx\\hyhfn\x5fi"` + "\n" +
-				`"kxndlabn\\wwumctuzdcfiitrbnn"` + "\n" +
-				`"eoosynwhwm"` + "\n" +
-				`"\"c\x04"` + "\n" +
-				`"ny\xf6vuwlec"` + "\n" +
-				`"ubgxxcvnltzaucrzg\\xcez"` + "\n" +
-				`"pnocjvo\\yt"` + "\n" +
-				`"fcabrtqog\"a\"zj"` + "\n" +
-				`"o\\bha\\mzxmrfltnflv\xea"` + "\n" +
-				`"tbfvzwhexsdxjmxejwqqngzixcx"` + "\n" +
-				`"wdptrakok\"rgymturdmwfiwu"` + "\n" +
-				`"reffmj"` + "\n" +
-				`"lqm"` + "\n" +
-				`"\\oc"` + "\n" +
-				`"p\""` + "\n" +
-				`"ygkdnhcuehlx"` + "\n" +
-				`"vsqmv\"bqay\"olimtkewedzm"` + "\n" +
-				`"isos\x6azbnkojhxoopzetbj\xe1yd"` + "\n" +
-				`"yo\\pgayjcyhshztnbdv"` + "\n" +
-				`"fg\"h"` + "\n" +
-				`"vcmcojolfcf\\\\oxveua"` + "\n" +
-				`"w\"vyszhbrr\"jpeddpnrjlca\x69bdbopd\\z"` + "\n" +
-				`"jikeqv"` + "\n" +
-				`"\"dkjdfrtj"` + "\n" +
-				`"is"` + "\n" +
-				`"hgzx"` + "\n" +
-				`"z\""` + "\n" +
-				`"woubquq\\ag\""` + "\n" +
-				`"xvclriqa\xe6ltt"` + "\n" +
-				`"tfxinifmd"` + "\n" +
-				`"mvywzf\"jz"` + "\n" +
-				`"vlle"` + "\n" +
-				`"c\"rf\"wynhye\x25vccvb\""` + "\n" +
-				`"zvuxm"` + "\n" +
-				`"\xf2\"jdstiwqer\"h"` + "\n" +
-				`"kyogyogcknbzv\x9f\\\\e"` + "\n" +
-				`"kspodj\"edpeqgypc"` + "\n" +
-				`"oh\\x\\h"` + "\n" +
-				`"julb"` + "\n" +
-				`"bmcfkidxyilgoy\\xmu\"ig\\qg"` + "\n" +
-				`"veqww\"ea"` + "\n" +
-				`"fkdbemtgtkpqisrwlxutllxc\"mbelhs"` + "\n" +
-				`"e"` + "\n" +
-				`"ecn\x50ooprbstnq"` + "\n" +
-				`"\"\xe8\"ec\xeah\"qo\\g\"iuqxy\"e\"y\xe7xk\xc6d"` + "\n" +
-				`"lwj\"aftrcqj"` + "\n" +
-				`"jduij\x97zk\"rftjrixzgscxxllpqx\"bwwb"` + "\n" +
-				`"fqcditz"` + "\n" +
-				`"f\x19azclj\"rsvaokgvty\"aeq"` + "\n" +
-				`"erse\x9etmzhlmhy\x67yftoti"` + "\n" +
-				`"lsdw\xb3dmiy\\od"` + "\n" +
-				`"x\x6fxbljsjdgd\xaau"` + "\n" +
-				`"hjg\\w\"\x78uoqbsdikbjxpip\"w\"jnhzec"` + "\n" +
-				`"gk"` + "\n" +
-				`"\\zrs\\syur"`,
+			Input:   day08myInput,
 			Result1: "1342",
 			Result2: "2074"},
 	}
 	for _, tt := range testCases {
 		tt.Test(Day08, assert)
 	}
+}
+
+func BenchmarkDay08(b *testing.B) {
+	internal.Benchmark(Day08, b, day08myInput)
 }

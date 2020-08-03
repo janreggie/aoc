@@ -3,6 +3,7 @@ package aoc2015
 import (
 	"bufio"
 	"strconv"
+	"sync"
 )
 
 // checkThreeVowels checks whether input has at least three vowels
@@ -133,6 +134,72 @@ func checkNiceTwo(input string) bool {
 //	qkkwrhpbhypxhiun
 //	wgfvnogarjmdbxyh
 func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+	// I can think of the following:
+	// - a primary channel where the input is fed into.
+	// - several worker goroutines that feed from primary
+	// and check if they're nice1 or nice2,
+	// and if so push a value to nice1chan and nice2chan.
+	// - totalNice1 and totalNice2 which iterate every time
+	// there's a value appended to nice1chan or nice2chan.
+	goroutineCount := 16 // this can be modified
+	var totalNiceOne, totalNiceTwo int64
+	primaryChannel := make(chan string, goroutineCount)
+	niceOneChannel, niceTwoChannel := make(chan struct{}, goroutineCount), make(chan struct{}, goroutineCount)
+
+	var wg sync.WaitGroup
+	// makeWorker is a goroutine instance
+	makeWorker := func() {
+		for input := range primaryChannel {
+			if checkNiceOne(input) {
+				niceOneChannel <- struct{}{}
+			}
+			if checkNiceTwo(input) {
+				niceTwoChannel <- struct{}{}
+			}
+		}
+		wg.Done()
+	}
+
+	go func() {
+		for scanner.Scan() {
+			primaryChannel <- scanner.Text()
+		}
+		close(primaryChannel)
+	}()
+
+	// iterate nice1 and nice2
+	var iterwg sync.WaitGroup
+	iterwg.Add(2)
+	go func() {
+		for range niceOneChannel {
+			totalNiceOne++
+		}
+		iterwg.Done()
+	}()
+	go func() {
+		for range niceTwoChannel {
+			totalNiceTwo++
+		}
+		iterwg.Done()
+	}()
+
+	for ii := 0; ii < goroutineCount; ii++ {
+		wg.Add(1)
+		go makeWorker()
+	}
+
+	wg.Wait()
+	close(niceOneChannel)
+	close(niceTwoChannel)
+	iterwg.Wait()
+	answer1 = strconv.FormatInt(totalNiceOne, 10)
+	answer2 = strconv.FormatInt(totalNiceTwo, 10)
+	return
+}
+
+// Day05ST solves the fifth day puzzle "Doesn't He Have Intern-Elves For This?"
+// but is a single-threaded solution.
+func Day05ST(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var totalNiceOne, totalNiceTwo int64
 	// Is it more worth to check each ind := range currentString?
 	// Not necessarily since it will run the same number of comparisons

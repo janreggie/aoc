@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -671,7 +671,7 @@ func Test_repertoire(t *testing.T) {
 
 func TestDay06(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Details: "Y2016D06 sample input",
 			Input:   day06sampleInput,
 			Result1: "easter",
@@ -684,4 +684,8 @@ func TestDay06(t *testing.T) {
 	for _, tt := range testCases {
 		tt.Test(Day06, assert)
 	}
+}
+
+func BenchmarkDay06(b *testing.B) {
+	internal.Benchmark(Day06, b, day06myInput)
 }

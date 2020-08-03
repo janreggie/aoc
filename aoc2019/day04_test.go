@@ -3,9 +3,11 @@ package aoc2019
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
+
+const day04myInput = `271973-785961`
 
 func Test_checkAdjacent(t *testing.T) {
 	assert := assert.New(t)
@@ -67,13 +69,17 @@ func Test_checkDuality(t *testing.T) {
 
 func TestDay04(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Details: "Y2019D04 my input",
-			Input:   "271973-785961",
+			Input:   day04myInput,
 			Result1: "925",
 			Result2: "607"},
 	}
 	for _, tt := range testCases {
 		tt.Test(Day04, assert)
 	}
+}
+
+func BenchmarkDay04(b *testing.B) {
+	internal.Benchmark(Day04, b, day04myInput)
 }

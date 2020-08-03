@@ -80,7 +80,9 @@ func extractSumButRed(value *jason.Value) int64 {
 //
 // Input
 //
-// A single line representing a JSON value. For example:
+// A single line representing a JSON value.
+// This line can be very long. Mine has 26,663 characters.
+// For example:
 //
 //	{"d":"red","e":[1,2,3,4],"f":5}
 //
@@ -104,13 +106,13 @@ func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 	// but how do we read the data?
 	var totalSum int64
-	var antiCommunistSum int64 // answer2 (because not red)
+	var notRedSum int64 // answer2
 
 	totalSum += extractSum(data)
-	antiCommunistSum += extractSumButRed(data)
+	notRedSum += extractSumButRed(data)
 
 	answer1 = strconv.FormatInt(totalSum, 10)
-	answer2 = strconv.FormatInt(antiCommunistSum, 10)
+	answer2 = strconv.FormatInt(notRedSum, 10)
 
 	return
 }

@@ -82,6 +82,7 @@ func (lights *lights) brightness() uint {
 // A file containing 300 lines, each of which is an "instruction"
 // that determines which lights to turn off, turn on, or toggle on a 1000x1000 grid.
 // For example:
+//
 // 	turn on 818,296 through 818,681
 // 	turn on 71,699 through 91,960
 // 	turn off 838,578 through 967,928
@@ -91,6 +92,7 @@ func (lights *lights) brightness() uint {
 // prefixed by "turn on", "turn off", or "toggle",
 // the first coordinate is no greater than the third one and the second no greater than the fourth,
 // and all numbers are no greater than 999.
+// Invalid inputs will cause an error to return.
 func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var allLights lights
 

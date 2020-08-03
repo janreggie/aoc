@@ -1,17 +1,18 @@
-// The AdventOfCode project contains my solutions for the Advent of Code series of puzzles from 2015 to 2019.
-// Progress varies between these years, but I shall attempt to finish this
-// project in due time.
+// The AdventOfCode project contains my solutions
+// for the Advent of Code series of puzzles from 2015 to 2019.
+// Progress varies between these years,
+// but I shall finish this project in due time.
 //
 // Usage
 //
 // If a year or day is invalid, or if the puzzle for some day of some year
 // has yet to be implemented, the program will panic.
 //
-//	./AdventOfCode [profiling flags] -year YEAR -day DAY -input FILE
+//	./AdventOfCode [other flags] -year YEAR -day DAY -input FILE
 //
 // For example:
 //
-//	./AdventOfCode [profiling flags] -year 2015 -day 4 -input inputs/2015_04.txt
+//	./AdventOfCode [other flags] -year 2015 -day 4 -input inputs/2015_04.txt
 //
 // Profiling flags
 //
@@ -20,50 +21,90 @@
 // They will write their outputs to trace.out, cpu.pprof, and mem.pprof respectively
 // in the current folder.
 //
+// Glog flags
+//
+// This package uses the Google logging library https://github.com/golang/glog.
+// A solver function may use glog to log what it's doing to Info or Warning.
+// The user may set -stderrthreshold to modify the level of verbosity.
+//
 // Structuring of packages
 //
 // This project contains several packages: those containing the solutions
-// (which start with aoc), and the utilities packages (those in the tools folder).
+// (which start with aoc), and utilities packages (in the internal folder).
 //
-// The Solutions Packages are those that contain the solutions for the Day
+// The aoc20XX Packages are those that contain the solutions for the Day
 // and the Year they are written. For example, the solution for Day 4 of
 // Year 2015 is aoc2015.Day04, which is in day04.go in the aoc2015 folder.
 // Each of these "Solver Functions" are written such that they take in
 // a *bufio.Scanner, which contains the text for the puzzle input,
 // and returns two strings answer1 and answer2, and an error.
 //
+//	// Day04 solves the fourth day puzzle "The Ideal Stocking Stuffer".
+//	//
+//	// Input
+//	//
+//	// A string of length 8 containing only the lowercase
+//	// letters 'a' to 'z'. For example:
+//	//
+//	//	iwrupvqb
+//	func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+//		// ...implementation
+//	}
+//
+// For some puzzles, I have written more than one solver function.
+// These other solver functions are written as alternative solutions,
+// but I believe that the "primary" one is the most optimal.
+// For example, there is also an aoc2015.Day04ST,
+// which is just like aoc2015.Day04 but is a single-threaded solution.
+// Alternative solutions are only there in special cases,
+// such as documenting single threaded solutions or using alternative algorithms.
+// These are also benchmarked using my input as well as those from other people.
+//
+// For some puzzles, answer1 or answer2 do not give the exact answer,
+// but rather require a human to look at the output directly
+// and infer the actual answer from there.
+// These puzzles are often in the form of
+// "your output will display an ASCII image containing a word which you should input".
+// Parsing these outputs are difficult so I have left them be.
+//
 // I have not written every Solver Function there is yet,
 // and for those that have yet to be implemented,
-// a dummy Solver Function is written that just throws an error
-// that says "unimplemented".
+// a dummy Solver Function is written that just throws an error that says "unimplemented".
 //
 // These Solver Functions could not act alone, and thus would need
 // the assistance of helper structs and functions.
 // These Helpers are also visible in the .go files in their respective Day and Year,
 // and each set of Helpers are unique to a certain Solver Function.
 // While these Helpers are left unexported, they can still be viewed in godoc using ?m=all.
+// Helper packages also exist in the aoc20XX folders
+// wherein multiple puzzles in a year use a set of tools.
 //
-// Most Helpers and all Solver Functions are tested using the utilities
-// packages (seen below). These tests also include my inputs,
+// Most Helpers and all Solver Functions are tested using the internal package.
+// The internal package is only meant to be used for testing.
+// In the future, this may be deprecated so that the aoc20XX packages could stand alone.
+// These tests also include the inputs that are given to me.
 //
-// Each Solutions Package will also have an AllSolutions in their init.go,
+// Each aoc20XX package will also have an AllSolutions in their solutions.go,
 // which is a way to store all Solver Functions in one slice,
 // which this Program imports to choose the correct Solver Function given
 // a Day and a Year.
-//
-// The utilities packages are there to facilitate the operation of several
-// Solver Functions, such as the Intcode package used for several days in
-// aoc2019. A utility package is also written to facilitate my testing.
+// Note that some of these functions are unimplemented.
 //
 // The packages written can be used outside of this project,
-// by, for instance, importing the appropriate Solutions Package.
+// by importing the appropriate aoc20XX package.
 //
 // Input file
 //
 // The program is designed to read from an input file which is the user's "puzzle input".
-// Check the inputs/ folder in this repository for example inputs of the author.
+// Check the inputs/ folder in this repository for my inputs.
+// In addition, I have also placed these inputs as strings in each package
+// primarily for testing purposes.
+//
 // If the puzzle input is not "valid", undefined behavior may follow.
-// The Solver function may throw out an error and the program's execution may halt.
+// Often, the Solver function may throw out an error and the program's execution may halt.
+// Othertimes, the Solver function may not care and parse the input as-is.
+// The tests written mostly do not check for invalid inputs.
+// Great care is taken so that none of the solver functions panic.
 //
 // Each Solver Function should provide documentation on what the input file looks like.
 //
@@ -108,17 +149,7 @@ import (
 	"github.com/pkg/profile"
 )
 
-var year int     // year (must be between 2015 to 2018)
-var day int      // day (must be between 1 to 25)
-var input string // filename of input
-// to trace or not to trace?
-var profileCPU bool
-var profileMem bool
-var profileTrace bool
-
-const minYear, maxYear = 2015, 2019 // minimum and maximum years so far
-const minDay, maxDay = 1, 25        // minimum and maximum days
-
+// allAoCs store all AdventOfCode solutions
 var allAoCs = [][]func(*bufio.Scanner) (string, string, error){
 	aoc2015.AllSolutions, // 2015
 	aoc2016.AllSolutions, // 2016
@@ -127,33 +158,49 @@ var allAoCs = [][]func(*bufio.Scanner) (string, string, error){
 	aoc2019.AllSolutions, // 2019
 }
 
-func init() {
+func main() {
+	var year, day int
+	var input string
+	var profileCPU, profileMem, profileTrace bool
+	const minYear, maxYear = 2015, 2019 // minimum and maximum years so far
+	const minDay, maxDay = 1, 25        // minimum and maximum days
+
+	// Year, Day, and Input: the essentials
 	flag.IntVar(&year, "year", 0, "Year to solve")
 	flag.IntVar(&day, "day", 0, "Day to solve")
 	flag.StringVar(&input, "input", "", "Input file")
+
+	// to trace, or not to trace?
 	flag.BoolVar(&profileCPU, "cpuprof", false, "Profile CPU")
 	flag.BoolVar(&profileMem, "memprof", false, "Profile memory")
 	flag.BoolVar(&profileTrace, "trace", false, "Enable execution tracing")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "\t%s -year YEAR -day DAY -input INPUT_FILE\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Other flags:\n")
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 
 	if year < minYear || year > maxYear {
+		flag.Usage()
 		glog.Fatalf("invalid year %v", year)
 	}
 	if day < minDay || day > maxDay {
+		flag.Usage()
 		glog.Fatalf("invalid day: %v", day)
 	}
 	if input == "" {
+		flag.Usage()
 		glog.Fatalf("input file cannot be empty")
 	}
+
+	// Enable profiling
 	if profileTrace {
 		profileCPU = false
 		profileMem = false
-	}
-}
-
-func main() {
-	// Enable profiling
-	if profileTrace {
 		defer profile.Start(profile.TraceProfile, profile.ProfilePath(".")).Stop()
 	} else if profileCPU {
 		defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
@@ -161,25 +208,34 @@ func main() {
 		defer profile.Start(profile.MemProfile, profile.ProfilePath(".")).Stop()
 	}
 
-	// implement flags
+	// open the file
 	glog.Infof("To solve: Year %v Day %v\n", year, day)
 	glog.Infof("Opening file %v...\n", input)
 	osFile, err := os.Open(input)
 	defer osFile.Close()
 	if err != nil {
-		glog.Fatalf("cannot open %v: %v", input, err)
+		glog.Fatalf("cannot open %v: %+v", input, err)
 	}
 	bufferFile := bufio.NewScanner(osFile)
 
-	// now this is where it gets interesting
-	solverFunc := allAoCs[year-minYear][day-minDay]
+	// retrieve solverFunc.
+	// Just to be safe, check yearInd, dayInd.
+	yearInd, dayInd := year-minYear, day-minDay
+	if yearInd >= len(allAoCs) || yearInd < 0 {
+		glog.Fatalf("couldn't access allAoCs[%d]; check your program", yearInd)
+	}
+	if dayInd >= len(allAoCs[yearInd]) || dayInd < 0 {
+		glog.Fatalf("couldn't access allAoCs[%d][%d]; check your program", yearInd, dayInd)
+	}
+	solverFunc := allAoCs[yearInd][day-minDay]
 	glog.Infof("Solving puzzle...\n")
+
 	start := time.Now()
 	if result1, result2, err := solverFunc(bufferFile); err != nil {
-		glog.Fatalf("some error: %v", err)
+		glog.Fatalf("could not solve Y%04dD%02d: %+v", year, day, err)
 	} else {
 		fmt.Printf("First answer is %v.\n", result1)
 		fmt.Printf("Second answer is %v.\n", result2)
 	}
-	fmt.Printf("It took %v time to solve Y%04vD%02v.\n", time.Since(start), year, day)
+	fmt.Printf("It took %v time to solve Y%04dD%02d.\n", time.Since(start), year, day)
 }

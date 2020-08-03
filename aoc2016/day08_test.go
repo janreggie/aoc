@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -319,11 +319,15 @@ func Test_littleScreen_parseInstruction(t *testing.T) {
 
 func TestDay08(t *testing.T) {
 	assert := assert.New(t)
-	testCase := tools.TestCase{
+	testCase := internal.TestCase{
 		Details: "Y2016D08 my input",
 		Input:   day08myInput,
 		Result1: `110`,
 		// Result2 difficult to formalize
 	}
 	testCase.Test(Day08, assert)
+}
+
+func BenchmarkDay08(b *testing.B) {
+	internal.Benchmark(Day08, b, day08myInput)
 }

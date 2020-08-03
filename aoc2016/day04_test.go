@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -1056,7 +1056,7 @@ func Test_room_decrypt(t *testing.T) {
 
 func TestDay04(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Details: "Y2016D04 sample input",
 			Input:   day04sampleInput,
 			Result1: "1514"},
@@ -1068,4 +1068,8 @@ func TestDay04(t *testing.T) {
 	for _, tt := range testCases {
 		tt.Test(Day04, assert)
 	}
+}
+
+func BenchmarkDay04(b *testing.B) {
+	internal.Benchmark(Day04, b, day04myInput)
 }

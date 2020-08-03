@@ -14,17 +14,17 @@ const unknownAuntParameter uint = 4294967295
 
 // auntSue is a representation of an Aunt named Sue.
 type auntSue struct {
-	number    uint // "Sue 1" to "Sue 500"
-	children, //by human DNA age analysis
-	cats, // It doesn't differentiate individual breeds.
-	samoyeds, // Several seemingly random breeds of dog
-	pomeranians,
-	akitas,
-	vizslas,
-	goldfish, // No other kinds of fish.
-	trees, // all in one group.
-	cars, // presumably by exhaust or gasoline or something
-	perfumes uint // which is handy, since many of your Aunts Sue wear a few kinds
+	number      uint // "Sue 1" to "Sue 500"
+	children    uint // by human DNA age analysis
+	cats        uint // It doesn't differentiate individual breeds.
+	samoyeds    uint // Several seemingly random breeds of dog
+	pomeranians uint
+	akitas      uint
+	vizslas     uint
+	goldfish    uint // No other kinds of fish.
+	trees       uint // all in one group.
+	cars        uint // presumably by exhaust or gasoline or something
+	perfumes    uint // which is handy, since many of your Aunts Sue wear a few kinds
 }
 
 // newAuntSue returns a new Aunt Sue object from a string.

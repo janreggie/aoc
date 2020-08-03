@@ -31,6 +31,11 @@ import (
 //	16x17x22
 //	11x28x26
 //	1x11x10
+//
+// If there is more than or less than three numbers in a row,
+// or if there are issues with parsing the input,
+// the function will return an error corresponding to the problematic line.
+// If the numbers are too large, that may result in an integer overflow.
 func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// initialize important variables
 	splitDims := make([]string, 3)
@@ -38,7 +43,9 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var totalPaper, totalRibbon int // part 1 and part 2 respectively
 
 	// some helper functions
-	// it is assumed that dims is of length 3
+	// it is assumed that dims is of length 3,
+	// since we first check whether that is the case.
+
 	// max function for maximum of a slice
 	max := func(list []int) int {
 		currentMax := list[0]
@@ -49,10 +56,12 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		}
 		return currentMax
 	}
+
 	// surfaceArea function for total surface area (part 1)
 	surfaceArea := func(dims []int) int {
 		return 2 * (dims[0]*dims[1] + dims[1]*dims[2] + dims[2]*dims[0])
 	}
+
 	// slack function for the little extra paper (part 1)
 	slack := func(dims []int) int {
 		result := 1
@@ -62,6 +71,7 @@ func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		result /= max(dims)
 		return result
 	}
+
 	// ribbon for amount of ribbon to be used (part 2)
 	ribbon := func(dims []int) int {
 		result := 0

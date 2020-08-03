@@ -1,11 +1,9 @@
 package aoc2016
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -145,7 +143,7 @@ func Test_number_iterateDeux(t *testing.T) {
 
 func TestDay02(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Input: "ULL\n" +
 			"RRDDD\n" +
 			"LURDL\n" +
@@ -164,7 +162,5 @@ func TestDay02(t *testing.T) {
 }
 
 func BenchmarkDay02(b *testing.B) {
-	for ii := 0; ii < b.N; ii++ {
-		Day02(bufio.NewScanner(strings.NewReader(day02myInput)))
-	}
+	internal.Benchmark(Day01, b, day02myInput)
 }

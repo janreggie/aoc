@@ -42,6 +42,9 @@ func checkHash(n int, augend string, addend int) bool {
 // letters 'a' to 'z'. For example:
 //
 //	iwrupvqb
+//
+// Because this is more or less a brute-force solution,
+// it may take a long time before returning an answer.
 func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	// the entire scanner is read.
 	input := ""

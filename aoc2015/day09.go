@@ -638,8 +638,7 @@ func (queue *townPathQueue) pop() (townPath, error) {
 //
 // The above is my complete input.
 // It is guaranteed that the distances betwen any two towns is given.
-// It is also guaranteed that the distances between any two towns
-// is no more than 200.
+// It is also guaranteed that the distances between any two towns is no more than 200.
 func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	santasGraph, err := newTownGraph(scanner)
 	if err != nil {

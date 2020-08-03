@@ -1,11 +1,9 @@
 package aoc2016
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +11,7 @@ const day05myInput = `ffykfhsq`
 
 func TestDay05(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Input: "abc",
 			Result1: "18f47a30",
 			Result2: "05ace8e3"},
@@ -29,7 +27,5 @@ func TestDay05(t *testing.T) {
 }
 
 func BenchmarkDay05(b *testing.B) {
-	for ii := 0; ii < b.N; ii++ {
-		Day05(bufio.NewScanner(strings.NewReader(day05myInput)))
-	}
+	internal.Benchmark(Day05, b, day05myInput)
 }

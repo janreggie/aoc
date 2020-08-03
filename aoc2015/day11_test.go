@@ -1,13 +1,13 @@
 package aoc2015
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
+
+const day11myInput = `hepxcrrq`
 
 func Test_newPassword(t *testing.T) {
 	assert := assert.New(t)
@@ -45,10 +45,10 @@ func Test_increment(t *testing.T) {
 
 func TestDay11(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Input: "abcdefgh", Result1: "abcdffaa"},
 		{Input: "ghijklmn", Result1: "ghjaabcc"},
-		{Details: "Y2015D11 my input", Input: "hepxcrrq", Result1: "hepxxyzz", Result2: "heqaabcc"},
+		{Details: "Y2015D11 my input", Input: day11myInput, Result1: "hepxxyzz", Result2: "heqaabcc"},
 	}
 	for _, tt := range testCases {
 		tt.Test(Day11, assert)
@@ -56,8 +56,5 @@ func TestDay11(t *testing.T) {
 }
 
 func BenchmarkDay11(b *testing.B) {
-	input := "hepxcrrq"
-	for ii := 0; ii < b.N; ii++ {
-		Day11(bufio.NewScanner(strings.NewReader(input)))
-	}
+	internal.Benchmark(Day11, b, day11myInput)
 }

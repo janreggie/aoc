@@ -473,7 +473,7 @@ func (queue *seatingArrangementQueue) pop() (seatingArrangement, error) {
 //	Bob would gain 40 happiness units by sitting next to Alice.
 //	Bob would lose 61 happiness units by sitting next to Carol.
 //	Bob would lose 15 happiness units by sitting next to David.
-//	(this file continues)
+//	(this line continues)
 //
 // If the happiness between one person and another is not provided
 // it is assumed that the former would gain zero happiness
@@ -493,7 +493,7 @@ func Day13(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wg.Add(2)
 
 	go func() {
-		answer1 = strconv.Itoa(scenario.happiestExhaustive().int())
+		answer1 = strconv.Itoa(scenario.happiestPermutative().int())
 		wg.Done()
 	}()
 
@@ -502,7 +502,7 @@ func Day13(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		// This should have no error
 		scenarioWithYou := scenario.copy()
 		scenarioWithYou.addToVisitors(visitorPair{"Alice", "You"})
-		answer2 = strconv.Itoa(scenarioWithYou.happiestExhaustive().int())
+		answer2 = strconv.Itoa(scenarioWithYou.happiestPermutative().int())
 		wg.Done()
 	}()
 

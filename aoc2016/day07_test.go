@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -2069,11 +2069,15 @@ func Test_ipv7Address_supportSSL(t *testing.T) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCase := tools.TestCase{
+	testCase := internal.TestCase{
 		Details: "Y2016D07 my input",
 		Input:   day07myInput,
 		Result1: `110`,
 		Result2: `242`,
 	}
 	testCase.Test(Day07, assert)
+}
+
+func BenchmarkDay07(b *testing.B) {
+	internal.Benchmark(Day07, b, day07myInput)
 }

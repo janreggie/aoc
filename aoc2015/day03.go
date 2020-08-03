@@ -25,9 +25,11 @@ func iterateCoordinate(location *image.Point, input string) {
 // Input
 //
 // A single line of length 8192 containing only the characters '<', '>', '^', and 'v',
-// representing direction. For example:
+// each representing direction. For example:
 //
 //	v^>>v>v>>>>^^>v<^v^>><<^<>>v><^><<^>^<vv^^<><<>><vvvv^>^^<><^^
+//
+// Any characters that are not any of those will be ignored.
 func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Split(bufio.ScanBytes)
 

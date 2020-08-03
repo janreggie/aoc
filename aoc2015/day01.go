@@ -14,6 +14,7 @@ import (
 // For example:
 //
 //	()((()((()(()()())(())()()()((())())))((()()(()()((()(())()()())(((()(()()))))(())))(()(()())()))()()))))))()))))((((
+// If there exists any character that is neither a '(' or a ')', return an error.
 func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	currentFloor := 0
 	position := 1
@@ -26,10 +27,10 @@ func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		} else if readFloor == ")" {
 			currentFloor--
 		} else {
-			err = fmt.Errorf("unexpected: %v", readFloor)
+			err = fmt.Errorf("unexpected: %s", readFloor)
 			return
 		}
-		if currentFloor == -1 && !passedBasement {
+		if !passedBasement && currentFloor == -1 {
 			answer2 = strconv.Itoa(position)
 			passedBasement = true
 		}

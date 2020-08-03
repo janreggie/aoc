@@ -21,6 +21,8 @@ import (
 //	"isos\x6azbnkojhxoopzetbj\xe1yd"
 //
 // Each line is observed to start and end with a double-quotation mark '"'.
+// If it does, trim the quotation marks away.
+// If it doesn't, take the input as-is.
 func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	var representedDiff uint64 // character difference (representation and actual) for answer 1
 	var encodedDiff uint64     // character difference (literal and encoded) for answer 2

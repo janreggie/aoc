@@ -6,9 +6,350 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/tools"
+	"github.com/janreggie/AdventOfCode/internal"
 	"github.com/stretchr/testify/assert"
 )
+
+const day07myInput = `NOT dq -> dr
+kg OR kf -> kh
+ep OR eo -> eq
+44430 -> b
+NOT gs -> gt
+dd OR do -> dp
+eg AND ei -> ej
+y AND ae -> ag
+jx AND jz -> ka
+lf RSHIFT 2 -> lg
+z AND aa -> ac
+dy AND ej -> el
+bj OR bi -> bk
+kk RSHIFT 3 -> km
+NOT cn -> co
+gn AND gp -> gq
+cq AND cs -> ct
+eo LSHIFT 15 -> es
+lg OR lm -> ln
+dy OR ej -> ek
+NOT di -> dj
+1 AND fi -> fj
+kf LSHIFT 15 -> kj
+NOT jy -> jz
+NOT ft -> fu
+fs AND fu -> fv
+NOT hr -> hs
+ck OR cl -> cm
+jp RSHIFT 5 -> js
+iv OR jb -> jc
+is OR it -> iu
+ld OR le -> lf
+NOT fc -> fd
+NOT dm -> dn
+bn OR by -> bz
+aj AND al -> am
+cd LSHIFT 15 -> ch
+jp AND ka -> kc
+ci OR ct -> cu
+gv AND gx -> gy
+de AND dk -> dm
+x RSHIFT 5 -> aa
+et RSHIFT 2 -> eu
+x RSHIFT 1 -> aq
+ia OR ig -> ih
+bk LSHIFT 1 -> ce
+y OR ae -> af
+NOT ca -> cb
+e AND f -> h
+ia AND ig -> ii
+ck AND cl -> cn
+NOT jh -> ji
+z OR aa -> ab
+1 AND en -> eo
+ib AND ic -> ie
+NOT eh -> ei
+iy AND ja -> jb
+NOT bb -> bc
+ha OR gz -> hb
+1 AND cx -> cy
+NOT ax -> ay
+ev OR ew -> ex
+bn RSHIFT 2 -> bo
+er OR es -> et
+eu OR fa -> fb
+jp OR ka -> kb
+ea AND eb -> ed
+k AND m -> n
+et RSHIFT 3 -> ev
+et RSHIFT 5 -> ew
+hz RSHIFT 1 -> is
+ki OR kj -> kk
+NOT h -> i
+lv LSHIFT 15 -> lz
+as RSHIFT 1 -> bl
+hu LSHIFT 15 -> hy
+iw AND ix -> iz
+lf RSHIFT 1 -> ly
+fp OR fv -> fw
+1 AND am -> an
+ap LSHIFT 1 -> bj
+u LSHIFT 1 -> ao
+b RSHIFT 5 -> f
+jq AND jw -> jy
+iu RSHIFT 3 -> iw
+ih AND ij -> ik
+NOT iz -> ja
+de OR dk -> dl
+iu OR jf -> jg
+as AND bd -> bf
+b RSHIFT 3 -> e
+jq OR jw -> jx
+iv AND jb -> jd
+cg OR ch -> ci
+iu AND jf -> jh
+lx -> a
+1 AND cc -> cd
+ly OR lz -> ma
+NOT el -> em
+1 AND bh -> bi
+fb AND fd -> fe
+lf OR lq -> lr
+bn RSHIFT 3 -> bp
+bn AND by -> ca
+af AND ah -> ai
+cf LSHIFT 1 -> cz
+dw OR dx -> dy
+gj AND gu -> gw
+jg AND ji -> jj
+jr OR js -> jt
+bl OR bm -> bn
+gj RSHIFT 2 -> gk
+cj OR cp -> cq
+gj OR gu -> gv
+b OR n -> o
+o AND q -> r
+bi LSHIFT 15 -> bm
+dy RSHIFT 1 -> er
+cu AND cw -> cx
+iw OR ix -> iy
+hc OR hd -> he
+0 -> c
+db OR dc -> dd
+kk RSHIFT 2 -> kl
+eq LSHIFT 1 -> fk
+dz OR ef -> eg
+NOT ed -> ee
+lw OR lv -> lx
+fw AND fy -> fz
+dz AND ef -> eh
+jp RSHIFT 3 -> jr
+lg AND lm -> lo
+ci RSHIFT 2 -> cj
+be AND bg -> bh
+lc LSHIFT 1 -> lw
+hm AND ho -> hp
+jr AND js -> ju
+1 AND io -> ip
+cm AND co -> cp
+ib OR ic -> id
+NOT bf -> bg
+fo RSHIFT 5 -> fr
+ip LSHIFT 15 -> it
+jt AND jv -> jw
+jc AND je -> jf
+du OR dt -> dv
+NOT fx -> fy
+aw AND ay -> az
+ge LSHIFT 15 -> gi
+NOT ak -> al
+fm OR fn -> fo
+ff AND fh -> fi
+ci RSHIFT 5 -> cl
+cz OR cy -> da
+NOT ey -> ez
+NOT ju -> jv
+NOT ls -> lt
+kk AND kv -> kx
+NOT ii -> ij
+kl AND kr -> kt
+jk LSHIFT 15 -> jo
+e OR f -> g
+NOT bs -> bt
+hi AND hk -> hl
+hz OR ik -> il
+ek AND em -> en
+ao OR an -> ap
+dv LSHIFT 1 -> ep
+an LSHIFT 15 -> ar
+fo RSHIFT 1 -> gh
+NOT im -> in
+kk RSHIFT 1 -> ld
+hw LSHIFT 1 -> iq
+ec AND ee -> ef
+hb LSHIFT 1 -> hv
+kb AND kd -> ke
+x AND ai -> ak
+dd AND do -> dq
+aq OR ar -> as
+iq OR ip -> ir
+dl AND dn -> do
+iu RSHIFT 5 -> ix
+as OR bd -> be
+NOT go -> gp
+fk OR fj -> fl
+jm LSHIFT 1 -> kg
+NOT cv -> cw
+dp AND dr -> ds
+dt LSHIFT 15 -> dx
+et RSHIFT 1 -> fm
+dy RSHIFT 3 -> ea
+fp AND fv -> fx
+NOT p -> q
+dd RSHIFT 2 -> de
+eu AND fa -> fc
+ba AND bc -> bd
+dh AND dj -> dk
+lr AND lt -> lu
+he RSHIFT 1 -> hx
+ex AND ez -> fa
+df OR dg -> dh
+fj LSHIFT 15 -> fn
+NOT kx -> ky
+gk OR gq -> gr
+dy RSHIFT 2 -> dz
+gh OR gi -> gj
+lj AND ll -> lm
+x OR ai -> aj
+bz AND cb -> cc
+1 AND lu -> lv
+as RSHIFT 3 -> au
+ce OR cd -> cf
+il AND in -> io
+dd RSHIFT 1 -> dw
+NOT lo -> lp
+c LSHIFT 1 -> t
+dd RSHIFT 3 -> df
+dd RSHIFT 5 -> dg
+lh AND li -> lk
+lf RSHIFT 5 -> li
+dy RSHIFT 5 -> eb
+NOT kt -> ku
+at OR az -> ba
+x RSHIFT 3 -> z
+NOT lk -> ll
+lb OR la -> lc
+1 AND r -> s
+lh OR li -> lj
+ln AND lp -> lq
+kk RSHIFT 5 -> kn
+ea OR eb -> ec
+ci AND ct -> cv
+b RSHIFT 2 -> d
+jp RSHIFT 1 -> ki
+NOT cr -> cs
+NOT jd -> je
+jp RSHIFT 2 -> jq
+jn OR jo -> jp
+lf RSHIFT 3 -> lh
+1 AND ds -> dt
+lf AND lq -> ls
+la LSHIFT 15 -> le
+NOT fg -> fh
+at AND az -> bb
+au AND av -> ax
+kw AND ky -> kz
+v OR w -> x
+kk OR kv -> kw
+ks AND ku -> kv
+kh LSHIFT 1 -> lb
+1 AND kz -> la
+NOT kc -> kd
+x RSHIFT 2 -> y
+et OR fe -> ff
+et AND fe -> fg
+NOT ac -> ad
+jl OR jk -> jm
+1 AND jj -> jk
+bn RSHIFT 1 -> cg
+NOT kp -> kq
+ci RSHIFT 3 -> ck
+ev AND ew -> ey
+1 AND ke -> kf
+cj AND cp -> cr
+ir LSHIFT 1 -> jl
+NOT gw -> gx
+as RSHIFT 2 -> at
+iu RSHIFT 1 -> jn
+cy LSHIFT 15 -> dc
+hg OR hh -> hi
+ci RSHIFT 1 -> db
+au OR av -> aw
+km AND kn -> kp
+gj RSHIFT 1 -> hc
+iu RSHIFT 2 -> iv
+ab AND ad -> ae
+da LSHIFT 1 -> du
+NOT bw -> bx
+km OR kn -> ko
+ko AND kq -> kr
+bv AND bx -> by
+kl OR kr -> ks
+1 AND ht -> hu
+df AND dg -> di
+NOT ag -> ah
+d OR j -> k
+d AND j -> l
+b AND n -> p
+gf OR ge -> gg
+gg LSHIFT 1 -> ha
+bn RSHIFT 5 -> bq
+bo OR bu -> bv
+1 AND gy -> gz
+s LSHIFT 15 -> w
+NOT ie -> if
+as RSHIFT 5 -> av
+bo AND bu -> bw
+hz AND ik -> im
+bp AND bq -> bs
+b RSHIFT 1 -> v
+NOT l -> m
+bp OR bq -> br
+g AND i -> j
+br AND bt -> bu
+t OR s -> u
+hz RSHIFT 5 -> ic
+gk AND gq -> gs
+fl LSHIFT 1 -> gf
+he RSHIFT 3 -> hg
+gz LSHIFT 15 -> hd
+hf OR hl -> hm
+1 AND gd -> ge
+fo OR fz -> ga
+id AND if -> ig
+fo AND fz -> gb
+gr AND gt -> gu
+he OR hp -> hq
+fq AND fr -> ft
+ga AND gc -> gd
+fo RSHIFT 2 -> fp
+gl OR gm -> gn
+hg AND hh -> hj
+NOT hn -> ho
+gl AND gm -> go
+he RSHIFT 5 -> hh
+NOT gb -> gc
+hq AND hs -> ht
+hz RSHIFT 3 -> ib
+hz RSHIFT 2 -> ia
+fq OR fr -> fs
+hx OR hy -> hz
+he AND hp -> hr
+gj RSHIFT 5 -> gm
+hf AND hl -> hn
+hv OR hu -> hw
+NOT hj -> hk
+gj RSHIFT 3 -> gl
+fo RSHIFT 3 -> fq
+he RSHIFT 2 -> hf
+`
 
 func Test_isInteger(t *testing.T) {
 	type args struct {
@@ -921,351 +1262,17 @@ func Test_instructionMap_lookup(t *testing.T) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []tools.TestCase{
+	testCases := []internal.TestCase{
 		{Details: "Y2016D07 my input",
-			Input: "NOT dq -> dr\n" +
-				"kg OR kf -> kh\n" +
-				"ep OR eo -> eq\n" +
-				"44430 -> b\n" +
-				"NOT gs -> gt\n" +
-				"dd OR do -> dp\n" +
-				"eg AND ei -> ej\n" +
-				"y AND ae -> ag\n" +
-				"jx AND jz -> ka\n" +
-				"lf RSHIFT 2 -> lg\n" +
-				"z AND aa -> ac\n" +
-				"dy AND ej -> el\n" +
-				"bj OR bi -> bk\n" +
-				"kk RSHIFT 3 -> km\n" +
-				"NOT cn -> co\n" +
-				"gn AND gp -> gq\n" +
-				"cq AND cs -> ct\n" +
-				"eo LSHIFT 15 -> es\n" +
-				"lg OR lm -> ln\n" +
-				"dy OR ej -> ek\n" +
-				"NOT di -> dj\n" +
-				"1 AND fi -> fj\n" +
-				"kf LSHIFT 15 -> kj\n" +
-				"NOT jy -> jz\n" +
-				"NOT ft -> fu\n" +
-				"fs AND fu -> fv\n" +
-				"NOT hr -> hs\n" +
-				"ck OR cl -> cm\n" +
-				"jp RSHIFT 5 -> js\n" +
-				"iv OR jb -> jc\n" +
-				"is OR it -> iu\n" +
-				"ld OR le -> lf\n" +
-				"NOT fc -> fd\n" +
-				"NOT dm -> dn\n" +
-				"bn OR by -> bz\n" +
-				"aj AND al -> am\n" +
-				"cd LSHIFT 15 -> ch\n" +
-				"jp AND ka -> kc\n" +
-				"ci OR ct -> cu\n" +
-				"gv AND gx -> gy\n" +
-				"de AND dk -> dm\n" +
-				"x RSHIFT 5 -> aa\n" +
-				"et RSHIFT 2 -> eu\n" +
-				"x RSHIFT 1 -> aq\n" +
-				"ia OR ig -> ih\n" +
-				"bk LSHIFT 1 -> ce\n" +
-				"y OR ae -> af\n" +
-				"NOT ca -> cb\n" +
-				"e AND f -> h\n" +
-				"ia AND ig -> ii\n" +
-				"ck AND cl -> cn\n" +
-				"NOT jh -> ji\n" +
-				"z OR aa -> ab\n" +
-				"1 AND en -> eo\n" +
-				"ib AND ic -> ie\n" +
-				"NOT eh -> ei\n" +
-				"iy AND ja -> jb\n" +
-				"NOT bb -> bc\n" +
-				"ha OR gz -> hb\n" +
-				"1 AND cx -> cy\n" +
-				"NOT ax -> ay\n" +
-				"ev OR ew -> ex\n" +
-				"bn RSHIFT 2 -> bo\n" +
-				"er OR es -> et\n" +
-				"eu OR fa -> fb\n" +
-				"jp OR ka -> kb\n" +
-				"ea AND eb -> ed\n" +
-				"k AND m -> n\n" +
-				"et RSHIFT 3 -> ev\n" +
-				"et RSHIFT 5 -> ew\n" +
-				"hz RSHIFT 1 -> is\n" +
-				"ki OR kj -> kk\n" +
-				"NOT h -> i\n" +
-				"lv LSHIFT 15 -> lz\n" +
-				"as RSHIFT 1 -> bl\n" +
-				"hu LSHIFT 15 -> hy\n" +
-				"iw AND ix -> iz\n" +
-				"lf RSHIFT 1 -> ly\n" +
-				"fp OR fv -> fw\n" +
-				"1 AND am -> an\n" +
-				"ap LSHIFT 1 -> bj\n" +
-				"u LSHIFT 1 -> ao\n" +
-				"b RSHIFT 5 -> f\n" +
-				"jq AND jw -> jy\n" +
-				"iu RSHIFT 3 -> iw\n" +
-				"ih AND ij -> ik\n" +
-				"NOT iz -> ja\n" +
-				"de OR dk -> dl\n" +
-				"iu OR jf -> jg\n" +
-				"as AND bd -> bf\n" +
-				"b RSHIFT 3 -> e\n" +
-				"jq OR jw -> jx\n" +
-				"iv AND jb -> jd\n" +
-				"cg OR ch -> ci\n" +
-				"iu AND jf -> jh\n" +
-				"lx -> a\n" +
-				"1 AND cc -> cd\n" +
-				"ly OR lz -> ma\n" +
-				"NOT el -> em\n" +
-				"1 AND bh -> bi\n" +
-				"fb AND fd -> fe\n" +
-				"lf OR lq -> lr\n" +
-				"bn RSHIFT 3 -> bp\n" +
-				"bn AND by -> ca\n" +
-				"af AND ah -> ai\n" +
-				"cf LSHIFT 1 -> cz\n" +
-				"dw OR dx -> dy\n" +
-				"gj AND gu -> gw\n" +
-				"jg AND ji -> jj\n" +
-				"jr OR js -> jt\n" +
-				"bl OR bm -> bn\n" +
-				"gj RSHIFT 2 -> gk\n" +
-				"cj OR cp -> cq\n" +
-				"gj OR gu -> gv\n" +
-				"b OR n -> o\n" +
-				"o AND q -> r\n" +
-				"bi LSHIFT 15 -> bm\n" +
-				"dy RSHIFT 1 -> er\n" +
-				"cu AND cw -> cx\n" +
-				"iw OR ix -> iy\n" +
-				"hc OR hd -> he\n" +
-				"0 -> c\n" +
-				"db OR dc -> dd\n" +
-				"kk RSHIFT 2 -> kl\n" +
-				"eq LSHIFT 1 -> fk\n" +
-				"dz OR ef -> eg\n" +
-				"NOT ed -> ee\n" +
-				"lw OR lv -> lx\n" +
-				"fw AND fy -> fz\n" +
-				"dz AND ef -> eh\n" +
-				"jp RSHIFT 3 -> jr\n" +
-				"lg AND lm -> lo\n" +
-				"ci RSHIFT 2 -> cj\n" +
-				"be AND bg -> bh\n" +
-				"lc LSHIFT 1 -> lw\n" +
-				"hm AND ho -> hp\n" +
-				"jr AND js -> ju\n" +
-				"1 AND io -> ip\n" +
-				"cm AND co -> cp\n" +
-				"ib OR ic -> id\n" +
-				"NOT bf -> bg\n" +
-				"fo RSHIFT 5 -> fr\n" +
-				"ip LSHIFT 15 -> it\n" +
-				"jt AND jv -> jw\n" +
-				"jc AND je -> jf\n" +
-				"du OR dt -> dv\n" +
-				"NOT fx -> fy\n" +
-				"aw AND ay -> az\n" +
-				"ge LSHIFT 15 -> gi\n" +
-				"NOT ak -> al\n" +
-				"fm OR fn -> fo\n" +
-				"ff AND fh -> fi\n" +
-				"ci RSHIFT 5 -> cl\n" +
-				"cz OR cy -> da\n" +
-				"NOT ey -> ez\n" +
-				"NOT ju -> jv\n" +
-				"NOT ls -> lt\n" +
-				"kk AND kv -> kx\n" +
-				"NOT ii -> ij\n" +
-				"kl AND kr -> kt\n" +
-				"jk LSHIFT 15 -> jo\n" +
-				"e OR f -> g\n" +
-				"NOT bs -> bt\n" +
-				"hi AND hk -> hl\n" +
-				"hz OR ik -> il\n" +
-				"ek AND em -> en\n" +
-				"ao OR an -> ap\n" +
-				"dv LSHIFT 1 -> ep\n" +
-				"an LSHIFT 15 -> ar\n" +
-				"fo RSHIFT 1 -> gh\n" +
-				"NOT im -> in\n" +
-				"kk RSHIFT 1 -> ld\n" +
-				"hw LSHIFT 1 -> iq\n" +
-				"ec AND ee -> ef\n" +
-				"hb LSHIFT 1 -> hv\n" +
-				"kb AND kd -> ke\n" +
-				"x AND ai -> ak\n" +
-				"dd AND do -> dq\n" +
-				"aq OR ar -> as\n" +
-				"iq OR ip -> ir\n" +
-				"dl AND dn -> do\n" +
-				"iu RSHIFT 5 -> ix\n" +
-				"as OR bd -> be\n" +
-				"NOT go -> gp\n" +
-				"fk OR fj -> fl\n" +
-				"jm LSHIFT 1 -> kg\n" +
-				"NOT cv -> cw\n" +
-				"dp AND dr -> ds\n" +
-				"dt LSHIFT 15 -> dx\n" +
-				"et RSHIFT 1 -> fm\n" +
-				"dy RSHIFT 3 -> ea\n" +
-				"fp AND fv -> fx\n" +
-				"NOT p -> q\n" +
-				"dd RSHIFT 2 -> de\n" +
-				"eu AND fa -> fc\n" +
-				"ba AND bc -> bd\n" +
-				"dh AND dj -> dk\n" +
-				"lr AND lt -> lu\n" +
-				"he RSHIFT 1 -> hx\n" +
-				"ex AND ez -> fa\n" +
-				"df OR dg -> dh\n" +
-				"fj LSHIFT 15 -> fn\n" +
-				"NOT kx -> ky\n" +
-				"gk OR gq -> gr\n" +
-				"dy RSHIFT 2 -> dz\n" +
-				"gh OR gi -> gj\n" +
-				"lj AND ll -> lm\n" +
-				"x OR ai -> aj\n" +
-				"bz AND cb -> cc\n" +
-				"1 AND lu -> lv\n" +
-				"as RSHIFT 3 -> au\n" +
-				"ce OR cd -> cf\n" +
-				"il AND in -> io\n" +
-				"dd RSHIFT 1 -> dw\n" +
-				"NOT lo -> lp\n" +
-				"c LSHIFT 1 -> t\n" +
-				"dd RSHIFT 3 -> df\n" +
-				"dd RSHIFT 5 -> dg\n" +
-				"lh AND li -> lk\n" +
-				"lf RSHIFT 5 -> li\n" +
-				"dy RSHIFT 5 -> eb\n" +
-				"NOT kt -> ku\n" +
-				"at OR az -> ba\n" +
-				"x RSHIFT 3 -> z\n" +
-				"NOT lk -> ll\n" +
-				"lb OR la -> lc\n" +
-				"1 AND r -> s\n" +
-				"lh OR li -> lj\n" +
-				"ln AND lp -> lq\n" +
-				"kk RSHIFT 5 -> kn\n" +
-				"ea OR eb -> ec\n" +
-				"ci AND ct -> cv\n" +
-				"b RSHIFT 2 -> d\n" +
-				"jp RSHIFT 1 -> ki\n" +
-				"NOT cr -> cs\n" +
-				"NOT jd -> je\n" +
-				"jp RSHIFT 2 -> jq\n" +
-				"jn OR jo -> jp\n" +
-				"lf RSHIFT 3 -> lh\n" +
-				"1 AND ds -> dt\n" +
-				"lf AND lq -> ls\n" +
-				"la LSHIFT 15 -> le\n" +
-				"NOT fg -> fh\n" +
-				"at AND az -> bb\n" +
-				"au AND av -> ax\n" +
-				"kw AND ky -> kz\n" +
-				"v OR w -> x\n" +
-				"kk OR kv -> kw\n" +
-				"ks AND ku -> kv\n" +
-				"kh LSHIFT 1 -> lb\n" +
-				"1 AND kz -> la\n" +
-				"NOT kc -> kd\n" +
-				"x RSHIFT 2 -> y\n" +
-				"et OR fe -> ff\n" +
-				"et AND fe -> fg\n" +
-				"NOT ac -> ad\n" +
-				"jl OR jk -> jm\n" +
-				"1 AND jj -> jk\n" +
-				"bn RSHIFT 1 -> cg\n" +
-				"NOT kp -> kq\n" +
-				"ci RSHIFT 3 -> ck\n" +
-				"ev AND ew -> ey\n" +
-				"1 AND ke -> kf\n" +
-				"cj AND cp -> cr\n" +
-				"ir LSHIFT 1 -> jl\n" +
-				"NOT gw -> gx\n" +
-				"as RSHIFT 2 -> at\n" +
-				"iu RSHIFT 1 -> jn\n" +
-				"cy LSHIFT 15 -> dc\n" +
-				"hg OR hh -> hi\n" +
-				"ci RSHIFT 1 -> db\n" +
-				"au OR av -> aw\n" +
-				"km AND kn -> kp\n" +
-				"gj RSHIFT 1 -> hc\n" +
-				"iu RSHIFT 2 -> iv\n" +
-				"ab AND ad -> ae\n" +
-				"da LSHIFT 1 -> du\n" +
-				"NOT bw -> bx\n" +
-				"km OR kn -> ko\n" +
-				"ko AND kq -> kr\n" +
-				"bv AND bx -> by\n" +
-				"kl OR kr -> ks\n" +
-				"1 AND ht -> hu\n" +
-				"df AND dg -> di\n" +
-				"NOT ag -> ah\n" +
-				"d OR j -> k\n" +
-				"d AND j -> l\n" +
-				"b AND n -> p\n" +
-				"gf OR ge -> gg\n" +
-				"gg LSHIFT 1 -> ha\n" +
-				"bn RSHIFT 5 -> bq\n" +
-				"bo OR bu -> bv\n" +
-				"1 AND gy -> gz\n" +
-				"s LSHIFT 15 -> w\n" +
-				"NOT ie -> if\n" +
-				"as RSHIFT 5 -> av\n" +
-				"bo AND bu -> bw\n" +
-				"hz AND ik -> im\n" +
-				"bp AND bq -> bs\n" +
-				"b RSHIFT 1 -> v\n" +
-				"NOT l -> m\n" +
-				"bp OR bq -> br\n" +
-				"g AND i -> j\n" +
-				"br AND bt -> bu\n" +
-				"t OR s -> u\n" +
-				"hz RSHIFT 5 -> ic\n" +
-				"gk AND gq -> gs\n" +
-				"fl LSHIFT 1 -> gf\n" +
-				"he RSHIFT 3 -> hg\n" +
-				"gz LSHIFT 15 -> hd\n" +
-				"hf OR hl -> hm\n" +
-				"1 AND gd -> ge\n" +
-				"fo OR fz -> ga\n" +
-				"id AND if -> ig\n" +
-				"fo AND fz -> gb\n" +
-				"gr AND gt -> gu\n" +
-				"he OR hp -> hq\n" +
-				"fq AND fr -> ft\n" +
-				"ga AND gc -> gd\n" +
-				"fo RSHIFT 2 -> fp\n" +
-				"gl OR gm -> gn\n" +
-				"hg AND hh -> hj\n" +
-				"NOT hn -> ho\n" +
-				"gl AND gm -> go\n" +
-				"he RSHIFT 5 -> hh\n" +
-				"NOT gb -> gc\n" +
-				"hq AND hs -> ht\n" +
-				"hz RSHIFT 3 -> ib\n" +
-				"hz RSHIFT 2 -> ia\n" +
-				"fq OR fr -> fs\n" +
-				"hx OR hy -> hz\n" +
-				"he AND hp -> hr\n" +
-				"gj RSHIFT 5 -> gm\n" +
-				"hf AND hl -> hn\n" +
-				"hv OR hu -> hw\n" +
-				"NOT hj -> hk\n" +
-				"gj RSHIFT 3 -> gl\n" +
-				"fo RSHIFT 3 -> fq\n" +
-				"he RSHIFT 2 -> hf\n",
+			Input:   day07myInput,
 			Result1: "3176",
 			Result2: "14710"},
 	}
 	for _, tt := range testCases {
 		tt.Test(Day07, assert)
 	}
+}
+
+func BenchmarkDay07(b *testing.B) {
+	internal.Benchmark(Day07, b, day07myInput)
 }

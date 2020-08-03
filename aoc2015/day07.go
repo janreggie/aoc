@@ -501,7 +501,7 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		instr, _ := imap1.lookup(id)
 		instr.done = false
 	})
-	glog.Infof("Performing parent1's operations...\n")
+	glog.Infof("Performing parent1's operations yet again...\n")
 	if err = parent1.performAll(wires); err != nil {
 		return
 	}
@@ -509,6 +509,5 @@ func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 		glog.Infof("%v: %v\n", key, val)
 	}
 	answer2 = strconv.Itoa(int(wires[parent1.id]))
-
 	return
 }
