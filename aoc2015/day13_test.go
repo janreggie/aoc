@@ -67,27 +67,27 @@ Mallory would lose 73 happiness units by sitting next to Frank.
 Mallory would lose 89 happiness units by sitting next to George.
 `
 
-const day13sampleInput = `"Alice would gain 54 happiness units by sitting next to Bob.
-"Alice would lose 79 happiness units by sitting next to Carol.
-"Alice would lose 2 happiness units by sitting next to David.
-"Bob would gain 83 happiness units by sitting next to Alice.
-"Bob would lose 7 happiness units by sitting next to Carol.
-"Bob would lose 63 happiness units by sitting next to David.
-"Carol would lose 62 happiness units by sitting next to Alice.
-"Carol would gain 60 happiness units by sitting next to Bob.
-"Carol would gain 55 happiness units by sitting next to David.
-"David would gain 46 happiness units by sitting next to Alice.
-"David would lose 7 happiness units by sitting next to Bob.
-"David would gain 41 happiness units by sitting next to Carol.
+const day13sampleInput = `Alice would gain 54 happiness units by sitting next to Bob.
+Alice would lose 79 happiness units by sitting next to Carol.
+Alice would lose 2 happiness units by sitting next to David.
+Bob would gain 83 happiness units by sitting next to Alice.
+Bob would lose 7 happiness units by sitting next to Carol.
+Bob would lose 63 happiness units by sitting next to David.
+Carol would lose 62 happiness units by sitting next to Alice.
+Carol would gain 60 happiness units by sitting next to Bob.
+Carol would gain 55 happiness units by sitting next to David.
+David would gain 46 happiness units by sitting next to Alice.
+David would lose 7 happiness units by sitting next to Bob.
+David would gain 41 happiness units by sitting next to Carol.
 `
 
-func day13sampleScenario() tableScenario {
+func day13sampleScenario() *tableScenario {
 	// guaranteed not to error
 	scenario, _ := newTableScenario(bufio.NewScanner(strings.NewReader(day13sampleInput)))
 	return scenario
 }
 
-func day13myScenario() tableScenario {
+func day13myScenario() *tableScenario {
 	scenario, _ := newTableScenario(bufio.NewScanner(strings.NewReader(day13myInput)))
 	return scenario
 }
@@ -130,10 +130,10 @@ func Test_tableScenario_happiestPermutative(t *testing.T) {
 func Test_seatingArrangement(t *testing.T) {
 	assert := assert.New(t)
 	scenario := day13myScenario()
-	arrangement, err := newSeatingArrangement("Alice", "Bob", &scenario)
+	arrangement, err := newSeatingArrangement("Alice", "Bob", scenario)
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob"},
 		remaining: []visitor{"Carol", "David", "Eric", "Frank", "George", "Mallory"},
 		happiness: 42,
@@ -142,7 +142,7 @@ func Test_seatingArrangement(t *testing.T) {
 	arrangement, err = arrangement.add("David")
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob", "David"},
 		remaining: []visitor{"Carol", "Eric", "Frank", "George", "Mallory"},
 		happiness: 9,
@@ -156,7 +156,7 @@ func Test_seatingArrangement(t *testing.T) {
 	arrangement, err = arrangement.add("Mallory")
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob", "David", "Mallory"},
 		remaining: []visitor{"Carol", "Eric", "Frank", "George"},
 		happiness: -30,
@@ -168,7 +168,7 @@ func Test_seatingArrangement(t *testing.T) {
 	arrangement, err = arrangement.add("George")
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob", "David", "Mallory", "George"},
 		remaining: []visitor{"Carol", "Eric", "Frank"},
 		happiness: -22,
@@ -177,7 +177,7 @@ func Test_seatingArrangement(t *testing.T) {
 	arrangement, err = arrangement.add("Eric")
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob", "David", "Mallory", "George", "Eric"},
 		remaining: []visitor{"Carol", "Frank"},
 		happiness: -59,
@@ -197,7 +197,7 @@ func Test_seatingArrangement(t *testing.T) {
 	arrangement, err = arrangement.add("Carol")
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob", "David", "Mallory", "George", "Eric", "Carol"},
 		remaining: []visitor{"Frank"},
 		happiness: 136,
@@ -206,7 +206,7 @@ func Test_seatingArrangement(t *testing.T) {
 	arrangement, err = arrangement.add("Frank")
 	assert.NoError(err)
 	assert.Equal(seatingArrangement{
-		basis:     &scenario,
+		basis:     scenario,
 		raw:       []visitor{"Alice", "Bob", "David", "Mallory", "George", "Eric", "Carol", "Frank"},
 		remaining: []visitor{},
 		happiness: 228,
@@ -221,21 +221,21 @@ func Test_seatingArrangementQueue(t *testing.T) {
 
 	// suppose we start from Alice.
 	// should not error!
-	arrangement, err := newSeatingArrangement("Alice", "Alice", &scenario)
+	arrangement, err := newSeatingArrangement("Alice", "Alice", scenario)
 	assert.Error(err)
-	arrangement, err = newSeatingArrangement("Alice", "Bob", &scenario)
+	arrangement, err = newSeatingArrangement("Alice", "Bob", scenario)
 	assert.NoError(err)
 	queue.push(arrangement)
-	arrangement, err = newSeatingArrangement("Alice", "Carol", &scenario)
+	arrangement, err = newSeatingArrangement("Alice", "Carol", scenario)
 	assert.NoError(err)
 	queue.push(arrangement)
-	arrangement, err = newSeatingArrangement("Alice", "David", &scenario)
+	arrangement, err = newSeatingArrangement("Alice", "David", scenario)
 	assert.NoError(err)
 	queue.push(arrangement)
 	assert.ElementsMatch([]seatingArrangement{
-		{&scenario, []visitor{"Alice", "Carol"}, []visitor{"Bob", "David"}, -141},
-		{&scenario, []visitor{"Alice", "David"}, []visitor{"Bob", "Carol"}, 44},
-		{&scenario, []visitor{"Alice", "Bob"}, []visitor{"Carol", "David"}, 137},
+		{scenario, []visitor{"Alice", "Carol"}, []visitor{"Bob", "David"}, -141},
+		{scenario, []visitor{"Alice", "David"}, []visitor{"Bob", "Carol"}, 44},
+		{scenario, []visitor{"Alice", "Bob"}, []visitor{"Carol", "David"}, 137},
 	}, queue)
 }
 

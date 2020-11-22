@@ -24,7 +24,7 @@ func (happiness happiness) int() int {
 // visitor is represented by a string
 type visitor string
 
-func (visitor visitor) string() string {
+func (visitor visitor) String() string {
 	return string(visitor)
 }
 
@@ -59,6 +59,7 @@ func (pair visitorPair) String() string {
 }
 
 // tableScenario is a representation of a "scenario"
+// which is represented by a list of visitorPairs and their respective happiness gains.
 type tableScenario struct {
 	// potentialHappiness is the potential happiness gain of a visitor pair
 	potentialHappiness map[visitorPair]happiness
@@ -67,11 +68,14 @@ type tableScenario struct {
 	visitors []visitor
 }
 
-// newTableScenario creates a table scenario from a scanner object
-func newTableScenario(scanner *bufio.Scanner) (tableScenario, error) {
+// newTableScenario creates a table scenario from a scanner object.
+// It uses parseTableScenario to read text such as:
+//
+//     Alice would lose 2 happiness units by sitting next to David.
+func newTableScenario(scanner *bufio.Scanner) (*tableScenario, error) {
 	potentialHappiness := make(map[visitorPair]happiness)
 	visitors := make([]visitor, 0)
-	result := tableScenario{potentialHappiness: potentialHappiness, visitors: visitors}
+	result := &tableScenario{potentialHappiness: potentialHappiness, visitors: visitors}
 
 	// now parse each line
 	for scanner.Scan() {
@@ -85,7 +89,7 @@ func newTableScenario(scanner *bufio.Scanner) (tableScenario, error) {
 	return result, nil
 }
 
-func (scenario tableScenario) String() string {
+func (scenario *tableScenario) String() string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("Visitors: %v\n", scenario.visitors))
 	sb.WriteString("Happiness:\n")
@@ -96,7 +100,7 @@ func (scenario tableScenario) String() string {
 	return sb.String()
 }
 
-func (scenario tableScenario) copy() tableScenario {
+func (scenario *tableScenario) copy() tableScenario {
 	result := tableScenario{}
 	result.potentialHappiness = make(map[visitorPair]happiness)
 	for kk, vv := range scenario.potentialHappiness {
@@ -108,7 +112,7 @@ func (scenario tableScenario) copy() tableScenario {
 }
 
 // parseTableScenario parses each line of Day 13's input
-// and modifies the scenario accordingly.
+// and modifies the scenario in-place accordingly.
 // A line should look like the following two:
 //
 //	Alice would gain 26 happiness units by sitting next to Carol.
@@ -170,9 +174,6 @@ func (scenario *tableScenario) addToVisitors(pair visitorPair) {
 }
 
 // influence adds happiness to the happiness that visitorPair would have.
-// For instance, calling influence(A+B, 3) and influence(A+B, -2)
-// would make the pair A and B give off a net happiness of 1.
-// A need not be lexographically less than B.
 // Will give off an error if pair refers to only one person
 // or if one of pair is an empty string.
 func (scenario *tableScenario) influence(pair visitorPair, h happiness) error {
@@ -191,7 +192,7 @@ func (scenario *tableScenario) influence(pair visitorPair, h happiness) error {
 
 // permutations creates a channel that contains all the possible circular seating arrangements
 // and will close said channel.
-func (scenario tableScenario) permutations() <-chan []visitor {
+func (scenario *tableScenario) permutations() <-chan []visitor {
 	permutate := func(c chan []visitor, inputs []visitor) {
 		output := make([]visitor, len(inputs))
 		copy(output, inputs)
@@ -235,7 +236,7 @@ func (scenario tableScenario) permutations() <-chan []visitor {
 // or if the visitors are equal to each other.
 // If the happiness between these visitors does not exist return zero
 // as if they are neutral towards each other.
-func (scenario tableScenario) get(a, b visitor) (happiness, error) {
+func (scenario *tableScenario) get(a, b visitor) (happiness, error) {
 	if a == b {
 		return 0, fmt.Errorf("could not evaluate happiness of %v and themselves", a)
 	}
@@ -267,12 +268,12 @@ func (scenario tableScenario) get(a, b visitor) (happiness, error) {
 
 // happiestFrom determines the happiest seating arrangement starting from some person.
 // This uses the concept of seatingArrangements and a seatingArrangementQueue to record all arrangements.
-func (scenario tableScenario) happiestFrom(visitor visitor) happiness {
+func (scenario *tableScenario) happiestFrom(visitor visitor) happiness {
 	queue := newSeatingArrangementQueue()
 
 	// check all visitors in the list
 	for _, vv := range scenario.visitors {
-		arrangement, err := newSeatingArrangement(visitor, vv, &scenario)
+		arrangement, err := newSeatingArrangement(visitor, vv, scenario)
 		if err != nil {
 			continue // maybe same person
 		}
@@ -306,13 +307,13 @@ func (scenario tableScenario) happiestFrom(visitor visitor) happiness {
 // by exhausting all visitors in scenario.
 // This simply gets the happiest arrangement from the first visitor in the scenario
 // as the list is circular and it doesn't really matter who the first visitor is.
-func (scenario tableScenario) happiestExhaustive() happiness {
+func (scenario *tableScenario) happiestExhaustive() happiness {
 	return scenario.happiestFrom(scenario.visitors[0])
 }
 
 // happiestPermutative determines the happiest arrangement
 // by checking all possible circular seating arrangements.
-func (scenario tableScenario) happiestPermutative() happiness {
+func (scenario *tableScenario) happiestPermutative() happiness {
 	arrangements := scenario.permutations()
 	var record happiness
 
@@ -359,7 +360,7 @@ func (arrangement seatingArrangement) String() string {
 	var sb strings.Builder
 	sb.WriteString("Visitors: ")
 	for _, vv := range arrangement.raw {
-		sb.WriteString(vv.string())
+		sb.WriteString(vv.String())
 		sb.WriteString(", ")
 	}
 	sb.WriteString(fmt.Sprintf("; Happiness: %v", arrangement.happiness))
