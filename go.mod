@@ -1,4 +1,4 @@
-module github.com/janreggie/AdventOfCode
+module github.com/janreggie/aoc
 
 go 1.13
 

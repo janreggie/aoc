@@ -141,11 +141,11 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/janreggie/AdventOfCode/aoc2015"
-	"github.com/janreggie/AdventOfCode/aoc2016"
-	"github.com/janreggie/AdventOfCode/aoc2017"
-	"github.com/janreggie/AdventOfCode/aoc2018"
-	"github.com/janreggie/AdventOfCode/aoc2019"
+	"github.com/janreggie/aoc/aoc2015"
+	"github.com/janreggie/aoc/aoc2016"
+	"github.com/janreggie/aoc/aoc2017"
+	"github.com/janreggie/aoc/aoc2018"
+	"github.com/janreggie/aoc/aoc2019"
 	"github.com/pkg/profile"
 )
 

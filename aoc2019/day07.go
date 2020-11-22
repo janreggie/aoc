@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/golang/glog"
-	"github.com/janreggie/AdventOfCode/aoc2019/intcode"
+	"github.com/janreggie/aoc/aoc2019/intcode"
 )
 
 func inspectIntCode(ic *intcode.Intcode) {

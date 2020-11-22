@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/AdventOfCode/internal"
+	"github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
