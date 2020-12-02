@@ -146,6 +146,7 @@ import (
 	"github.com/janreggie/aoc/aoc2017"
 	"github.com/janreggie/aoc/aoc2018"
 	"github.com/janreggie/aoc/aoc2019"
+	"github.com/janreggie/aoc/aoc2020"
 	"github.com/pkg/profile"
 )
 
@@ -156,13 +157,14 @@ var allAoCs = [][]func(*bufio.Scanner) (string, string, error){
 	aoc2017.AllSolutions, // 2017
 	aoc2018.AllSolutions, // 2018
 	aoc2019.AllSolutions, // 2019
+	aoc2020.AllSolutions, // 2020
 }
 
 func main() {
 	var year, day int
 	var input string
 	var profileCPU, profileMem, profileTrace bool
-	const minYear, maxYear = 2015, 2019 // minimum and maximum years so far
+	const minYear, maxYear = 2015, 2020 // minimum and maximum years so far
 	const minDay, maxDay = 1, 25        // minimum and maximum days
 
 	// Year, Day, and Input: the essentials
