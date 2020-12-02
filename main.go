@@ -1,5 +1,5 @@
 // The AdventOfCode project contains my solutions
-// for the Advent of Code series of puzzles from 2015 to 2019.
+// for the Advent of Code series of puzzles from 2015 to 2020.
 // Progress varies between these years,
 // but I shall finish this project in due time.
 //
