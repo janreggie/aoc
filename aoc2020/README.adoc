@@ -1,0 +1,29 @@
+= Advent of Code 2020
+
+== Progress
+
+* [*] Day 1: Report Repair
+* [*] Day 2: Password Philosophy
+* [*] Day 3: Toboggan Trajectory
+* [ ] Day 4: (to be unlocked)
+* [ ] Day 5: (to be unlocked)
+* [ ] Day 6: (to be unlocked)
+* [ ] Day 7: (to be unlocked)
+* [ ] Day 8: (to be unlocked)
+* [ ] Day 9: (to be unlocked)
+* [ ] Day 10: (to be unlocked)
+* [ ] Day 11: (to be unlocked)
+* [ ] Day 12: (to be unlocked)
+* [ ] Day 13: (to be unlocked)
+* [ ] Day 14: (to be unlocked)
+* [ ] Day 15: (to be unlocked)
+* [ ] Day 16: (to be unlocked)
+* [ ] Day 17: (to be unlocked)
+* [ ] Day 18: (to be unlocked)
+* [ ] Day 19: (to be unlocked)
+* [ ] Day 20: (to be unlocked)
+* [ ] Day 21: (to be unlocked)
+* [ ] Day 22: (to be unlocked)
+* [ ] Day 23: (to be unlocked)
+* [ ] Day 24: (to be unlocked)
+* [ ] Day 25: (to be unlocked)
