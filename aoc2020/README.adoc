@@ -5,7 +5,7 @@
 * [*] Day 1: Report Repair
 * [*] Day 2: Password Philosophy
 * [*] Day 3: Toboggan Trajectory
-* [ ] Day 4: (to be unlocked)
+* [*] Day 4: Passport Processing
 * [ ] Day 5: (to be unlocked)
 * [ ] Day 6: (to be unlocked)
 * [ ] Day 7: (to be unlocked)
