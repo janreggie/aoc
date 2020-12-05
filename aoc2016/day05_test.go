@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const day05myInput = `ffykfhsq`
-
 func TestDay05(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []internal.TestCase{

@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const day04myInput = `271973-785961`
-
 func Test_checkAdjacent(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {

@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const day11myInput = `hepxcrrq`
-
 func Test_newPassword(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []struct {

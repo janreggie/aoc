@@ -7,28 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const day17myInput = `50
-44
-11
-49
-42
-46
-18
-32
-26
-40
-21
-7
-18
-43
-10
-47
-36
-24
-22
-40
-`
-
 func TestDay17(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []internal.TestCase{

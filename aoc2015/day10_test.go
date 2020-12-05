@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const day10myInput = `3113322113`
-
 func Test_lookAndSay(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
