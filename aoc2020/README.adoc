@@ -9,7 +9,7 @@
 * [*] Day 5: Binary Boarding
 * [*] Day 6: Custom Customs
 * [*] Day 7: Handy Haversacks
-* [ ] Day 8: (to be unlocked)
+* [*] Day 8: Handheld Halting
 * [ ] Day 9: (to be unlocked)
 * [ ] Day 10: (to be unlocked)
 * [ ] Day 11: (to be unlocked)
