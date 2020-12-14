@@ -14,7 +14,7 @@
 * [*] Day 10: Adapter Array
 * [*] Day 11: Seating System
 * [*] Day 12: Rain Risk
-* [ ] Day 13: (to be unlocked)
+* [*] Day 13: Shuttle Search 
 * [ ] Day 14: (to be unlocked)
 * [ ] Day 15: (to be unlocked)
 * [ ] Day 16: (to be unlocked)
