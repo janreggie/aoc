@@ -200,7 +200,7 @@ func readFerryV2(instrs []ferryInstruction) map[uint64]uint64 {
 //   mem[57344] = 62358
 //   mem[63867] = 9443
 //
-// It is guaranteed that the mask represents a 32-bit number.
+// It is guaranteed that the mask represents a 36-bit number.
 func Day14(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	instrs := make([]ferryInstruction, 0)
 	for scanner.Scan() {
