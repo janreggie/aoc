@@ -19,7 +19,9 @@ import (
 //   939
 //   7,13,x,x,59,x,31,19
 //
-// It is guaranteed that there are only two lines, and that all bus IDs are pairwise coprime.
+// The actions will either be N, S, E, W, L, R, and F;
+// and the values are guaranteed to be positive numbers no more than 300.
+// The values for L and R will be multiples of 90 (90, 180, 270).
 func Day13(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	scanner.Scan()
 	timestamp, err := strconv.Atoi(scanner.Text())
