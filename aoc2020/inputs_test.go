@@ -9356,3 +9356,6 @@ mem[6578] = 469499
 mem[60824] = 1460
 mem[50713] = 7725506
 `
+
+const day15sampleInput = `0,3,6`
+const day15myInput = `13,0,10,12,1,5,8`

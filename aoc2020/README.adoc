@@ -16,7 +16,7 @@
 * [*] Day 12: Rain Risk
 * [*] Day 13: Shuttle Search 
 * [*] Day 14: Docking Data
-* [ ] Day 15: (to be unlocked)
+* [*] Day 15: Rambunctious Recitation 
 * [ ] Day 16: (to be unlocked)
 * [ ] Day 17: (to be unlocked)
 * [ ] Day 18: (to be unlocked)
