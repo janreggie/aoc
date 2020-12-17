@@ -17,7 +17,7 @@
 * [*] Day 13: Shuttle Search 
 * [*] Day 14: Docking Data
 * [*] Day 15: Rambunctious Recitation 
-* [ ] Day 16: (to be unlocked)
+* [*] Day 16: Ticket Translation 
 * [ ] Day 17: (to be unlocked)
 * [ ] Day 18: (to be unlocked)
 * [ ] Day 19: (to be unlocked)
