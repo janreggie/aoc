@@ -18,9 +18,9 @@
 * [*] Day 14: Docking Data
 * [*] Day 15: Rambunctious Recitation 
 * [*] Day 16: Ticket Translation 
-* [ ] Day 17: (to be unlocked)
-* [ ] Day 18: (to be unlocked)
-* [ ] Day 19: (to be unlocked)
+* [*] Day 17: Conway Cubes 
+* [ ] Day 18: Operation Order
+* [ ] Day 19: Monster Messages
 * [ ] Day 20: (to be unlocked)
 * [ ] Day 21: (to be unlocked)
 * [ ] Day 22: (to be unlocked)
