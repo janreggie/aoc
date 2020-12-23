@@ -65,37 +65,52 @@ func (ruleset *messageRuleset) addRule(rule string) error {
 // IF ind is out of bounds, return false.
 func (ruleset messageRuleset) check(ind int, str string) bool {
 	// recurse is the recursive function we'd want.
-	// It returns if str has a prefix matching ind's ruleset and returns true and the trimmed str.
-	var recurse func(ind int, str string) (bool, string)
-	recurse = func(ind int, str string) (bool, string) {
-		if ind < 0 || ind >= len(ruleset) {
-			return false, str
+	// It returns if any of strs has a prefix matching ind's ruleset and, if there is a match, return an appropriate list of strings.
+	// If there is no match, return an empty slice.
+	var recurse func(ind int, strs []string) []string
+	recurse = func(ind int, strs []string) []string {
+		if ind < 0 || ind >= len(ruleset) || len(strs) == 0 {
+			return []string{}
 		}
 		rule := ruleset[ind]
 
 		if rule.subRules == nil {
-			return strings.HasPrefix(str, rule.pattern), strings.TrimPrefix(str, rule.pattern)
+			potentialMatches := []string{}
+			for _, str := range strs {
+				hasPrefix, trimmed := strings.HasPrefix(str, rule.pattern), strings.TrimPrefix(str, rule.pattern)
+				if hasPrefix {
+					potentialMatches = append(potentialMatches, trimmed)
+				}
+			}
+			return potentialMatches
 		}
 
+		result := []string{}
 	SUBRULES:
 		for _, subRule := range rule.subRules {
-			toCheck := str
-			hasMatch := true
+			toCheck := make([]string, len(strs))
+			copy(toCheck, strs)
 			for _, field := range subRule {
-				hasMatch, toCheck = recurse(field, toCheck)
-				if !hasMatch {
+				toCheck = recurse(field, toCheck)
+				if len(toCheck) == 0 {
 					continue SUBRULES
 				}
 			}
-			if hasMatch {
-				return true, toCheck
+			if len(toCheck) > 0 {
+				result = append(result, toCheck...)
 			}
 		}
-		return false, ""
+		return result
 	}
 
-	result, remains := recurse(ind, str)
-	return result && remains == ""
+	result := recurse(ind, []string{str})
+	for _, res := range result {
+		// An empty string means that all values in the string has been exhausted
+		if res == "" {
+			return true
+		}
+	}
+	return false
 }
 
 // Day19 solves the nineteenth day puzzle "Monster Messages"

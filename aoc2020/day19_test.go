@@ -51,12 +51,12 @@ func Test_messageRuleset(t *testing.T) {
 func TestDay19(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []internal.TestCase{
-		// {
-		// 	Details: "Y2020D19 sample input",
-		// 	Input:   day19sampleInput,
-		// 	Result1: "3",
-		// 	Result2: "12",
-		// },
+		{
+			Details: "Y2020D19 sample input",
+			Input:   day19sampleInput,
+			Result1: "3",
+			Result2: "12",
+		},
 		{
 			Details: "Y2020D19 my input",
 			Input:   day19myInput,
