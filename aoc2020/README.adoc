@@ -20,10 +20,10 @@
 * [*] Day 16: Ticket Translation 
 * [*] Day 17: Conway Cubes 
 * [*] Day 18: Operation Order
-* [ ] Day 19: Monster Messages
+* [ ] Day 19: Monster Messages (currently ongoing)
 * [ ] Day 20: Jurassic Jigsaw 
-* [ ] Day 21: (to be unlocked)
-* [ ] Day 22: (to be unlocked)
+* [ ] Day 21: Allergen Assessment
+* [ ] Day 22: Crab Combat
 * [ ] Day 23: (to be unlocked)
 * [ ] Day 24: (to be unlocked)
 * [ ] Day 25: (to be unlocked)
