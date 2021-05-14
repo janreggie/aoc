@@ -102,7 +102,8 @@ func (number *keypadNumber) iterateStringDeux(movement string) {
 //
 // It is guaranteed that no line exceeds 600 characters,
 // and there are no more than five lines.
-func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day02(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var initOne, initTwo keypadNumber = 5, 5
 
 	var a1, a2 strings.Builder

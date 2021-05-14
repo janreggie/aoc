@@ -3,6 +3,7 @@ package aoc2020
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -92,7 +93,8 @@ func (forest *tobogganForest) traverse(r, d, x, y int) int {
 //  some sample input indented to become a code block
 //
 // The file should only contain `.`, `#`, and newlines. All lines are of equal length.
-func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day03(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	forest, err := readTobogganForest(scanner)
 	if err != nil {
 		err = errors.Wrap(err, "couldn't read from scanner")

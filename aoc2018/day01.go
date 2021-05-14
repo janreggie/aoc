@@ -3,6 +3,7 @@ package aoc2018
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -30,7 +31,8 @@ import (
 //
 // It is guaranteeed that these numbers will be no more than 100000
 // and will be no less than -100000.
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day01(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	scanner.Split(bufio.ScanWords) // maybe the words are split via spaces
 	allInstr := []int64{}          // all instructions for safekeeping
 	allFreqs := make(map[int64]struct{})

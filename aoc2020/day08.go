@@ -151,7 +151,8 @@ func (err oobInstrPointerError) Error() string {
 //
 // It is guaranteed that the operations are either one of `acc`, `jmp`, or `nop`,
 // and that all arguments are integers.
-func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day08(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	instructions, err := generateInstructionList(scanner)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from scanner")

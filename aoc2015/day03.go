@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"image"
 	"strconv"
+	"strings"
 )
 
 // iterateCoordinate moves the location using an input (`v`, `^`, `<`, `>`)
@@ -30,7 +31,8 @@ func iterateCoordinate(location *image.Point, input string) {
 //	v^>>v>v>>>>^^>v<^v^>><<^<>>v><^><<^>^<vv^^<><<>><vvvv^>^^<><^^
 //
 // Any characters that are not any of those will be ignored.
-func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day03(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	scanner.Split(bufio.ScanBytes)
 
 	// okay how do we "store" these? maybe hash map

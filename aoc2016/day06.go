@@ -117,7 +117,8 @@ func (rp repertoire) leastCommon() string {
 //
 // It is guaranteed that all lines have the same length
 // and that there are no more than 600 lines.
-func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day06(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	rp := newRepertoire(0)
 	for scanner.Scan() {
 		rp.add(scanner.Text())

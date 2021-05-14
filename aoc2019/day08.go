@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type spaceImage [6][25]int8 // 6 tall, 25 wide
@@ -69,7 +70,8 @@ func (sp *spaceImage) count() (count [3]int) {
 // 	█  ███   ██  ███  ██ ██ █
 //
 // It may be hard to read but it does spell out UGCUH.
-func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day08(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	allLayers := make([]spaceImage, 0)
 	// scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	// 	// This is bufio.ScanBytes but with 150 bytes at a time

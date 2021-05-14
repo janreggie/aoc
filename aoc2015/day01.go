@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // Day01 solves the first day puzzle "Not Quite Lisp".
@@ -15,7 +16,8 @@ import (
 //
 //	()((()((()(()()())(())()()()((())())))((()()(()()((()(())()()())(((()(()()))))(())))(()(()())()))()()))))))()))))((((
 // If there exists any character that is neither a '(' or a ')', return an error.
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day01(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	currentFloor := 0
 	position := 1
 	passedBasement := false

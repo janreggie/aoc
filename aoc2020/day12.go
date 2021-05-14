@@ -168,7 +168,8 @@ func (s *ship) manhattanDistance() int {
 // The actions will either be N, S, E, W, L, R, and F;
 // and the values are guaranteed to be positive numbers no more than 300.
 // The values for L and R will be multiples of 90 (90, 180, 270).
-func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day12(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	instrs, err := generateNavigationInstructions(scanner)
 	if err != nil {
 		errors.Wrapf(err, "could not generate navigation instructions from input")

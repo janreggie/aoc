@@ -1,25 +1,22 @@
 package aoc2015
 
 import (
-	"bufio"
 	"math"
 	"sort"
 	"strconv"
-
-	"github.com/pkg/errors"
 )
 
 // divisors represents the divisors of a number
-type divisors []uint
+type divisors []uint64
 
 // newDivisors determines the divisors of a number
-func newDivisors(number uint) divisors {
+func newDivisors(number uint64) divisors {
 	if number == 1 {
-		return []uint{1}
+		return []uint64{1}
 	}
 	result := make(divisors, 2)
 	result[0], result[1] = 1, number
-	for ii := uint(2); ii <= uint(math.Sqrt(float64(number))); ii++ {
+	for ii := uint64(2); ii <= uint64(math.Sqrt(float64(number))); ii++ {
 		if number%ii == 0 {
 			result = append(result, ii)
 			if ii != number/ii {
@@ -34,8 +31,8 @@ func newDivisors(number uint) divisors {
 }
 
 // sum returns the sum of divisors
-func (dv divisors) sum() uint {
-	var result uint
+func (dv divisors) sum() uint64 {
+	var result uint64
 	for _, vv := range dv {
 		result += vv
 	}
@@ -43,12 +40,12 @@ func (dv divisors) sum() uint {
 }
 
 // count returns the number of divisors
-func (dv divisors) count() uint {
-	return uint(len(dv))
+func (dv divisors) count() uint64 {
+	return uint64(len(dv))
 }
 
 // last returns the final number of divisors, which should be the number pertaining to the divisors
-func (dv divisors) last() uint {
+func (dv divisors) last() uint64 {
 	return dv[dv.count()-1]
 }
 
@@ -86,21 +83,20 @@ func (dv divisors) onlyFifty() divisors {
 //	29000000
 //
 // It is guaranteed that the input is a non-negative int32.
-func Day20(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	scanner.Scan()
-	inputRaw, err := strconv.ParseUint(scanner.Text(), 10, 32)
+func Day20(input string) (answer1, answer2 string, err error) {
+
+	realInput, err := strconv.ParseUint(input, 10, 64)
 	if err != nil {
-		err = errors.Wrapf(err, "could not read input %v", scanner.Text())
+		return
 	}
-	input := uint(inputRaw)
 
 	divisorChan := make(chan divisors, 10)
 	done := make(chan struct{})
 
 	// iterator for house counts
-	iterator := make(chan uint, 10)
+	iterator := make(chan uint64, 10)
 	go func() {
-		for ii := uint(1); ; ii++ {
+		for ii := uint64(1); ; ii++ {
 			select {
 			case <-done:
 				return
@@ -122,11 +118,11 @@ func Day20(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 	wroteFirst, wroteSecond := false, false
 	for !wroteFirst || !wroteSecond {
 		divisors := <-divisorChan
-		if !wroteFirst && divisors.sum()*10 >= input {
+		if !wroteFirst && divisors.sum()*10 >= realInput {
 			answer1 = strconv.FormatUint(uint64(divisors.last()), 10)
 			wroteFirst = true
 		}
-		if !wroteSecond && divisors.onlyFifty().sum()*11 >= input {
+		if !wroteSecond && divisors.onlyFifty().sum()*11 >= realInput {
 			answer2 = strconv.FormatUint(uint64(divisors.last()), 10)
 			wroteSecond = true
 		}

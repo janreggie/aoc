@@ -146,7 +146,8 @@ func (rm room) decrypt() string {
 //
 // The input contains at most 1000 lines,
 // and it is guaranteed that ENCRYPTEDNAME is at most of length 60.
-func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day04(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var a1 uint64
 
 	for scanner.Scan() {

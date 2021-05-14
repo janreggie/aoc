@@ -3,6 +3,7 @@ package aoc2015
 import (
 	"bufio"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -133,7 +134,8 @@ func checkNiceTwo(input string) bool {
 //	potmkinyuqxsfdfw
 //	qkkwrhpbhypxhiun
 //	wgfvnogarjmdbxyh
-func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day05(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// I can think of the following:
 	// - a primary channel where the input is fed into.
 	// - several worker goroutines that feed from primary
@@ -199,7 +201,8 @@ func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 // Day05ST solves the fifth day puzzle "Doesn't He Have Intern-Elves For This?"
 // but is a single-threaded solution.
-func Day05ST(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day05ST(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var totalNiceOne, totalNiceTwo int64
 	// Is it more worth to check each ind := range currentString?
 	// Not necessarily since it will run the same number of comparisons

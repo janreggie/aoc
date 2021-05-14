@@ -1,9 +1,7 @@
 package aoc2015
 
 import (
-	"bufio"
 	"crypto/md5"
-	"errors"
 	"fmt"
 	"strconv"
 )
@@ -45,15 +43,7 @@ func checkHash(n int, augend string, addend int) bool {
 //
 // Because this is more or less a brute-force solution,
 // it may take a long time before returning an answer.
-func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	// the entire scanner is read.
-	input := ""
-	if scanner.Scan() {
-		input = scanner.Text()
-	} else {
-		err = errors.New("first line of file is empty")
-		return
-	}
+func Day04(input string) (answer1, answer2 string, err error) {
 
 	// suppose we have an addends channel
 	// which contains all the possible addends for input
@@ -124,15 +114,8 @@ func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
 
 // Day04ST solves the fourth day puzzle "The Ideal Stocking Stuffer"
 // but is a single-threaded solution.
-func Day04ST(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	// the entire scanner is read.
-	input := ""
-	if scanner.Scan() {
-		input = scanner.Text()
-	} else {
-		err = errors.New("first line of file is empty")
-		return
-	}
+func Day04ST(input string) (answer1, answer2 string, err error) {
+
 	addend := 1        // to be appended to input
 	foundFive := false // have we found five zeroes?
 	foundSix := false  // have we found six zeroes?

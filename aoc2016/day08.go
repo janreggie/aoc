@@ -197,7 +197,8 @@ func (e littleScreenError) Error() string {
 //	rotate column x=A by B
 //
 // An invalid instruction will cause an error.
-func Day08(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day08(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var ls littleScreen
 	for scanner.Scan() {
 		e := ls.parseInstruction(scanner.Text())

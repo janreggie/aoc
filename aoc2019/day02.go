@@ -3,6 +3,7 @@ package aoc2019
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/janreggie/aoc/aoc2019/intcode"
 )
@@ -20,7 +21,8 @@ import (
 // It is assumed that the tape length,
 // that is, the total number of integers,
 // is no more than 200.
-func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day02(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var ic *intcode.Intcode
 	ic, err = intcode.NewFromScanner(scanner)
 	if err != nil {

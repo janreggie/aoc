@@ -17,7 +17,8 @@ import (
 //  some sample input indented to become a code block
 //
 // It is guaranteed that the numbers are nonnegative.
-func Day15(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day15(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	scanner.Scan()
 	rawNums := strings.Split(scanner.Text(), ",")
 	var memory [30000000]int

@@ -168,7 +168,8 @@ func advancedMath(eqn []string) (int, error) {
 //    5 + (8 * 3 + 9 + 3 * 4 * 3)
 //
 // It is guaranteed that the equations only contain numerical integers, the operations `+` and `*`, and balanced parentheses.
-func Day18(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day18(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	equations := make([][]string, 0)
 	for scanner.Scan() {
 		equations = append(equations, parseEquation(scanner.Text()))

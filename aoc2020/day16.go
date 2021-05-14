@@ -305,7 +305,8 @@ func (notes ticketNotes) findFieldRanges() [][]fieldRange {
 //
 // It is guaranteed that the input resembles the one above,
 // but it is possible for one's input to use a different number of fields.
-func Day16(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day16(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	notes, err := generateTicketNotes(scanner)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from input scanner")

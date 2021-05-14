@@ -68,7 +68,8 @@ func (policy *passPolicy) checkPasswordPos(password string) bool {
 // `m` and `M` are guaranteed to be numbers no less than 1 and no more than 20.
 // `x` is guaranteed to be a single character.
 // `PASS` is guaranteed to be of length no more than 20.
-func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day02(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	validFirst, validSecond := 0, 0
 
 	for scanner.Scan() {

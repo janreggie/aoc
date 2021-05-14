@@ -295,7 +295,8 @@ func (area waitingArea) iterateTolerant() waitingArea {
 //  some sample input indented to become a code block
 //
 // It is guaranteed that the rows of the grid are equal in width, and that they initially contain only `L` or `.`.
-func Day11(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day11(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	area, err := generateWaitingArea(scanner)
 	if err != nil {
 		err = errors.Wrapf(err, "could not parse scanner from puzzle input")

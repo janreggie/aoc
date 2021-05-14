@@ -245,7 +245,8 @@ func (aunt auntSue) howSimilarRecalibrated(another auntSue) uint {
 // "children", "cats", "samoyeds", "pomerians", "akitas",
 // "vizslas", "goldfish", "trees", "cars", and "perfumes",
 // and that the values are non-negative integers no more than 10.
-func Day16(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day16(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// basis...
 	var basis = auntSue{
 		children:    3,

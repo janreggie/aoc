@@ -3,6 +3,7 @@ package aoc2019
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/golang/glog"
 	"github.com/janreggie/aoc/aoc2019/intcode"
@@ -47,7 +48,8 @@ func permuteIntslice(xs []int64) (permuts [][]int64) {
 // and that the tape length is no more than 700.
 //
 // The first opcode of the Intcode program should be an INPUT (3).
-func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day07(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var ic *intcode.Intcode
 	var memory []int64
 	if ic, err = intcode.NewFromScanner(scanner); err != nil {

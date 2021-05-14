@@ -443,7 +443,8 @@ func (imap *instructionMap) traverse(f func(id identifier)) {
 // and VALUE represents a raw Signal.
 // Also note that VALUE is only a parameter for the LSHIFT, RSHIFT, and
 // Assignment instructions.
-func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day07(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	wires := make(map[identifier]signal) // map of all wires and their signal values
 	imap1 := newInstructionMap()
 	imap2 := newInstructionMap()

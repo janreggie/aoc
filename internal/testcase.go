@@ -1,9 +1,7 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
-	"strings"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -21,9 +19,8 @@ type TestCase struct {
 }
 
 // Test tests a test case.
-func (tc TestCase) Test(f func(*bufio.Scanner) (string, string, error), a *assert.Assertions) {
-	scanner := bufio.NewScanner(strings.NewReader(tc.Input))
-	answer1, answer2, err := f(scanner)
+func (tc TestCase) Test(f func(string) (string, string, error), a *assert.Assertions) {
+	answer1, answer2, err := f(tc.Input)
 	details := tc.Details
 	if tc.Details == "" {
 		details = fmt.Sprintf("input: %v, ans1: %v, ans2: %v", tc.Input, tc.Result1, tc.Result2)

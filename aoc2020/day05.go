@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -70,7 +71,8 @@ func (seat planeSeat) seatID() int {
 //
 // It is guaranteed that the first 7 characters for each boarding pass
 // consist of either `B` or `F`, and the last 3 consist of either `R` or `L`.
-func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day05(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	allSeats := make([]planeSeat, 0)
 	highestID := 0 // all IDs are at least 0
 

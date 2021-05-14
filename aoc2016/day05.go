@@ -1,12 +1,9 @@
 package aoc2016
 
 import (
-	"bufio"
 	"crypto/md5"
 	"strconv"
 	"sync"
-
-	"github.com/pkg/errors"
 )
 
 // checkHash checks the first n nibbles (half-octets) of the MD5 of Augend+string(Addend)
@@ -48,13 +45,7 @@ func checkHash(n int, augend string, addend int) (bool, [16]byte) {
 //	ffykfhsq
 //
 // It is guaranteed that the input contains at least one line.
-func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	scanner.Scan()
-	input := scanner.Text()
-	if scanner.Err() != nil {
-		err = errors.Wrap(scanner.Err(), "could not read text")
-		return
-	}
+func Day05(input string) (answer1, answer2 string, err error) {
 
 	firstPassword := make([]byte, 8)
 	secondPassword := make([]byte, 8)

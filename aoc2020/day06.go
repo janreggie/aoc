@@ -130,7 +130,8 @@ func generateCustomsResponseGroups(scanner *bufio.Scanner) ([]customsResponseGro
 //   nwifazovu
 //
 // The file should only contain newlines and the characters `a` to `z`.
-func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day06(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	responseGroups, err := generateCustomsResponseGroups(scanner)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from scanner")

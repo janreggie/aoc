@@ -3,6 +3,7 @@ package aoc2015
 import (
 	"bufio"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -72,7 +73,8 @@ func leastContainers(amount eggnog, containers []eggnog) containerCount {
 //
 // There are no guarantees that the list in the input containers have been
 // sorted. All containers should be non-negative integers no more than 150.
-func Day17(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day17(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	containers := make([]eggnog, 0)
 	for scanner.Scan() {
 		size, e := strconv.ParseUint(scanner.Text(), 0, 32)

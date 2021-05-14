@@ -1,7 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
@@ -256,14 +255,10 @@ func (cube conwayCube) iterate() conwayCube {
 //  some sample input indented to become a code block
 //
 // It is guaranteed that the input only contains `.` and `#`'s.
-func Day17(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	// Code goes here.
-	var sb strings.Builder
-	for scanner.Scan() {
-		sb.WriteString(scanner.Text())
-		sb.WriteString("\n")
-	}
-	input := strings.TrimSpace(sb.String())
+func Day17(input string) (answer1, answer2 string, err error) {
+
+	input = strings.TrimSpace(input)
+
 	cube, err := newConwayCube(input)
 	if err != nil {
 		err = errors.Wrapf(err, "could not derive cube from input %s", input)

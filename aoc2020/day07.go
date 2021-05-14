@@ -172,7 +172,8 @@ func (ruleset *bagRuleset) countBags(parent bag) int {
 //   INTERNAL_k = no other bags | 1 QUALITY COLOR bag | i QUALITY COLOR bags
 //
 // There should be no loops (i.e., Bag A contains B, which contains C, which contains A, which...).
-func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day07(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	ruleset, err := generateBagRuleset(scanner)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from scanner")

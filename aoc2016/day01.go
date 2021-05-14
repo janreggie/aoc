@@ -1,12 +1,10 @@
 package aoc2016
 
 import (
-	"bufio"
 	"fmt"
 	"image"
 	"strconv"
-	"unicode"
-	"unicode/utf8"
+	"strings"
 )
 
 type direction int
@@ -34,32 +32,6 @@ func absInt64(a int64) int64 {
 		return -a
 	}
 	return a
-}
-
-func readUntilCommaSpace(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	// Skip leading spaces.
-	start := 0
-	for width := 0; start < len(data); start += width {
-		var r rune
-		r, width = utf8.DecodeRune(data[start:])
-		if !unicode.IsSpace(r) {
-			break
-		}
-	}
-	// Scan until comma or when space, marking end of word.
-	for width, i := 0, start; i < len(data); i += width {
-		var r rune
-		r, width = utf8.DecodeRune(data[i:])
-		if r == ',' || unicode.IsSpace(r) {
-			return i + width, data[start:i], nil
-		}
-	}
-	// If we're at EOF, we have a final, non-empty, non-terminated word. Return it.
-	if atEOF && len(data) > start {
-		return len(data), data[start:], nil
-	}
-	// Request more data.
-	return start, nil, nil
 }
 
 // movePosition: return image.Point which is old offset by amt in direction
@@ -96,31 +68,29 @@ func movePosition(old image.Point, dir direction, amt int64) image.Point {
 // It is guaranteed that the distance to travel per instruction
 // is no greater than 200. It is also guaranteed that each
 // instruction is prefixed by either "R" or "L".
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day01(input string) (answer1, answer2 string, err error) {
 	currentDirection := north
 	current := image.Pt(0, 0) // current position
 	allVisited := make([]image.Point, 0, 32)
 	found := false // have we found the intersection?
 	intersection := image.Pt(0, 0)
-	scanner.Split(readUntilCommaSpace)
-	for scanner.Scan() {
-		raw := scanner.Text() // raw == [R|L](count)
-		// check direction
-		if len(raw) < 2 {
-			err = fmt.Errorf("invalid string: `%v`", raw)
+	turns := strings.Split(input, ", ")
+	for _, turn := range turns {
+		if len(turn) < 2 {
+			err = fmt.Errorf("invalid string: `%v`", turn)
 			return
 		}
-		if raw[0] == 'R' {
+		if turn[0] == 'R' {
 			currentDirection++
-		} else if raw[0] == 'L' {
+		} else if turn[0] == 'L' {
 			currentDirection--
 		} else {
-			err = fmt.Errorf("invalid string: `%v`", raw)
+			err = fmt.Errorf("invalid string: `%v`", turn)
 			return
 		}
 		currentDirection = currentDirection % 4
 
-		amt, e := strconv.ParseInt(raw[1:], 10, 64)
+		amt, e := strconv.ParseInt(turn[1:], 10, 64)
 		if e != nil {
 			err = e
 			return

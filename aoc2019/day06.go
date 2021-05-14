@@ -105,7 +105,8 @@ exterloop:
 //
 // It is assumed that there are no more than 1400 combinations of orbits,
 // and that there is always an IDENT that is "YOU" and "SAN" in the input.
-func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day06(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	allSatellites := make(map[string]*orbit, 0)
 	for scanner.Scan() {
 		raw := strings.Fields(scanner.Text())

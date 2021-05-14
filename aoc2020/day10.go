@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -78,7 +79,8 @@ func countAdapterArrangement(arr []int) int {
 //   4
 //
 // It is guaranteed that all entries are nonnegative integers no more than 200.
-func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day10(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// adapters is the slice of adapters (puzzle input)
 	adapters := make([]int, 0)
 	for scanner.Scan() {

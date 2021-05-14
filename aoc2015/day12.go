@@ -3,6 +3,7 @@ package aoc2015
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/antonholmquist/jason"
 	"github.com/pkg/errors"
@@ -90,7 +91,8 @@ func extractSumButRed(value *jason.Value) int64 {
 // It could be any JSON "value": string, number, object, array, or boolean.
 // Do note that all numbers in the input are integers,
 // that is, there are no floating-points.
-func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day12(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// let's read everything first...
 	result := ""
 	if !scanner.Scan() {

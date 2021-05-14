@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -22,7 +23,8 @@ import (
 //  1456
 //
 // It is guaranteed that no number is greater than 2020.
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day01(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// Grab input
 	inputs := make([]int, 0, 200) // prealloc 200 because average case
 	for scanner.Scan() {

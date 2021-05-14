@@ -216,7 +216,8 @@ func readPassportFile(scanner *bufio.Scanner) ([]passport, error) {
 //  ecl (Eye Color)
 //  pid (Passport ID)
 //  cid (Country ID)
-func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day04(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	allPassports, err := readPassportFile(scanner)
 	if err != nil {
 		errors.Wrapf(err, "could not read file properly")

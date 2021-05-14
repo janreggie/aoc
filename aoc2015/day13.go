@@ -482,7 +482,8 @@ func (queue *seatingArrangementQueue) pop() (seatingArrangement, error) {
 //
 // It is guaranteed that the gain or loss of happiness between any two
 // people is no more than 100.
-func Day13(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day13(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	scenario, err := newTableScenario(scanner)
 	if err != nil {
 		err = errors.Wrap(err, "could not parse input")

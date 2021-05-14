@@ -3,7 +3,6 @@
 package aoc2016
 
 import (
-	"bufio"
 	"errors"
 )
 
@@ -11,7 +10,7 @@ import (
 // so that they may be indexed easily.
 // Note that slice index starts at 0 and not 1
 // so AllSolutions[0] is the solution for Day 1.
-var AllSolutions = []func(*bufio.Scanner) (string, string, error){
+var AllSolutions = []func(string) (string, string, error){
 	Day01,         // day 1
 	Day02,         // day 2
 	Day03,         // day 3
@@ -41,6 +40,6 @@ var AllSolutions = []func(*bufio.Scanner) (string, string, error){
 
 // Unimplemented function returns an error
 // simply stating unimplemented.
-func Unimplemented(scanner *bufio.Scanner) (string, string, error) {
+func Unimplemented(scanner string) (string, string, error) {
 	return "", "", errors.New("unimplemented")
 }

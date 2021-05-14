@@ -93,7 +93,8 @@ func (lights *lights) brightness() uint {
 // the first coordinate is no greater than the third one and the second no greater than the fourth,
 // and all numbers are no greater than 999.
 // Invalid inputs will cause an error to return.
-func Day06(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day06(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var allLights lights
 
 	// parseRowCol turns dimensions initRaw and finalRaw

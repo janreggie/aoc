@@ -3,6 +3,7 @@ package aoc2019
 import (
 	"bufio"
 	"strconv"
+	"strings"
 )
 
 // Day01 solves the first day puzzle "The Tyranny of the Rocket Equation".
@@ -22,7 +23,8 @@ import (
 //	147378
 //
 // It is guaranteed that all numbers are no more than six digits long.
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day01(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var totalFuel int64 // total fuel required
 	var cumuFuel int64  // answer2 (where fuel requires fuel!)
 	massToFuel := func(mass int64) int64 {

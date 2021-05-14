@@ -155,7 +155,8 @@ func (olympics *reindeerOlympics) iterateUntil(time uint) {
 //
 // It is guaranteed that the numbers are non-negative integers,
 // each no more than 200.
-func Day14(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day14(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	allReindeer := make([]racingReindeer, 0)
 	for scanner.Scan() {
 		rd, e := newRacingReindeer(scanner.Text())

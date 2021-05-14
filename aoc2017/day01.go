@@ -1,11 +1,8 @@
 package aoc2017
 
 import (
-	"bufio"
 	"strconv"
 	"sync"
-
-	"github.com/pkg/errors"
 )
 
 // Day01 solves the first day puzzle "Inverse Captcha".
@@ -18,15 +15,9 @@ import (
 //	91212129
 //
 // It is guaranteed that the first line does not contain any non-numeric characters.
-func Day01(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	// scanner.Split(bufio.ScanBytes)
-	var adjacentCaptcha, halfwayCaptcha int64 // answer1, answer2
-	if !scanner.Scan() {
-		err = errors.Wrap(scanner.Err(), "could not read from scanner")
-		return
-	}
-	input := scanner.Text() // string should not be THAT long
+func Day01(input string) (answer1, answer2 string, err error) {
 
+	var adjacentCaptcha, halfwayCaptcha int64 // answer1, answer2
 	// now two for loops
 	var wg sync.WaitGroup
 	wg.Add(2)

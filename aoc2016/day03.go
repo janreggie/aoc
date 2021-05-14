@@ -36,7 +36,8 @@ func checkSides(input [3]uint64) bool {
 //
 // It is guaranteed that there are no more than 1600 lines
 // and that no side is more than three digits long.
-func Day03(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day03(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var a1, a2 uint64 // answer1, answer2
 	var rowCount uint // number of rows so far (either 0, 1, or 2)
 

@@ -1,8 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
-	"errors"
 	"strconv"
 	"strings"
 	"time"
@@ -60,15 +58,7 @@ func lookAndSay(input string) string {
 //	3113322113
 //
 // It is guaranteed that the input represents an integer.
-func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
-	// the entire scanner is read.
-	input := ""
-	if scanner.Scan() {
-		input = scanner.Text()
-	} else {
-		err = errors.New("first line of file is empty")
-		return
-	}
+func Day10(input string) (answer1, answer2 string, err error) {
 
 	// iterate forty times
 	for ii := 0; ii < 40; ii++ {

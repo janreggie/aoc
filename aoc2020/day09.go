@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -31,7 +32,8 @@ import (
 //   127
 //
 // It is guaranteed that the input is at least 26 lines long.
-func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day09(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	allNumbers := make([]int, 0)
 	for scanner.Scan() {
 		text := scanner.Text()

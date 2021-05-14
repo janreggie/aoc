@@ -36,7 +36,8 @@ import (
 // or if there are issues with parsing the input,
 // the function will return an error corresponding to the problematic line.
 // If the numbers are too large, that may result in an integer overflow.
-func Day02(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day02(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// initialize important variables
 	splitDims := make([]string, 3)
 	actualDims := make([]int, 3)

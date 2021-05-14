@@ -3,6 +3,7 @@ package aoc2019
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/golang/glog"
 	"github.com/janreggie/aoc/aoc2019/intcode"
@@ -20,7 +21,8 @@ import (
 // It is assumed that the numbers do not exceed five digits long,
 // and that the tape length is no more than 1000. In addition,
 // the Intcode computer should be able to support BOOST mode.
-func Day09(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day09(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	ic, err := intcode.NewFromScanner(scanner)
 	if err != nil {
 		return

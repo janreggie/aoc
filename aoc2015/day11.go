@@ -112,7 +112,8 @@ func (ps *password) increment() {
 // eight lowercase letters. For example:
 //
 //	hepxcrrq
-func Day11(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day11(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	// do things
 	scanner.Scan()
 	passwd := newPassword(scanner.Text())

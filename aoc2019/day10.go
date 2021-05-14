@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -469,7 +470,8 @@ func (field *asteroidField) sweepAsteroids(station image.Point, toVaporize uint)
 // or if it contains lines of uneven width, it may return an error.
 //
 // It is guaranteed that WIDTH and HEIGHT are both at least 1 and at most 30.
-func Day10(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day10(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	asteroids, err := newAsteroidField(scanner)
 	if err != nil {
 		err = errors.Wrap(err, "Y2019D10: could not create asteroidField")

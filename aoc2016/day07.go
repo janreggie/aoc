@@ -121,7 +121,8 @@ func (ipv7 ipv7Address) supportSSL() bool {
 //     abba[mnop]qrst
 //     ioxxoj[asdfgh]zxcvbn
 //     wvwhsvattcfkxsjbif[bkesznrpxrlcnsmhbxv]rdycrgrtwazfqlx[genmoutcoedshrn]ucufntphttrvzmgt
-func Day07(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day07(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	a1, a2 := 0, 0
 	for scanner.Scan() {
 		ipv7 := newIpv7Address(scanner.Text())

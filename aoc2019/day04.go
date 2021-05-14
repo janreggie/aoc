@@ -73,7 +73,8 @@ func checkNonDecreasing(input int) bool {
 // Because the problem does not specify so,
 // assume that the lower and upper bounds of the range
 // should be accounted for in counting the number of valid passwords.
-func Day04(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day04(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var current, lowerBound, upperBound int
 	var count1, count2 int
 	// This looks more like a number theory problem

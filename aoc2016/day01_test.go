@@ -10,7 +10,7 @@ import (
 func TestDay01(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []internal.TestCase{
-		{Input: "R8, R4, R4, R8\n",
+		{Input: "R8, R4, R4, R8",
 			Result1: "8",
 			Result2: "4"},
 		{Details: "Y2016D01 my input",

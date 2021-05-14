@@ -222,7 +222,8 @@ func (asm *assembunnyComputer) ReadMemory(memory []string) error {
 // 	dec a
 // 	jnz a 2
 // 	dec a
-func Day12(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day12(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var asm assembunnyComputer
 	memory := make([]string, 0)
 	for scanner.Scan() {

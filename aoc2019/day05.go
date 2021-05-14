@@ -3,6 +3,7 @@ package aoc2019
 import (
 	"bufio"
 	"strconv"
+	"strings"
 
 	"github.com/janreggie/aoc/aoc2019/intcode"
 )
@@ -25,7 +26,8 @@ import (
 // In addition, it should be able to support parameter modes.
 //
 // The first Opcode of the Intcode program should be an INPUT (3).
-func Day05(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day05(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	var ic *intcode.Intcode
 	if ic, err = intcode.NewFromScanner(scanner); err != nil {
 		return

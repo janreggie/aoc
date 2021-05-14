@@ -22,7 +22,8 @@ import (
 // The actions will either be N, S, E, W, L, R, and F;
 // and the values are guaranteed to be positive numbers no more than 300.
 // The values for L and R will be multiples of 90 (90, 180, 270).
-func Day13(scanner *bufio.Scanner) (answer1, answer2 string, err error) {
+func Day13(input string) (answer1, answer2 string, err error) {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 	scanner.Scan()
 	timestamp, err := strconv.Atoi(scanner.Text())
 	if err != nil {
