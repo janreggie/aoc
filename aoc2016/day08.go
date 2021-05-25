@@ -1,11 +1,11 @@
 package aoc2016
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -198,12 +198,12 @@ func (e littleScreenError) Error() string {
 //
 // An invalid instruction will cause an error.
 func Day08(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	var ls littleScreen
-	for scanner.Scan() {
-		e := ls.parseInstruction(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		e := ls.parseInstruction(line)
 		if e != nil {
-			err = errors.Wrapf(e, "could not parse instruction %v", scanner.Text())
+			err = errors.Wrapf(e, "could not parse instruction %v", line)
 			return
 		}
 	}

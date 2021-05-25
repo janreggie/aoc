@@ -1,11 +1,11 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -28,13 +28,12 @@ type bagRuleset struct {
 }
 
 // generateBagRuleset generates a bagRuleset from a string containing rules
-func generateBagRuleset(rules *bufio.Scanner) (*bagRuleset, error) {
+func generateBagRuleset(rules string) (*bagRuleset, error) {
 	ruleset := &bagRuleset{
 		rr: make(map[bag][]bagRule),
 	}
 
-	for rules.Scan() {
-		rule := rules.Text()
+	for _, rule := range aoc.SplitLines(rules) {
 		if err := ruleset.addRule(rule); err != nil {
 			return nil, errors.Wrapf(err, "could not parse rule %s", rule)
 		}
@@ -173,8 +172,8 @@ func (ruleset *bagRuleset) countBags(parent bag) int {
 //
 // There should be no loops (i.e., Bag A contains B, which contains C, which contains A, which...).
 func Day07(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	ruleset, err := generateBagRuleset(scanner)
+
+	ruleset, err := generateBagRuleset(input)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from scanner")
 		return

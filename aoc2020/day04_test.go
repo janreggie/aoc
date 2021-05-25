@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -11,7 +9,7 @@ import (
 
 func Test_readPassportFile(t *testing.T) {
 	assert := assert.New(t)
-	scanned, err := readPassportFile(bufio.NewScanner(strings.NewReader(day04sampleInput)))
+	scanned, err := readPassportFile(day04sampleInput)
 	assert.NoError(err)
 	assert.ElementsMatch(
 		scanned,
@@ -62,7 +60,7 @@ iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719`
 	}
 
 	for _, tt := range testCases {
-		passports, err := readPassportFile(bufio.NewScanner(strings.NewReader(tt.input)))
+		passports, err := readPassportFile(tt.input)
 		assert.NoError(err)
 		assert.Len(passports, tt.total)
 		countValid := 0

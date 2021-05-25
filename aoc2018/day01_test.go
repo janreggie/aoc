@@ -10,7 +10,7 @@ import (
 func TestDay01(t *testing.T) {
 	assert := assert.New(t)
 	testCases := []aoc.TestCase{
-		{Input: "+1 -2 +3 +1",
+		{Input: "+1\n-2\n+3\n+1",
 			Result1: "3",
 			Result2: "2"},
 		{Details: "Y2018D01 my input",

@@ -1,12 +1,12 @@
 package aoc2016
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/golang/glog"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -223,12 +223,9 @@ func (asm *assembunnyComputer) ReadMemory(memory []string) error {
 // 	jnz a 2
 // 	dec a
 func Day12(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	var asm assembunnyComputer
-	memory := make([]string, 0)
-	for scanner.Scan() {
-		memory = append(memory, scanner.Text())
-	}
+	memory := aoc.SplitLines(input)
 	if err = asm.ReadMemory(memory); err != nil {
 		err = errors.Wrapf(err, "could not read memory %v", memory)
 		return

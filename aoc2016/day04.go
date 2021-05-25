@@ -1,12 +1,12 @@
 package aoc2016
 
 import (
-	"bufio"
 	"sort"
 	"strconv"
 	"strings"
 	"unicode"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -147,13 +147,12 @@ func (rm room) decrypt() string {
 // The input contains at most 1000 lines,
 // and it is guaranteed that ENCRYPTEDNAME is at most of length 60.
 func Day04(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
 	var a1 uint64
 
-	for scanner.Scan() {
-		rm, e := newRoom(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		rm, e := newRoom(line)
 		if e != nil {
-			err = errors.Wrapf(e, "could not parse %v", scanner.Text())
+			err = errors.Wrapf(e, "could not parse %v", line)
 			return
 		}
 		if !rm.isReal() {

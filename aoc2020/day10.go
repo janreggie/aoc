@@ -1,12 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"sort"
 	"strconv"
-	"strings"
 
-	"github.com/pkg/errors"
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // countAdapterArrangement counts the number of arrangements for a given slice of jolt output voltages.
@@ -80,25 +78,18 @@ func countAdapterArrangement(arr []int) int {
 //
 // It is guaranteed that all entries are nonnegative integers no more than 200.
 func Day10(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	// adapters is the slice of adapters (puzzle input)
-	adapters := make([]int, 0)
-	for scanner.Scan() {
-		aa, e := strconv.Atoi(scanner.Text())
-		if e != nil {
-			err = errors.Wrapf(e, "couldn't parse %s from input", scanner.Text())
-			return
-		}
-		adapters = append(adapters, aa)
-	}
 
-	adaptersSorted := make([]int, len(adapters))
-	copy(adaptersSorted, adapters)
-	sort.Ints(adaptersSorted)
+	adapters, err := aoc.SplitLinesToInts(input)
+	if err != nil {
+		return
+	}
+	sortedAdapters := make([]int, len(adapters))
+	copy(sortedAdapters, adapters)
+	sort.Ints(sortedAdapters)
 
 	oneVoltDiffs, threeVoltDiffs := 0, 0
 	prev := 0 // the zeroth one
-	for _, curr := range adaptersSorted {
+	for _, curr := range sortedAdapters {
 		if curr-prev == 1 {
 			oneVoltDiffs++
 		} else if curr-prev == 3 {
@@ -111,9 +102,9 @@ func Day10(input string) (answer1, answer2 string, err error) {
 	answer1 = strconv.Itoa(oneVoltDiffs * threeVoltDiffs)
 
 	// Now for the second part...
-	masterChain := make([]int, len(adaptersSorted)+2)
+	masterChain := make([]int, len(sortedAdapters)+2)
 	masterChain[0] = 0
-	copy(masterChain[1:], adaptersSorted)
+	copy(masterChain[1:], sortedAdapters)
 	masterChain[len(masterChain)-1] = deviceBuiltin
 	answer2 = strconv.Itoa(countAdapterArrangement(masterChain))
 	return

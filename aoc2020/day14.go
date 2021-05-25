@@ -1,11 +1,11 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -202,10 +202,10 @@ func readFerryV2(instrs []ferryInstruction) map[uint64]uint64 {
 //
 // It is guaranteed that the mask represents a 36-bit number.
 func Day14(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	instrs := make([]ferryInstruction, 0)
-	for scanner.Scan() {
-		instr, e := newFerryInstruction(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		instr, e := newFerryInstruction(line)
 		if e != nil {
 			err = errors.Wrapf(e, "couldn't read ferryInstructions from scanner")
 			return

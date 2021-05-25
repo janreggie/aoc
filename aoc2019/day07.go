@@ -1,21 +1,10 @@
 package aoc2019
 
 import (
-	"bufio"
 	"strconv"
-	"strings"
 
-	"github.com/golang/glog"
 	"github.com/janreggie/aoc/aoc2019/intcode"
 )
-
-func inspectIntCode(ic *intcode.Intcode) {
-	// let's take a look shall we?
-	glog.Infof("State: PC: %v (%v)\n", ic.PC(), ic.Current())
-	glog.Infof("Memory: %v\n", ic.Snapshot())
-	glog.Infof("Input: %v\n", ic.Input())
-	glog.Infof("Output: %v\n", ic.Output())
-}
 
 func permuteIntslice(xs []int64) (permuts [][]int64) {
 	var rc func([]int64, int64)
@@ -49,13 +38,13 @@ func permuteIntslice(xs []int64) (permuts [][]int64) {
 //
 // The first opcode of the Intcode program should be an INPUT (3).
 func Day07(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	var ic *intcode.Intcode
-	var memory []int64
-	if ic, err = intcode.NewFromScanner(scanner); err != nil {
+
+	ic, err := intcode.NewFromString(input)
+	if err != nil {
 		return
 	}
-	memory = ic.Snapshot()
+
+	memory := ic.Snapshot()
 	intcode.InstallAdderMultiplier(ic)
 	intcode.InstallJumpers(ic)
 	ic.Install(intcode.Inputter)
@@ -93,38 +82,6 @@ func Day07(input string) (answer1, answer2 string, err error) {
 	}
 	answer1 = strconv.FormatInt(highestOutput, 10)
 
-	// // Part 2
-	// highestOutput = 0
-	// p := make([]int64, 5)
-	// _ = highestOutput
-	// // permutation := []int64{9, 7, 8, 5, 6}
-	// ic.Format(memory)
-	// for _, permutation := range permuteIntslice([]int64{5, 6, 7, 8, 9}) {
-	// 	var output int64
-	// 	ic.PushToInput(0)
-	// 	for ii := range permutation {
-	// 		output, err = ic.GetInput()
-	// 		if err != nil {
-	// 			return
-	// 		}
-	// 		ic.Format(memory)
-	// 		ic.PushToInput(output)
-	// 		ic.PushToInput(permutation[ii])
-	// 		if err = ic.Operate(); !intcode.IsHalt(err) {
-	// 			return
-	// 		}
-	// 	}
-	// 	output, err = ic.GetInput()
-	// 	if err != nil {
-	// 		return
-	// 	}
-	// 	if output > highestOutput {
-	// 		copy(p, permutation)
-	// 		highestOutput = output
-	// 	}
-	// }
-	// glog.Infof("with highest: %v", p)
-	// answer2 = strconv.Itoa(highestOutput)
 	answer2 = "unimplemented"
 	return
 }

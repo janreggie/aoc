@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -13,7 +11,7 @@ func Test_waitingArea(t *testing.T) {
 	assert := assert.New(t)
 	// variables for later
 	const e, o, f = empty, occupied, floor
-	area, err := generateWaitingArea(bufio.NewScanner(strings.NewReader(day11sampleInput)))
+	area, err := generateWaitingArea(day11sampleInput)
 	assert.NoError(err)
 	assert.Equal(waitingArea{
 		width:  10,

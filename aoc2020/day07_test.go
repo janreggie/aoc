@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -11,7 +9,7 @@ import (
 
 func Test_bagRuleset(t *testing.T) {
 	assert := assert.New(t)
-	ruleset, err := generateBagRuleset(bufio.NewScanner(strings.NewReader(day07sampleInput)))
+	ruleset, err := generateBagRuleset(day07sampleInput)
 	assert.NoError(err)
 	assert.Equal(map[bag][]bagRule{
 		{"light", "red"}:    {{1, bag{"bright", "white"}}, {2, bag{"muted", "yellow"}}},

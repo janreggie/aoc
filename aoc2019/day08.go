@@ -1,10 +1,10 @@
 package aoc2019
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
-	"strings"
+
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 type spaceImage [6][25]int8 // 6 tall, 25 wide
@@ -71,41 +71,20 @@ func (sp *spaceImage) count() (count [3]int) {
 //
 // It may be hard to read but it does spell out UGCUH.
 func Day08(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
 	allLayers := make([]spaceImage, 0)
-	// scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	// 	// This is bufio.ScanBytes but with 150 bytes at a time
-	// 	// For some reason it doesn't work...
-	// 	if atEOF && len(data) == 0 {
-	// 		return 0, nil, nil
-	// 	}
-	// 	if len(data) < 150 {
-	// 		// glog.Infof("data is %v; length %v", data, len(data))
-	// 		return len(data), data[0:len(data)], nil
-	// 	}
-	// 	return 150, data[0:150], nil
-	// })
-	// scanner.Buffer([]byte{}, 100000)
-	for scanner.Scan() {
-		raw := scanner.Text()
+
+	for _, line := range aoc.SplitLines(input) {
 		// split for every 150 bytes
-		for i := 0; (i+1)*150 <= len(raw); i++ {
-			sp, e := newSpaceImage(raw[i*150 : (i+1)*150])
+		for i := 0; (i+1)*150 <= len(line); i++ {
+			sp, e := newSpaceImage(line[i*150 : (i+1)*150])
 			if e != nil {
-				err = fmt.Errorf("can't create image from %v: %v", raw, e)
+				err = fmt.Errorf("can't create image from %v: %v", line, e)
 				return
 			}
 			allLayers = append(allLayers, sp)
 		}
-		// For custom SplitFunc
-		// sp, err := newSpaceImage(raw)
-		// if err != nil {
-		// 	e = fmt.Errorf("can't create image from %v: %v", raw, err)
-		// 	return
-		// }
-		// allLayers = append(allLayers, sp)
-		// glog.Infof("current: %v; count: %v", raw, len(allLayers))
 	}
+
 	fewestZeroes := allLayers[0].count()[0] // got it? good.
 	for _, layer := range allLayers {
 		if counts := layer.count(); counts[0] < fewestZeroes {

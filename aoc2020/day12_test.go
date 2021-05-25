@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -11,7 +9,7 @@ import (
 
 func Test_navigationInstruction(t *testing.T) {
 	assert := assert.New(t)
-	instrs, err := generateNavigationInstructions(bufio.NewScanner(strings.NewReader(day12sampleInput)))
+	instrs, err := generateNavigationInstructions(day12sampleInput)
 	assert.NoError(err)
 	assert.Equal([]navigationInstruction{
 		{'F', 10},
@@ -25,7 +23,7 @@ func Test_navigationInstruction(t *testing.T) {
 func Test_ship(t *testing.T) {
 	assert := assert.New(t)
 	// guaranteed no error (from test above)
-	instrs, _ := generateNavigationInstructions(bufio.NewScanner(strings.NewReader(day12sampleInput)))
+	instrs, _ := generateNavigationInstructions(day12sampleInput)
 	ss := ship{}
 	assert.Equal(ship{x: 0, y: 0, direction: east}, ss)
 	// states represent the state that should exist after launching every value at instrs.

@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -11,7 +9,7 @@ import (
 
 func Test_instruction(t *testing.T) {
 	assert := assert.New(t)
-	instrs, err := generateInstructionList(bufio.NewScanner(strings.NewReader(day08sampleInput)))
+	instrs, err := generateInstructionList(day08sampleInput)
 	assert.NoError(err)
 	assert.Equal([]instruction{
 		{"nop", +0},

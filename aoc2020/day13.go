@@ -1,11 +1,11 @@
 package aoc2020
 
 import (
-	"bufio"
 	"sort"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -23,20 +23,24 @@ import (
 // and the values are guaranteed to be positive numbers no more than 300.
 // The values for L and R will be multiples of 90 (90, 180, 270).
 func Day13(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	scanner.Scan()
-	timestamp, err := strconv.Atoi(scanner.Text())
-	if err != nil {
-		err = errors.Wrapf(err, "could not read earliest timestamp %s", scanner.Text())
+
+	lines := aoc.SplitLines(input)
+	if len(lines) != 2 {
+		err = errors.Errorf("expected number of lines to be 2, got %v instead", len(lines))
 		return
 	}
 
-	scanner.Scan()
-	rawBuses := strings.Split(scanner.Text(), ",")
+	timestamp, err := strconv.Atoi(lines[0])
+	if err != nil {
+		err = errors.Wrapf(err, "could not read earliest timestamp %s", lines[0])
+		return
+	}
+
+	rawBuses := strings.Split(lines[1], ",")
 	buses := make([]int, len(rawBuses))
 	for ii := range rawBuses {
 		var e error
-		if buses[ii], e = strconv.Atoi(rawBuses[ii]); e != nil {
+		if buses[ii], e = strconv.Atoi(rawBuses[ii]); e != nil { // x
 			buses[ii] = 0
 		}
 	}

@@ -1,11 +1,11 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -30,10 +30,10 @@ func readInstruction(input string) (instruction, error) {
 }
 
 // generateInstructionList generates a list of instructions (and an applicable error) from a bufio.Scanner
-func generateInstructionList(scanner *bufio.Scanner) ([]instruction, error) {
+func generateInstructionList(instrs string) ([]instruction, error) {
 	result := make([]instruction, 0)
-	for scanner.Scan() {
-		instr, err := readInstruction(scanner.Text())
+	for _, line := range aoc.SplitLines(instrs) {
+		instr, err := readInstruction(line)
 		if err != nil {
 			return nil, errors.Wrapf(err, "could not generate list of instructions")
 		}
@@ -152,8 +152,8 @@ func (err oobInstrPointerError) Error() string {
 // It is guaranteed that the operations are either one of `acc`, `jmp`, or `nop`,
 // and that all arguments are integers.
 func Day08(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	instructions, err := generateInstructionList(scanner)
+
+	instructions, err := generateInstructionList(input)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from scanner")
 		return

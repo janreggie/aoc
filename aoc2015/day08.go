@@ -2,9 +2,9 @@ package aoc2015
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/golang/glog"
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // Day08 solves the eighth day puzzle "Matchsticks".
@@ -75,11 +75,7 @@ func Day08(input string) (answer1, answer2 string, err error) {
 		return totalLength
 	}
 
-	for _, line := range strings.Split(input, "\n") {
-
-		if line == "" {
-			continue
-		}
+	for _, line := range aoc.SplitLines(input) {
 		representedDiff += uint64(literalLength(line) - stringLength(line))
 		encodedDiff += uint64(encodedLength(line) - literalLength(line))
 	}

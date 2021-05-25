@@ -21,6 +21,7 @@ func Day01(input string) (answer1, answer2 string, err error) {
 	// now two for loops
 	var wg sync.WaitGroup
 	wg.Add(2)
+
 	// first one for adjacents
 	go func() {
 		for ii, length := 0, len(input); ii < length; ii++ {

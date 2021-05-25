@@ -1,11 +1,11 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -69,19 +69,19 @@ func (policy *passPolicy) checkPasswordPos(password string) bool {
 // `x` is guaranteed to be a single character.
 // `PASS` is guaranteed to be of length no more than 20.
 func Day02(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	validFirst, validSecond := 0, 0
 
-	for scanner.Scan() {
-		splitLine := strings.Split(scanner.Text(), ": ")
+	for _, line := range aoc.SplitLines(input) {
+		splitLine := strings.Split(line, ": ")
 		if len(splitLine) != 2 {
-			err = errors.Errorf("`%v` could not be split properly", scanner.Text())
+			err = errors.Errorf("`%v` could not be split properly", line)
 			return
 		}
 
 		policy, e := newPolicy(splitLine[0])
 		if e != nil {
-			err = errors.Wrapf(e, "couldn't parse line `%v`", scanner.Text())
+			err = errors.Wrapf(e, "couldn't parse line `%v`", line)
 			return
 		}
 

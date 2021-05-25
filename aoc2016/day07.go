@@ -1,9 +1,10 @@
 package aoc2016
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
+
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // ipv7Address is a list of either bracketed or unbracketed strings
@@ -122,10 +123,10 @@ func (ipv7 ipv7Address) supportSSL() bool {
 //     ioxxoj[asdfgh]zxcvbn
 //     wvwhsvattcfkxsjbif[bkesznrpxrlcnsmhbxv]rdycrgrtwazfqlx[genmoutcoedshrn]ucufntphttrvzmgt
 func Day07(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	a1, a2 := 0, 0
-	for scanner.Scan() {
-		ipv7 := newIpv7Address(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		ipv7 := newIpv7Address(line)
 		if ipv7.supportTLS() {
 			a1++
 		}

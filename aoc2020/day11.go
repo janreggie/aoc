@@ -1,11 +1,11 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -69,19 +69,21 @@ func (area waitingArea) String() string {
 }
 
 // generateWaitingArea generates a waitingArea from a scanner
-func generateWaitingArea(scanner *bufio.Scanner) (waitingArea, error) {
+func generateWaitingArea(input string) (waitingArea, error) {
+
 	var result waitingArea
 	result.representation = make([][]seat, 0)
-	for scanner.Scan() {
-		row, err := makeSeatRow(scanner.Text())
+
+	for _, line := range aoc.SplitLines(input) {
+		row, err := makeSeatRow(line)
 		if err != nil {
-			return result, errors.Wrapf(err, "could not parse invalid row %s", scanner.Text())
+			return result, errors.Wrapf(err, "could not parse invalid row %s", line)
 		}
 		if result.width == 0 {
 			result.width = len(row)
 		}
 		if len(row) != result.width {
-			return result, errors.Wrapf(err, "row %s of unequal width, should be of width %d", scanner.Text(), result.width)
+			return result, errors.Wrapf(err, "row %s of unequal width, should be of width %d", line, result.width)
 		}
 		result.representation = append(result.representation, row)
 	}
@@ -292,12 +294,21 @@ func (area waitingArea) iterateTolerant() waitingArea {
 //
 // A grid representing seat layout on a waiting area. For example:
 //
-//  some sample input indented to become a code block
+// 	L.LL.LL.LL
+// 	LLLLLLL.LL
+// 	L.L.L..L..
+// 	LLLL.LL.LL
+// 	L.LL.LL.LL
+// 	L.LLLLL.LL
+// 	..L.L.....
+// 	LLLLLLLLLL
+// 	L.LLLLLL.L
+// 	L.LLLLL.LL
 //
 // It is guaranteed that the rows of the grid are equal in width, and that they initially contain only `L` or `.`.
 func Day11(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	area, err := generateWaitingArea(scanner)
+
+	area, err := generateWaitingArea(input)
 	if err != nil {
 		err = errors.Wrapf(err, "could not parse scanner from puzzle input")
 		return

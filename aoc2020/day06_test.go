@@ -1,9 +1,7 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -46,7 +44,7 @@ func Test_customsResponse(t *testing.T) {
 
 func Test_customsResponseGroups(t *testing.T) {
 	assert := assert.New(t)
-	responseGroups, err := generateCustomsResponseGroups(bufio.NewScanner(strings.NewReader(day06sampleInput)))
+	responseGroups, err := generateCustomsResponseGroups(day06sampleInput)
 	assert.NoError(err)
 	assert.Equal(5, len(responseGroups))
 	for ii, grp := range responseGroups {

@@ -1,10 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -169,11 +169,12 @@ func advancedMath(eqn []string) (int, error) {
 //
 // It is guaranteed that the equations only contain numerical integers, the operations `+` and `*`, and balanced parentheses.
 func Day18(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	equations := make([][]string, 0)
-	for scanner.Scan() {
-		equations = append(equations, parseEquation(scanner.Text()))
+	for _, line := range aoc.SplitLines(input) {
+		equations = append(equations, parseEquation(line))
 	}
+
 	result1, result2 := 0, 0
 	for _, eqn := range equations {
 		simpleAnswer, e := simpleMath(eqn)
@@ -192,6 +193,5 @@ func Day18(input string) (answer1, answer2 string, err error) {
 
 	answer1 = strconv.Itoa(result1)
 	answer2 = strconv.Itoa(result2)
-
 	return
 }

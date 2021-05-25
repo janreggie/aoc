@@ -2,6 +2,8 @@ package aoc2016
 
 import (
 	"strings"
+
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // keypadNumber represents a keypad number from 1 to 9 (or 1 to D). (Day 2)
@@ -97,10 +99,7 @@ func Day02(input string) (answer1, answer2 string, err error) {
 	var initOne, initTwo keypadNumber = 5, 5
 
 	var a1, a2 strings.Builder
-	for _, line := range strings.Split(input, "\n") {
-		if line == "" {
-			continue
-		}
+	for _, line := range aoc.SplitLines(input) {
 		initOne.iterateString(line)
 		initTwo.iterateStringDeux(line)
 		a1.WriteRune(initOne.Rune())

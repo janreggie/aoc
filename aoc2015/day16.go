@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -260,10 +261,8 @@ func Day16(input string) (answer1, answer2 string, err error) {
 
 	// construct a list of aunts
 	allAunts := make([]auntSue, 0, 500)
-	for _, line := range strings.Split(input, "\n") {
-		if line == "" {
-			continue
-		}
+	for _, line := range aoc.SplitLines(input) {
+
 		aunt, e := newAuntSue(line)
 		if e != nil {
 			err = errors.Wrapf(e, "could not properly create: %v", aunt)

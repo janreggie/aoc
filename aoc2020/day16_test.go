@@ -1,9 +1,7 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -31,7 +29,7 @@ func Test_fieldRange(t *testing.T) {
 
 func Test_ticketNotes(t *testing.T) {
 	assert := assert.New(t)
-	notes, err := generateTicketNotes(bufio.NewScanner(strings.NewReader(day16sampleInput)))
+	notes, err := generateTicketNotes(day16sampleInput)
 	assert.NoError(err)
 	fmt.Println(notes)
 	assert.Equal(ticketNotes{
@@ -65,7 +63,7 @@ nearby tickets:
 15,1,5
 5,14,9
 `
-	notes, err = generateTicketNotes(bufio.NewScanner(strings.NewReader(secondExample)))
+	notes, err = generateTicketNotes(secondExample)
 	assert.NoError(err)
 	notes.discardInvalids() // shouldn't change nearby tickets
 	assert.Equal(ticketNotes{

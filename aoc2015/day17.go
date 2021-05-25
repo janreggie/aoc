@@ -2,9 +2,9 @@ package aoc2015
 
 import (
 	"strconv"
-	"strings"
 	"sync"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -65,11 +65,7 @@ func containOnlyIn(amount eggnog, limit containerCount, containers []eggnog) con
 func Day17(input string) (answer1, answer2 string, err error) {
 
 	containers := make([]eggnog, 0)
-	for _, line := range strings.Split(input, "\n") {
-		if (line) == "" {
-			continue
-		}
-
+	for _, line := range aoc.SplitLines(input) {
 		size, e := strconv.ParseUint(line, 0, 32)
 		if e != nil {
 			err = errors.Wrapf(e, "could not parse %q", line)

@@ -1,6 +1,8 @@
 package aoc
 
-import "strings"
+import (
+	"strings"
+)
 
 // SplitLines splits an input to its lines except the last few ones if they are empty
 func SplitLines(input string) []string {
@@ -11,4 +13,9 @@ func SplitLines(input string) []string {
 		}
 	}
 	return result
+}
+
+// SplitLinesToInts splits input via newlines and then turns said slice into a slice of ints.
+func SplitLinesToInts(input string) ([]int, error) {
+	return StringsToInts(SplitLines(input))
 }

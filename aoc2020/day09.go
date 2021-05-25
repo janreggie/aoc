@@ -1,12 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"sort"
 	"strconv"
-	"strings"
 
-	"github.com/pkg/errors"
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // Day09 solves the ninth day puzzle "Encoding Error"
@@ -33,16 +31,10 @@ import (
 //
 // It is guaranteed that the input is at least 26 lines long.
 func Day09(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	allNumbers := make([]int, 0)
-	for scanner.Scan() {
-		text := scanner.Text()
-		num, e := strconv.Atoi(text)
-		if e != nil {
-			err = errors.Wrapf(e, "could not parse %s from input", text)
-			return
-		}
-		allNumbers = append(allNumbers, num)
+
+	allNumbers, err := aoc.SplitLinesToInts(input)
+	if err != nil {
+		return
 	}
 
 	// checkValidSumOfTwo returns true if there are two (distinct) numbers in past that sum to present.

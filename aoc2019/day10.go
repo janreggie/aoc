@@ -1,14 +1,13 @@
 package aoc2019
 
 import (
-	"bufio"
 	"fmt"
 	"image"
 	"math/big"
 	"sort"
 	"strconv"
-	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -149,23 +148,22 @@ type asteroidField struct {
 // Make sure that the string only contains `.` or `#`
 // because any character other than `#` will result to false
 // or non-presence of asteroid.
-func newAsteroidField(scanner *bufio.Scanner) (*asteroidField, error) {
+func newAsteroidField(input string) (*asteroidField, error) {
 	// okay... how do we store this
 	asteroids := make([][]bool, 0) // true: asteroid present; false: no asteroid
 	// asteroids[2][3] or asteroids(3,2) represents the 3rd asteroid in the 2nd row (counting from row 0, row 1,...)
 	var fieldWidth, fieldHeight int // width and height as observed.
 	// we know the input is 26x26 though... but we want to support other sizes.
-	for scanner.Scan() {
-		text := scanner.Text()
+	for _, line := range aoc.SplitLines(input) {
 		if fieldWidth == 0 {
-			fieldWidth = len(text)
+			fieldWidth = len(line)
 		}
-		if fieldWidth != len(text) {
-			return nil, fmt.Errorf("width of %v should b %v", text, fieldWidth)
+		if fieldWidth != len(line) {
+			return nil, fmt.Errorf("width of %v should b %v", line, fieldWidth)
 		}
 		asteroids = append(asteroids, make([]bool, fieldWidth))
 		for ii := range asteroids[fieldHeight] {
-			if text[ii] == '#' {
+			if line[ii] == '#' {
 				// default is false.
 				asteroids[fieldHeight][ii] = true
 			}
@@ -471,8 +469,8 @@ func (field *asteroidField) sweepAsteroids(station image.Point, toVaporize uint)
 //
 // It is guaranteed that WIDTH and HEIGHT are both at least 1 and at most 30.
 func Day10(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	asteroids, err := newAsteroidField(scanner)
+
+	asteroids, err := newAsteroidField(input)
 	if err != nil {
 		err = errors.Wrap(err, "Y2019D10: could not create asteroidField")
 		return
@@ -485,9 +483,6 @@ func Day10(input string) (answer1, answer2 string, err error) {
 			if !asteroids.get(image.Pt(ii, jj)) {
 				continue // don't care about non-asteroids
 			}
-			// for range asteroids.sweepClockwise(image.Pt(ii, jj)) {
-			// 	/// do nothing...
-			// }
 			if seen := asteroids.countLineOfSight(image.Pt(ii, jj)); seen > mostSeen {
 				mostSeen = seen
 				bestAsteroid = image.Pt(ii, jj)

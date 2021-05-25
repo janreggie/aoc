@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -157,10 +158,7 @@ func (olympics *reindeerOlympics) iterateUntil(time uint) {
 func Day14(input string) (answer1, answer2 string, err error) {
 
 	allReindeer := make([]racingReindeer, 0)
-	for _, line := range strings.Split(input, "\n") {
-		if line == "" {
-			continue
-		}
+	for _, line := range aoc.SplitLines(input) {
 
 		rd, e := newRacingReindeer(line)
 		if e != nil {

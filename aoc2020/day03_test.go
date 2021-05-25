@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	aoc "github.com/janreggie/aoc/internal"
@@ -12,7 +10,7 @@ import (
 func TestTobogganForest(t *testing.T) {
 	assert := assert.New(t)
 
-	forest, err := readTobogganForest(bufio.NewScanner(strings.NewReader(day03sampleInput)))
+	forest, err := readTobogganForest(day03sampleInput)
 	assert.NoErrorf(err, "no error should be from input")
 
 	// check the upper right corner

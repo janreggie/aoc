@@ -1,7 +1,6 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
@@ -14,13 +13,12 @@ import (
 //
 // A single line containing the "starting numbers" of the memory game. For example:
 //
-//  some sample input indented to become a code block
+// 	13,0,10,12,1,5,8
 //
 // It is guaranteed that the numbers are nonnegative.
 func Day15(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	scanner.Scan()
-	rawNums := strings.Split(scanner.Text(), ",")
+
+	rawNums := strings.Split(input, ",")
 	var memory [30000000]int
 	whenLastSaid := make(map[int]int)
 	for ii, vv := range rawNums {
@@ -45,7 +43,6 @@ func Day15(input string) (answer1, answer2 string, err error) {
 		return -1
 	}
 
-	// bar := progressbar.Default(int64(len(memory)))
 	for ind < len(memory) {
 		if ff := findWhenLastSaid(ind, lastSpoken); ff == -1 {
 			memory[ind] = 0
@@ -56,11 +53,7 @@ func Day15(input string) (answer1, answer2 string, err error) {
 		lastSpoken = memory[ind]
 		ind++
 
-		if ind%10000 == 0 {
-			// bar.Add(10000)
-		}
 	}
-	// bar.Finish()
 
 	answer1 = strconv.Itoa(memory[2019])
 	answer2 = strconv.Itoa(memory[29999999])

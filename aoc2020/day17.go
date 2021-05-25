@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -74,7 +75,8 @@ func (cube conwayCube) countActive() int {
 // newConwayCube returns a new Conway Cube from a string
 // whose width each line is equal and only contains `#` and `.`.
 func newConwayCube(input string) (conwayCube, error) {
-	lines := strings.Split(input, "\n")
+
+	lines := aoc.SplitLines(input)
 	if len(lines) == 0 {
 		// Well... we have an empty cube!
 		return [][][]bool{{{false}}}, nil
@@ -252,7 +254,14 @@ func (cube conwayCube) iterate() conwayCube {
 //
 // A 2D grid representing the initial state of the Conway cube. For example:
 //
-//  some sample input indented to become a code block
+// 	#.##.##.
+// 	.##..#..
+// 	....#..#
+// 	.##....#
+// 	#..##...
+// 	.###..#.
+// 	..#.#..#
+// 	.....#..
 //
 // It is guaranteed that the input only contains `.` and `#`'s.
 func Day17(input string) (answer1, answer2 string, err error) {

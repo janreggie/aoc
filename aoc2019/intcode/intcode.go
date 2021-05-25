@@ -3,11 +3,11 @@
 package intcode
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
-	"unicode"
-	"unicode/utf8"
+	"strings"
+
+	"github.com/pkg/errors"
 )
 
 // Halt is a module that is built in to the Intcode
@@ -35,66 +35,47 @@ type Intcode struct {
 }
 
 // New generates an Intcode using a memory reel
-func New(mem []int64) (ic *Intcode) {
-	ic = &Intcode{pc: 0, mem: make([]int64, len(mem))}
+func New(mem []int64) *Intcode {
+	ic := &Intcode{pc: 0, mem: make([]int64, len(mem))}
 	copy(ic.mem, mem)
 	ic.Install(Halt)
-	return
+	return ic
 }
 
-// NewFromScanner takes an Intcode from a *bufio.Scanner.
-// Originally adapted from aoc2019.Day02
-func NewFromScanner(scanner *bufio.Scanner) (ic *Intcode, err error) {
-	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		// Skip leading spaces.
-		start := 0
-		for width := 0; start < len(data); start += width {
-			var r rune
-			r, width = utf8.DecodeRune(data[start:])
-			if !unicode.IsSpace(r) {
-				break
-			}
+// NewFromString generates using a memory reel represented by a string
+func NewFromString(input string) (*Intcode, error) {
+
+	mem := make([]int64, 0)
+	for _, cell := range strings.Split(input, ",") {
+		cell = strings.TrimSpace(cell)
+		memVal, err := strconv.ParseInt(cell, 10, 64)
+		if err != nil {
+			return nil, errors.Errorf("could not parse memory cell %v in input", cell)
 		}
-		// Scan until comma or when space, marking end of word.
-		for width, i := 0, start; i < len(data); i += width {
-			var r rune
-			r, width = utf8.DecodeRune(data[i:])
-			if r == ',' || unicode.IsSpace(r) {
-				return i + width, data[start:i], nil
-			}
-		}
-		// If we're at EOF, we have a final, non-empty, non-terminated word. Return it.
-		if atEOF && len(data) > start {
-			return len(data), data[start:], nil
-		}
-		// Request more data.
-		return start, nil, nil
-	})
-	// now let's start scanning
-	ic = &Intcode{pc: 0, mem: make([]int64, 0)}
-	for scanner.Scan() {
-		raw := scanner.Text()
-		instr, e := strconv.ParseInt(raw, 10, 64)
-		if e != nil {
-			err = fmt.Errorf("cannot parse %v: %v", raw, err)
-			return
-		}
-		ic.mem = append(ic.mem, instr)
+		mem = append(mem, memVal)
 	}
-	ic.Install(Halt)
-	return
+	return New(mem), nil
+}
+
+// Details returns intimate details of the Intcode state
+func (ic *Intcode) Details() string {
+
+	var sb strings.Builder
+	fmt.Fprintf(&sb, "State: PC: %v (%v)\n", ic.PC(), ic.Current())
+	fmt.Fprintf(&sb, "Memory: %v\n", ic.Snapshot())
+	fmt.Fprintf(&sb, "Input: %v\n", ic.Input())
+	fmt.Fprintf(&sb, "Output: %v", ic.Output())
+	return sb.String()
 }
 
 // Install installs a module
 func (ic *Intcode) Install(module *Module) {
 	ic.modules = append(ic.modules, module)
-	return
 }
 
 // UninstallAll removes all modules
 func (ic *Intcode) UninstallAll() {
 	ic.modules = make([]*Module, 0)
-	return
 }
 
 // Operate performs instructions on the Intcode computer
@@ -234,19 +215,16 @@ func (ic *Intcode) RelativeBase() (relativeBase int64) {
 // increasing or decreasing it.
 func (ic *Intcode) AdjustRelativeBase(amount int64) {
 	ic.relativeBase += amount
-	return
 }
 
 // SetRelativeBase sets the relative base by some amount.
 func (ic *Intcode) SetRelativeBase(amount int64) {
 	ic.relativeBase = amount
-	return
 }
 
 // Rewind jumps PC to zero
 func (ic *Intcode) Rewind() {
 	ic.Jump(0) // this cannot return any error
-	return
 }
 
 // Format formats the memory, input, and outputs and sets PC and relative base to zero

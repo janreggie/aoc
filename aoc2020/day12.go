@@ -1,10 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -39,12 +39,12 @@ func newNavigationInstruction(input string) (navigationInstruction, error) {
 }
 
 // generateNavigationInstructions generates a slice of navigationInstruction objects from a Scanner input
-func generateNavigationInstructions(scanner *bufio.Scanner) ([]navigationInstruction, error) {
+func generateNavigationInstructions(input string) ([]navigationInstruction, error) {
 	instrs := make([]navigationInstruction, 0)
-	for scanner.Scan() {
-		instr, err := newNavigationInstruction(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		instr, err := newNavigationInstruction(line)
 		if err != nil {
-			return nil, errors.Wrapf(err, "could not parse navigation instruction %s", scanner.Text())
+			return nil, errors.Wrapf(err, "could not parse navigation instruction %s", line)
 		}
 		instrs = append(instrs, instr)
 	}
@@ -169,8 +169,8 @@ func (s *ship) manhattanDistance() int {
 // and the values are guaranteed to be positive numbers no more than 300.
 // The values for L and R will be multiples of 90 (90, 180, 270).
 func Day12(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	instrs, err := generateNavigationInstructions(scanner)
+
+	instrs, err := generateNavigationInstructions(input)
 	if err != nil {
 		errors.Wrapf(err, "could not generate navigation instructions from input")
 		return

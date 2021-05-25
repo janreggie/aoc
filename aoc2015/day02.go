@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // Day02 solves the second day puzzle "I Was Told There Would Be No Math".
@@ -83,11 +85,7 @@ func Day02(input string) (answer1, answer2 string, err error) {
 		return dims[0] * dims[1] * dims[2]
 	}
 
-	for _, readDims := range strings.Split(input, "\n") {
-
-		if readDims == "" { // Final string
-			continue
-		}
+	for _, readDims := range aoc.SplitLines(input) {
 
 		rawDims := strings.Split(readDims, "x")
 		if len(rawDims) != 3 {

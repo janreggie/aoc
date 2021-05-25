@@ -1,10 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -82,24 +82,19 @@ func (group customsResponseGroup) everyone() customsResponse {
 }
 
 // generateCustomsResponseGroups creates a slice of customResponseGroups from an input
-func generateCustomsResponseGroups(scanner *bufio.Scanner) ([]customsResponseGroup, error) {
+func generateCustomsResponseGroups(input string) ([]customsResponseGroup, error) {
+
 	result := make([]customsResponseGroup, 0)
-	current := make(customsResponseGroup, 0)
-	for scanner.Scan() {
-		if scanner.Text() == "" && len(current) != 0 {
-			result = append(result, current)
-			current = make(customsResponseGroup, 0)
-			continue
-		}
+	for _, group := range strings.Split(input, "\n\n") {
+		current := make(customsResponseGroup, 0)
 
-		response, err := newCustomsResponse(scanner.Text())
-		if err != nil {
-			return nil, errors.Wrapf(err, "could not generate response groups because of %s", scanner.Text())
+		for _, line := range aoc.SplitLines(group) {
+			response, err := newCustomsResponse(line)
+			if err != nil {
+				return nil, errors.Wrapf(err, "could not generate response groups because of %s", line)
+			}
+			current = append(current, response)
 		}
-		current = append(current, response)
-	}
-
-	if len(current) != 0 { // we might have forgotten to append it...
 		result = append(result, current)
 	}
 
@@ -131,10 +126,10 @@ func generateCustomsResponseGroups(scanner *bufio.Scanner) ([]customsResponseGro
 //
 // The file should only contain newlines and the characters `a` to `z`.
 func Day06(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	responseGroups, err := generateCustomsResponseGroups(scanner)
+
+	responseGroups, err := generateCustomsResponseGroups(input)
 	if err != nil {
-		err = errors.Wrapf(err, "could not read from scanner")
+		err = errors.Wrapf(err, "could not read from input")
 		return
 	}
 

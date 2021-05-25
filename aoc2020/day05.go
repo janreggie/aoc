@@ -1,11 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"sort"
 	"strconv"
-	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -72,14 +71,14 @@ func (seat planeSeat) seatID() int {
 // It is guaranteed that the first 7 characters for each boarding pass
 // consist of either `B` or `F`, and the last 3 consist of either `R` or `L`.
 func Day05(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	allSeats := make([]planeSeat, 0)
 	highestID := 0 // all IDs are at least 0
 
-	for scanner.Scan() {
-		seat, e := readBoardingPass(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		seat, e := readBoardingPass(line)
 		if e != nil {
-			err = errors.Wrapf(e, "couldn't read string %s", scanner.Text())
+			err = errors.Wrapf(e, "couldn't read string %s", line)
 			return
 		}
 		allSeats = append(allSeats, seat)

@@ -1,10 +1,9 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
-	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -15,28 +14,29 @@ type tobogganForest struct {
 	forest [][]bool // true if a tree exists here
 }
 
-// readTobogganForest reads to forest data from a bufio.Scanner.
+// readTobogganForest reads to forest data.
 // If it is uneven, reallocate...
-func readTobogganForest(scanner *bufio.Scanner) (*tobogganForest, error) {
+func readTobogganForest(input string) (*tobogganForest, error) {
+
 	result := &tobogganForest{}
 	result.forest = make([][]bool, 0)
-	for scanner.Scan() {
-		readRow := []rune(scanner.Text())
+
+	for _, line := range aoc.SplitLines(input) {
 		currentRow := make([]bool, 0)
-		for _, unit := range readRow {
+		for _, unit := range line {
 			switch unit {
 			case '#':
 				currentRow = append(currentRow, true)
 			case '.':
 				currentRow = append(currentRow, false)
 			default:
-				return nil, errors.Errorf("couldn't read char %c at row `%s`", unit, scanner.Text())
+				return nil, errors.Errorf("couldn't read char %c at row `%s`", unit, line)
 			}
 		}
 
 		result.height++
 		if result.width != 0 && result.width != len(currentRow) {
-			return nil, errors.Errorf("width should be %v but row %s is length %v", result.width, scanner.Text(), len(currentRow))
+			return nil, errors.Errorf("width should be %v but row %s is length %v", result.width, line, len(currentRow))
 		}
 		result.width = len(currentRow)
 		result.forest = append(result.forest, currentRow)
@@ -94,8 +94,8 @@ func (forest *tobogganForest) traverse(r, d, x, y int) int {
 //
 // The file should only contain `.`, `#`, and newlines. All lines are of equal length.
 func Day03(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	forest, err := readTobogganForest(scanner)
+
+	forest, err := readTobogganForest(input)
 	if err != nil {
 		err = errors.Wrap(err, "couldn't read from scanner")
 		return

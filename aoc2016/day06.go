@@ -1,8 +1,9 @@
 package aoc2016
 
 import (
-	"bufio"
 	"strings"
+
+	aoc "github.com/janreggie/aoc/internal"
 )
 
 // repertoire represents an array of dictionaries containing bytes
@@ -118,10 +119,10 @@ func (rp repertoire) leastCommon() string {
 // It is guaranteed that all lines have the same length
 // and that there are no more than 600 lines.
 func Day06(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	rp := newRepertoire(0)
-	for scanner.Scan() {
-		rp.add(scanner.Text())
+	for _, line := range aoc.SplitLines(input) {
+		rp.add(line)
 	}
 	answer1 = rp.mostCommon()
 	answer2 = rp.leastCommon()

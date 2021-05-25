@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -126,11 +127,7 @@ func Day06(input string) (answer1, answer2 string, err error) {
 	}
 
 	// read each line in scanner
-	for _, rawQuery := range strings.Split(input, "\n") {
-
-		if rawQuery == "" {
-			continue
-		}
+	for _, rawQuery := range aoc.SplitLines(input) {
 
 		query := strings.Fields(rawQuery)
 

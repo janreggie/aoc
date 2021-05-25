@@ -1,10 +1,10 @@
 package aoc2020
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -18,18 +18,6 @@ type passport struct {
 	ecl string // Eye Color
 	pid string // Passport ID
 	cid string // Country ID
-}
-
-// isEmpty used for readPassportFile
-func (pp passport) isEmpty() bool {
-	return pp.byr == "" &&
-		pp.iyr == "" &&
-		pp.eyr == "" &&
-		pp.hgt == "" &&
-		pp.hcl == "" &&
-		pp.ecl == "" &&
-		pp.pid == "" &&
-		pp.cid == ""
 }
 
 // valid checks if passport is "valid" (part1)
@@ -166,20 +154,16 @@ func (pp *passport) readLine(line string) error {
 }
 
 // readPassportFile reads from a bufio.Scanner and returns a slice of passport data
-func readPassportFile(scanner *bufio.Scanner) ([]passport, error) {
+func readPassportFile(input string) ([]passport, error) {
 	result := make([]passport, 0)
-	current := passport{}
-	for scanner.Scan() {
-		if scanner.Text() == "" && !current.isEmpty() {
-			result = append(result, current)
-			current = passport{}
-			continue
+
+	for _, passportData := range strings.Split(input, "\n\n") {
+		current := passport{}
+		for _, line := range aoc.SplitLines(passportData) {
+			if err := (&current).readLine(line); err != nil {
+				return nil, errors.Wrapf(err, "could not read line %v properly", line)
+			}
 		}
-		if err := (&current).readLine(scanner.Text()); err != nil {
-			return nil, errors.Wrapf(err, "could not read line %v properly", scanner.Text())
-		}
-	}
-	if !current.isEmpty() {
 		result = append(result, current)
 	}
 
@@ -217,8 +201,8 @@ func readPassportFile(scanner *bufio.Scanner) ([]passport, error) {
 //  pid (Passport ID)
 //  cid (Country ID)
 func Day04(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	allPassports, err := readPassportFile(scanner)
+
+	allPassports, err := readPassportFile(input)
 	if err != nil {
 		errors.Wrapf(err, "could not read file properly")
 		return
@@ -234,8 +218,8 @@ func Day04(input string) (answer1, answer2 string, err error) {
 			countStrictValid++
 		}
 	}
+
 	answer1 = strconv.Itoa(countValid)
 	answer2 = strconv.Itoa(countStrictValid)
-
 	return
 }

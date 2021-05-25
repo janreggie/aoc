@@ -1,12 +1,12 @@
 package aoc2020
 
 import (
-	"bufio"
 	"fmt"
 	"sort"
 	"strconv"
 	"strings"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -108,66 +108,55 @@ type ticketNotes struct {
 	allTickets [][]int
 }
 
-// generateTicketNotes generates a ticketNotes object using a scanner
-func generateTicketNotes(scanner *bufio.Scanner) (ticketNotes, error) {
+// generateTicketNotes generates a ticketNotes object using some input
+func generateTicketNotes(input string) (ticketNotes, error) {
+
 	result := ticketNotes{}
-	result.fields = make([]fieldRange, 0)
-	result.allTickets = make([][]int, 0)
+	var err error
 
-	state := 0 // 0 for scanning fields; 1 for scanning your ticket; 2 for scanning nearby tickets
-	for scanner.Scan() {
-		if scanner.Text() == "" {
-			state++
-			continue
+	groups := strings.Split(input, "\n\n")
+	if ll := len(groups); ll != 3 {
+		return result, errors.Errorf("expected to have three groups, got %v instead", ll)
+	}
+	if ll := len(aoc.SplitLines(groups[1])); ll != 2 {
+		return result, errors.Errorf("expected for second group to have two lines, got %v instead", ll)
+	}
+	if ll := len(aoc.SplitLines(groups[2])); ll < 2 {
+		return result, errors.Errorf("expected to have third group to have at least two lines, got %v instead", ll)
+	}
+
+	fieldRanges := aoc.SplitLines(groups[0])
+	fieldCount := len(fieldRanges)
+	result.fields = make([]fieldRange, fieldCount)
+	for ii, fieldRange := range fieldRanges {
+		ff, err := newFieldRange(fieldRange)
+		if err != nil {
+			return result, errors.Wrapf(err, "could not interpret %s as field range", fieldRange)
 		}
+		result.fields[ii] = ff
+	}
 
-		switch state {
-		case 0:
-			ff, err := newFieldRange(scanner.Text())
-			if err != nil {
-				return result, errors.Wrapf(err, "could not read %s from scanner", scanner.Text())
-			}
-			result.fields = append(result.fields, ff)
+	yourTicketRow := aoc.SplitLines(groups[1])[1]
+	result.yourTicket, err = aoc.StringsToInts(strings.Split(yourTicketRow, ","))
+	if err != nil {
+		return result, errors.Wrapf(err, "could not parse `%v` for your ticket", yourTicketRow)
+	}
+	if len(result.yourTicket) != fieldCount {
+		return result, errors.Wrapf(err, "expected length of ticket to be %v, got %v instead", fieldCount, len(result.yourTicket))
+	}
 
-		case 1:
-			if scanner.Text() == "your ticket:" {
-				continue
-			}
-			splitVals := strings.Split(scanner.Text(), ",")
-			if len(splitVals) != len(result.fields) {
-				return result, errors.Errorf("expected number of values for %v to be %d, got %d instead", scanner.Text(), len(result.fields), len(splitVals))
-			}
-			result.yourTicket = make([]int, len(splitVals))
-			for ii, vv := range splitVals {
-				val, err := strconv.Atoi(vv)
-				if err != nil {
-					return result, errors.Errorf("cannot convert %v from %v to int", vv, scanner.Text())
-				}
-				result.yourTicket[ii] = val
-			}
-
-		case 2:
-			if scanner.Text() == "nearby tickets:" {
-				continue
-			}
-			splitVals := strings.Split(scanner.Text(), ",")
-			if len(splitVals) != len(result.fields) {
-				return result, errors.Errorf("expected number of values for %v to be %d, got %d instead", scanner.Text(), len(result.fields), len(splitVals))
-			}
-			currentTicket := make([]int, len(splitVals))
-			for ii, vv := range splitVals {
-				val, err := strconv.Atoi(vv)
-				if err != nil {
-					return result, errors.Errorf("cannot convert %v from %v to int", vv, scanner.Text())
-				}
-				currentTicket[ii] = val
-			}
-			result.allTickets = append(result.allTickets, currentTicket)
-
-		default:
-			return result, errors.Errorf("scanner might be invalid: too many blank lines")
+	nearbyTicketRows := aoc.SplitLines(groups[2])[1:]
+	result.allTickets = make([][]int, len(nearbyTicketRows))
+	for ii, row := range nearbyTicketRows {
+		result.allTickets[ii], err = aoc.StringsToInts(strings.Split(row, ","))
+		if err != nil {
+			return result, errors.Wrapf(err, "could not parse `%v` for a ticket", row)
+		}
+		if len(result.allTickets[ii]) != fieldCount {
+			return result, errors.Wrapf(err, "expected length of ticket to be %v, got %v instead", fieldCount, len(result.allTickets[ii]))
 		}
 	}
+
 	return result, nil
 }
 
@@ -264,50 +253,50 @@ func (notes ticketNotes) findFieldRanges() [][]fieldRange {
 //
 // A text file containing the notes you have taken down. For example:
 //
-//   departure location: 43-237 or 251-961
-//   departure station: 27-579 or 586-953
-//   departure platform: 31-587 or 608-967
-//   departure track: 26-773 or 784-973
-//   departure date: 41-532 or 552-956
-//   departure time: 33-322 or 333-972
-//   arrival location: 30-165 or 178-965
-//   arrival station: 31-565 or 571-968
-//   arrival platform: 36-453 or 473-963
-//   arrival track: 35-912 or 924-951
-//   class: 39-376 or 396-968
-//   duration: 31-686 or 697-974
-//   price: 28-78 or 96-971
-//   route: 32-929 or 943-955
-//   row: 40-885 or 896-968
-//   seat: 26-744 or 765-967
-//   train: 46-721 or 741-969
-//   type: 30-626 or 641-965
-//   wagon: 48-488 or 513-971
-//   zone: 34-354 or 361-973
+// 	departure location: 43-237 or 251-961
+// 	departure station: 27-579 or 586-953
+// 	departure platform: 31-587 or 608-967
+// 	departure track: 26-773 or 784-973
+// 	departure date: 41-532 or 552-956
+// 	departure time: 33-322 or 333-972
+// 	arrival location: 30-165 or 178-965
+// 	arrival station: 31-565 or 571-968
+// 	arrival platform: 36-453 or 473-963
+// 	arrival track: 35-912 or 924-951
+// 	class: 39-376 or 396-968
+// 	duration: 31-686 or 697-974
+// 	price: 28-78 or 96-971
+// 	route: 32-929 or 943-955
+// 	row: 40-885 or 896-968
+// 	seat: 26-744 or 765-967
+// 	train: 46-721 or 741-969
+// 	type: 30-626 or 641-965
+// 	wagon: 48-488 or 513-971
+// 	zone: 34-354 or 361-973
 //
-//   your ticket:
-//   151,71,67,113,127,163,131,59,137,103,73,139,107,101,97,149,157,53,109,61
+// 	your ticket:
+// 	151,71,67,113,127,163,131,59,137,103,73,139,107,101,97,149,157,53,109,61
 //
-//   nearby tickets:
-//   680,418,202,55,792,800,896,801,312,252,721,702,24,112,608,837,98,222,797,364
-//   876,910,289,816,873,280,791,313,641,15,719,587,353,366,617,710,565,419,339,621
-//   869,683,645,185,121,51,670,401,308,213,54,150,813,264,330,50,444,825,837,368
-//   244,131,561,851,165,270,78,573,818,869,946,370,527,866,655,816,146,792,431,431
-//   626,744,334,482,185,797,770,723,532,475,441,62,837,657,412,106,404,433,577,439
-//   610,514,611,681,156,854,838,126,524,710,518,193,744,857,258,642,12,273,192,221
-//   215,408,404,344,319,720,403,434,885,248,707,195,672,312,809,855,118,529,673,439
-//   103,402,226,678,711,212,843,806,358,436,342,257,98,401,527,831,524,401,275,709
-//   429,906,336,77,146,122,179,295,251,529,487,858,901,71,417,477,458,474,154,786
-//   903,313,919,564,904,853,673,373,209,408,825,516,441,818,474,773,556,848,151,229
-//   96,861,791,620,929,256,587,211,250,684,420,258,365,96,104,653,368,528,784,817
-//   898,866,669,867,901,618,575,210,498,265,413,556,190,376,624,818,295,294,431,649
-//   50,346,807,717,850,820,791,561,486,752,414,669,927,72,205,117,137,564,744,799
+// 	nearby tickets:
+// 	680,418,202,55,792,800,896,801,312,252,721,702,24,112,608,837,98,222,797,364
+// 	876,910,289,816,873,280,791,313,641,15,719,587,353,366,617,710,565,419,339,621
+// 	869,683,645,185,121,51,670,401,308,213,54,150,813,264,330,50,444,825,837,368
+// 	244,131,561,851,165,270,78,573,818,869,946,370,527,866,655,816,146,792,431,431
+// 	626,744,334,482,185,797,770,723,532,475,441,62,837,657,412,106,404,433,577,439
+// 	610,514,611,681,156,854,838,126,524,710,518,193,744,857,258,642,12,273,192,221
+// 	215,408,404,344,319,720,403,434,885,248,707,195,672,312,809,855,118,529,673,439
+// 	103,402,226,678,711,212,843,806,358,436,342,257,98,401,527,831,524,401,275,709
+// 	429,906,336,77,146,122,179,295,251,529,487,858,901,71,417,477,458,474,154,786
+// 	903,313,919,564,904,853,673,373,209,408,825,516,441,818,474,773,556,848,151,229
+// 	96,861,791,620,929,256,587,211,250,684,420,258,365,96,104,653,368,528,784,817
+// 	898,866,669,867,901,618,575,210,498,265,413,556,190,376,624,818,295,294,431,649
+// 	50,346,807,717,850,820,791,561,486,752,414,669,927,72,205,117,137,564,744,799
 //
 // It is guaranteed that the input resembles the one above,
 // but it is possible for one's input to use a different number of fields.
 func Day16(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	notes, err := generateTicketNotes(scanner)
+
+	notes, err := generateTicketNotes(input)
 	if err != nil {
 		err = errors.Wrapf(err, "could not read from input scanner")
 		return

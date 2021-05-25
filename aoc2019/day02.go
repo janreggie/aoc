@@ -1,9 +1,7 @@
 package aoc2019
 
 import (
-	"bufio"
 	"strconv"
-	"strings"
 
 	"github.com/janreggie/aoc/aoc2019/intcode"
 )
@@ -22,12 +20,12 @@ import (
 // that is, the total number of integers,
 // is no more than 200.
 func Day02(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	var ic *intcode.Intcode
-	ic, err = intcode.NewFromScanner(scanner)
+
+	ic, err := intcode.NewFromString(input)
 	if err != nil {
 		return
 	}
+
 	ic.Install(intcode.SimpleAdder)
 	ic.Install(intcode.SimpleMultiplier)
 	instrs := ic.Snapshot() // for later

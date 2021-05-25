@@ -108,12 +108,6 @@ func decompress(input string) (string, error) {
 //
 //	(6x1)(1x3)A
 func Day09(input string) (answer1, answer2 string, err error) {
-	// scanner := bufio.NewScanner(strings.NewReader(input))
-	// var sb strings.Builder
-	// for scanner.Scan() {
-	// 	sb.WriteString(scanner.Text())
-	// }
-	// input := sb.String()
 
 	fmt.Println("Compressed: ", input)
 	decompressed, err := decompress(input)

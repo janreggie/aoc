@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync"
 
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/pkg/errors"
 )
 
@@ -77,11 +78,7 @@ func newTableScenario(input string) (*tableScenario, error) {
 	result := &tableScenario{potentialHappiness: potentialHappiness, visitors: visitors}
 
 	// now parse each line
-	for _, line := range strings.Split(input, "\n") {
-
-		if line == "" {
-			continue
-		}
+	for _, line := range aoc.SplitLines(input) {
 		if err := result.parseTableScenario(line); err != nil {
 			return result, errors.Wrapf(err, "could not parse line %v", line)
 		}
