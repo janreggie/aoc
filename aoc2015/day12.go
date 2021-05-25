@@ -1,9 +1,7 @@
 package aoc2015
 
 import (
-	"bufio"
 	"strconv"
-	"strings"
 
 	"github.com/antonholmquist/jason"
 	"github.com/pkg/errors"
@@ -92,26 +90,18 @@ func extractSumButRed(value *jason.Value) int64 {
 // Do note that all numbers in the input are integers,
 // that is, there are no floating-points.
 func Day12(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	// let's read everything first...
-	result := ""
-	if !scanner.Scan() {
-		err = errors.Wrap(scanner.Err(), "could not scan text; empty?")
-		return
-	}
-	result = scanner.Text() // just scan one line of text
-	data, err := jason.NewValueFromBytes([]byte(result))
+
+	data, err := jason.NewValueFromBytes([]byte(input))
 	if err != nil {
 		err = errors.Wrap(err, "could not create value from text")
 		return
 	}
 
-	// but how do we read the data?
-	var totalSum int64
-	var notRedSum int64 // answer2
+	// var totalSum int64
+	// var notRedSum int64 // answer2
 
-	totalSum += extractSum(data)
-	notRedSum += extractSumButRed(data)
+	totalSum := extractSum(data)
+	notRedSum := extractSumButRed(data)
 
 	answer1 = strconv.FormatInt(totalSum, 10)
 	answer2 = strconv.FormatInt(notRedSum, 10)

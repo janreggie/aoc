@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"strings"
 )
 
@@ -49,14 +48,6 @@ func (ps password) string() string {
 	return string(ps[:])
 }
 
-func (ps password) copy() password {
-	var result password
-	for ii := range ps {
-		result[ii] = ps[ii]
-	}
-	return result
-}
-
 // hasIncreasing returns true if it includes three characters that are
 // continuously increasing e.g., "abc", "bcd", and so on.
 func (ps password) hasIncreasing() bool {
@@ -101,7 +92,6 @@ func (ps *password) increment() {
 		ps[ind] = 'a'
 		ind--
 	}
-	return
 }
 
 // Day11 solves the eleventh day puzzle "Corporate Policy".
@@ -113,14 +103,13 @@ func (ps *password) increment() {
 //
 //	hepxcrrq
 func Day11(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	// do things
-	scanner.Scan()
-	passwd := newPassword(scanner.Text())
+
+	passwd := newPassword(input)
 	for !passwd.noForbidden() || !passwd.hasIncreasing() || !passwd.hasTwoPairs() {
 		passwd.increment()
 	}
 	answer1 = passwd.string()
+
 	passwd.increment()
 	for !passwd.noForbidden() || !passwd.hasIncreasing() || !passwd.hasTwoPairs() {
 		passwd.increment()

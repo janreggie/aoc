@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 	"sync"
@@ -11,10 +10,6 @@ import (
 
 // eggnog represents an amount of eggnog.
 type eggnog uint
-
-func (eggnog eggnog) uint() uint {
-	return uint(eggnog)
-}
 
 // containerCount represents a number of containers
 type containerCount uint
@@ -51,12 +46,6 @@ func containOnlyIn(amount eggnog, limit containerCount, containers []eggnog) con
 		containOnlyIn(amount, limit, containers[1:])
 }
 
-// leastContainers determines the least number of containers it takes
-// to fill some amount of eggnog using some set of containers
-func leastContainers(amount eggnog, containers []eggnog) containerCount {
-	return 0
-}
-
 // Day17 solves the seventeenth day puzzle "No Such Thing as Too Much".
 //
 // Input
@@ -74,21 +63,20 @@ func leastContainers(amount eggnog, containers []eggnog) containerCount {
 // There are no guarantees that the list in the input containers have been
 // sorted. All containers should be non-negative integers no more than 150.
 func Day17(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	containers := make([]eggnog, 0)
-	for scanner.Scan() {
-		size, e := strconv.ParseUint(scanner.Text(), 0, 32)
+	for _, line := range strings.Split(input, "\n") {
+		if (line) == "" {
+			continue
+		}
+
+		size, e := strconv.ParseUint(line, 0, 32)
 		if e != nil {
-			err = errors.Wrapf(e, "could not parse %q", scanner.Text())
+			err = errors.Wrapf(e, "could not parse %q", line)
 			return
 		}
 		containers = append(containers, eggnog(size))
 	}
-
-	// sort these out (there's apparently no need to do this!)
-	// sort.Slice(containers, func(i, j int) bool {
-	// 	return containers[i] > containers[j] // sort ascendingly!
-	// })
 
 	var wg sync.WaitGroup
 	wg.Add(2)

@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
@@ -37,10 +36,7 @@ import (
 // the function will return an error corresponding to the problematic line.
 // If the numbers are too large, that may result in an integer overflow.
 func Day02(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	// initialize important variables
-	splitDims := make([]string, 3)
-	actualDims := make([]int, 3)
+
 	var totalPaper, totalRibbon int // part 1 and part 2 respectively
 
 	// some helper functions
@@ -87,24 +83,30 @@ func Day02(input string) (answer1, answer2 string, err error) {
 		return dims[0] * dims[1] * dims[2]
 	}
 
-	// now for the big part.
-	for scanner.Scan() {
-		readDims := scanner.Text()
-		splitDims = strings.Split(readDims, "x")
-		if len(splitDims) != 3 {
+	for _, readDims := range strings.Split(input, "\n") {
+
+		if readDims == "" { // Final string
+			continue
+		}
+
+		rawDims := strings.Split(readDims, "x")
+		if len(rawDims) != 3 {
 			// throw an error
 			err = fmt.Errorf("invalid dimensions: %v", readDims)
 			return
 		}
+
 		// Atoi each dimension
+		actualDims := make([]int, 3)
 		for ind := range actualDims {
-			convt, e := strconv.Atoi(splitDims[ind])
+			convt, e := strconv.Atoi(rawDims[ind])
 			if e != nil {
-				err = fmt.Errorf("not an integer: %v (%v)", readDims, splitDims[ind])
+				err = fmt.Errorf("not an integer: %v (%v)", readDims, rawDims[ind])
 				return
 			}
 			actualDims[ind] = convt
 		}
+
 		totalPaper += surfaceArea(actualDims) + slack(actualDims)
 		totalRibbon += ribbon(actualDims) + bow(actualDims)
 	}

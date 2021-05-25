@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
@@ -72,15 +71,17 @@ type tableScenario struct {
 // It uses parseTableScenario to read text such as:
 //
 //     Alice would lose 2 happiness units by sitting next to David.
-func newTableScenario(scanner *bufio.Scanner) (*tableScenario, error) {
+func newTableScenario(input string) (*tableScenario, error) {
 	potentialHappiness := make(map[visitorPair]happiness)
 	visitors := make([]visitor, 0)
 	result := &tableScenario{potentialHappiness: potentialHappiness, visitors: visitors}
 
 	// now parse each line
-	for scanner.Scan() {
-		line := scanner.Text()
-		// split according to parseTableScenario
+	for _, line := range strings.Split(input, "\n") {
+
+		if line == "" {
+			continue
+		}
 		if err := result.parseTableScenario(line); err != nil {
 			return result, errors.Wrapf(err, "could not parse line %v", line)
 		}
@@ -483,8 +484,8 @@ func (queue *seatingArrangementQueue) pop() (seatingArrangement, error) {
 // It is guaranteed that the gain or loss of happiness between any two
 // people is no more than 100.
 func Day13(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	scenario, err := newTableScenario(scanner)
+
+	scenario, err := newTableScenario(input)
 	if err != nil {
 		err = errors.Wrap(err, "could not parse input")
 		return

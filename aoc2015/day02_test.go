@@ -31,6 +31,7 @@ func TestDay02(t *testing.T) {
 			WantErr: true},
 	}
 	for _, tt := range testCases {
+		t.Logf("testing case %#v", tt)
 		tt.Test(Day02, assert)
 	}
 }

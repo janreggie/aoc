@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"fmt"
 	"strconv"
 	"strings"
@@ -156,12 +155,16 @@ func (olympics *reindeerOlympics) iterateUntil(time uint) {
 // It is guaranteed that the numbers are non-negative integers,
 // each no more than 200.
 func Day14(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	allReindeer := make([]racingReindeer, 0)
-	for scanner.Scan() {
-		rd, e := newRacingReindeer(scanner.Text())
+	for _, line := range strings.Split(input, "\n") {
+		if line == "" {
+			continue
+		}
+
+		rd, e := newRacingReindeer(line)
 		if e != nil {
-			err = errors.Wrapf(err, "could not create reindeer %v", scanner.Text())
+			err = errors.Wrapf(err, "could not create reindeer %v", line)
 			return
 		}
 		allReindeer = append(allReindeer, rd)

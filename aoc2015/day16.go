@@ -1,10 +1,8 @@
 package aoc2015
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/pkg/errors"
 )
@@ -246,8 +244,7 @@ func (aunt auntSue) howSimilarRecalibrated(another auntSue) uint {
 // "vizslas", "goldfish", "trees", "cars", and "perfumes",
 // and that the values are non-negative integers no more than 10.
 func Day16(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	// basis...
+
 	var basis = auntSue{
 		children:    3,
 		cats:        7,
@@ -263,8 +260,11 @@ func Day16(input string) (answer1, answer2 string, err error) {
 
 	// construct a list of aunts
 	allAunts := make([]auntSue, 0, 500)
-	for scanner.Scan() {
-		aunt, e := newAuntSue(scanner.Text())
+	for _, line := range strings.Split(input, "\n") {
+		if line == "" {
+			continue
+		}
+		aunt, e := newAuntSue(line)
 		if e != nil {
 			err = errors.Wrapf(e, "could not properly create: %v", aunt)
 			return
@@ -272,38 +272,19 @@ func Day16(input string) (answer1, answer2 string, err error) {
 		allAunts = append(allAunts, aunt)
 	}
 
-	// Note:
-	// The computation performed here is trivial and inexpensive,
-	// and implementing concurrency and goroutines in solving this puzzle is unnecessary,
-	// and even causes a dip in performance.
-	// Nevertheless, I have implemented goroutines for the sake of demonstration,
-	// to show that these problems *can* be solved concurrently.
-
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		// now check which one has the same value...
-		// check for each Aunt...
-		for _, aunt := range allAunts {
-			if basis.howSimilar(aunt) == 3 {
-				answer1 = strconv.FormatUint(uint64(aunt.number), 10)
-				break
-			}
+	for _, aunt := range allAunts {
+		if basis.howSimilar(aunt) == 3 {
+			answer1 = strconv.FormatUint(uint64(aunt.number), 10)
+			break
 		}
-		wg.Done()
-	}()
+	}
 
-	go func() {
-		// now for Part two...
-		for _, aunt := range allAunts {
-			if basis.howSimilarRecalibrated(aunt) == 3 {
-				answer2 = strconv.FormatUint(uint64(aunt.number), 10)
-				break
-			}
+	for _, aunt := range allAunts {
+		if basis.howSimilarRecalibrated(aunt) == 3 {
+			answer2 = strconv.FormatUint(uint64(aunt.number), 10)
+			break
 		}
-		wg.Done()
-	}()
+	}
 
-	wg.Wait()
 	return
 }

@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"fmt"
 	"image"
 	"strconv"
@@ -13,7 +12,7 @@ import (
 // lights represents a 1000x1000 grid of lights (Day 6)
 type lights [1000][1000]struct {
 	status     bool // on/off?
-	brightness uint
+	brightness uint64
 }
 
 // turnOn turns on all points in a rectangular region from initial to final inclusive
@@ -52,8 +51,8 @@ func (lights *lights) toggle(initial, final image.Point) {
 }
 
 // countLit counts the number of lit lights
-func (lights *lights) countLit() uint {
-	var totalLit uint
+func (lights *lights) countLit() uint64 {
+	var totalLit uint64
 	for ii := 0; ii < 1000; ii++ {
 		for jj := 0; jj < 1000; jj++ {
 			if lights[jj][ii].status {
@@ -65,8 +64,8 @@ func (lights *lights) countLit() uint {
 }
 
 // brightness returns the brightness
-func (lights *lights) brightness() uint {
-	var br uint
+func (lights *lights) brightness() uint64 {
+	var br uint64
 	for ii := 0; ii < 1000; ii++ {
 		for jj := 0; jj < 1000; jj++ {
 			br += lights[jj][ii].brightness
@@ -93,8 +92,9 @@ func (lights *lights) brightness() uint {
 // the first coordinate is no greater than the third one and the second no greater than the fourth,
 // and all numbers are no greater than 999.
 // Invalid inputs will cause an error to return.
+//
 func Day06(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	var allLights lights
 
 	// parseRowCol turns dimensions initRaw and finalRaw
@@ -126,26 +126,36 @@ func Day06(input string) (answer1, answer2 string, err error) {
 	}
 
 	// read each line in scanner
-	for scanner.Scan() {
-		rawQuery := scanner.Text()
+	for _, rawQuery := range strings.Split(input, "\n") {
+
+		if rawQuery == "" {
+			continue
+		}
+
 		query := strings.Fields(rawQuery)
+
 		// note that rawQuery can either be one of the following
 		// 	toggle ROW1,COL1 through ROW2,COL2
 		// 	turn off ROW1,COL1 through ROW2,COL2
 		// 	turn on ROW1,COL1 through ROW2,COL2
 		// hence query is of length 4 or 5
+		//
 		if len(query) != 4 && len(query) != 5 {
 			err = fmt.Errorf("unknown spacing: %q", rawQuery)
 			return
 		}
+
 		var initial, final image.Point
 		if query[0] == "toggle" {
+
 			if err = parseRowCol(query[1], query[3], &initial, &final); err != nil {
 				err = errors.Wrapf(err, "could not parse query %v", rawQuery)
 				return
 			}
 			allLights.toggle(initial, final)
+
 		} else if query[0] == "turn" {
+
 			if err = parseRowCol(query[2], query[4], &initial, &final); err != nil {
 				err = errors.Wrapf(err, "could not parse query %v", rawQuery)
 				return
@@ -158,6 +168,7 @@ func Day06(input string) (answer1, answer2 string, err error) {
 				err = fmt.Errorf("unknown function: %q in %q neither off nor on", query[1], rawQuery)
 				return
 			}
+
 		} else {
 			err = fmt.Errorf("unknown function: %q in %q", query[0], rawQuery)
 			return
@@ -165,7 +176,7 @@ func Day06(input string) (answer1, answer2 string, err error) {
 	}
 
 	// now count
-	answer1 = strconv.FormatUint(uint64(allLights.countLit()), 10)
-	answer2 = strconv.FormatUint(uint64(allLights.brightness()), 10)
+	answer1 = strconv.FormatUint(allLights.countLit(), 10)
+	answer2 = strconv.FormatUint(allLights.brightness(), 10)
 	return
 }

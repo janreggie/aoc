@@ -50,7 +50,7 @@ func Day04(input string) (answer1, answer2 string, err error) {
 	// i.e., input+<-addned
 	processes := 8 // how many processes in parallel?
 	addends := func() chan int {
-		result := make(chan int)
+		result := make(chan int, processes*2)
 		go func() {
 			moar := 1
 			// add moar to addend channel
@@ -62,13 +62,10 @@ func Day04(input string) (answer1, answer2 string, err error) {
 		return result
 	}
 
-	// Let's rethink this problem...
-	// How do we get the addend that makes checkHash(..., 5) and ...,6 correct?
 	resultFive, resultSix := make(chan int), make(chan int) // result for 5 and 6 zeroes
 	addendFive, addendSix := addends(), addends()
-	foundFive, foundSix := make(chan bool), make(chan bool)
+	foundFive, foundSix := make(chan struct{}), make(chan struct{}) // will close once results are found
 
-	// let's use some vocabulary
 	evaluateFive := func() {
 		for {
 			addend := <-addendFive
@@ -136,9 +133,11 @@ func Day04ST(input string) (answer1, answer2 string, err error) {
 			}
 
 		}
-		if foundFive && foundSix == true {
+
+		if foundFive && foundSix {
 			break
 		}
+
 		addend++
 	}
 	return

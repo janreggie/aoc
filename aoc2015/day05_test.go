@@ -44,6 +44,7 @@ func TestDay05(t *testing.T) {
 			Result2: "69"}, // nice
 	}
 	for _, tt := range testCases {
+		t.Logf("Testing %#v", tt)
 		tt.Test(Day05, assert)
 	}
 }
@@ -156,8 +157,4 @@ func Test_checkNiceTwo(t *testing.T) {
 
 func BenchmarkDay05(b *testing.B) {
 	internal.Benchmark(Day05, b, day05myInput)
-}
-
-func BenchmarkDay05ST(b *testing.B) {
-	internal.Benchmark(Day05ST, b, day05myInput)
 }

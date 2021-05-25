@@ -1,7 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
 	"strconv"
 	"strings"
 
@@ -25,7 +24,7 @@ import (
 // If it does, trim the quotation marks away.
 // If it doesn't, take the input as-is.
 func Day08(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	var representedDiff uint64 // character difference (representation and actual) for answer 1
 	var encodedDiff uint64     // character difference (literal and encoded) for answer 2
 
@@ -37,6 +36,7 @@ func Day08(input string) (answer1, answer2 string, err error) {
 	// stringLength is length of a "string" while considering "escaped" characters
 	// e.g., `"aaa\"aaa"` is 6.
 	stringLength := func(str string) int {
+
 		// assume that str[0] and str[len(str)-1] is `"`
 		if str[0] == '"' {
 			str = str[1:]
@@ -44,8 +44,7 @@ func Day08(input string) (answer1, answer2 string, err error) {
 		if str[len(str)-1] == '"' {
 			str = str[:len(str)-1]
 		}
-		// create an iterative function for this...
-		// apparently you can't create recursive closures :sad:
+
 		totalLength := 0
 		glog.Infof("String to be used is %v\n", str)
 		for ind := 0; ind < len(str); ind++ {
@@ -76,10 +75,13 @@ func Day08(input string) (answer1, answer2 string, err error) {
 		return totalLength
 	}
 
-	for scanner.Scan() {
-		eachLine := scanner.Text()
-		representedDiff += uint64(literalLength(eachLine) - stringLength(eachLine))
-		encodedDiff += uint64(encodedLength(eachLine) - literalLength(eachLine))
+	for _, line := range strings.Split(input, "\n") {
+
+		if line == "" {
+			continue
+		}
+		representedDiff += uint64(literalLength(line) - stringLength(line))
+		encodedDiff += uint64(encodedLength(line) - literalLength(line))
 	}
 
 	answer1 = strconv.FormatUint(representedDiff, 10)

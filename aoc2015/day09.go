@@ -149,24 +149,6 @@ func (graph townGraph) in(town town) bool {
 	return false
 }
 
-// isValid returns whether the path is a isValid path in graph.
-// If path is empty it will return true.
-func (graph townGraph) isValid(path []town) bool {
-	if len(path) == 0 {
-		return true
-	}
-	if len(path) == 1 {
-		return graph.in(path[0])
-	}
-
-	firstTwo := graph.get(path[0], path[1])
-	if len(path) == 2 {
-		return firstTwo != disconnected
-	}
-
-	return graph.isValid(path[1:])
-}
-
 // distance determines the distance returned after traversing all towns in path.
 // Will also return a boolean signifying if path is a valid path.
 // If path is not valid it will return disconnected and false.
@@ -525,11 +507,6 @@ func (path townPath) copy() townPath {
 	return output
 }
 
-// head and tail returns the first and last towns of a townPath
-func (path *townPath) head() town {
-	return path.raw[0]
-}
-
 func (path *townPath) tail() town {
 	return path.raw[len(path.raw)-1]
 }
@@ -639,6 +616,7 @@ func (queue *townPathQueue) pop() (townPath, error) {
 // The above is my complete input.
 // It is guaranteed that the distances betwen any two towns is given.
 // It is also guaranteed that the distances between any two towns is no more than 200.
+//
 func Day09(input string) (answer1, answer2 string, err error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	santasGraph, err := newTownGraph(scanner)

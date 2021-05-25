@@ -1,8 +1,6 @@
 package aoc2015
 
 import (
-	"bufio"
-	"strings"
 	"testing"
 
 	"github.com/janreggie/aoc/internal"
@@ -11,12 +9,12 @@ import (
 
 func day13sampleScenario() *tableScenario {
 	// guaranteed not to error
-	scenario, _ := newTableScenario(bufio.NewScanner(strings.NewReader(day13sampleInput)))
+	scenario, _ := newTableScenario(day13sampleInput)
 	return scenario
 }
 
 func day13myScenario() *tableScenario {
-	scenario, _ := newTableScenario(bufio.NewScanner(strings.NewReader(day13myInput)))
+	scenario, _ := newTableScenario(day13myInput)
 	return scenario
 }
 

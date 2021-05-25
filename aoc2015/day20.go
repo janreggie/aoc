@@ -53,14 +53,7 @@ func (dv divisors) last() uint64 {
 // when multiplied by fifty.
 // It is guaranteed that dv is sorted.
 func (dv divisors) onlyFifty() divisors {
-	// result := make(divisors, 0)
-	// number := dv[len(dv)-1]
-	// for _, vv := range dv {
-	// 	if vv*50 >= number {
-	// 		result = append(result, vv)
-	// 	}
-	// }
-	// return result
+
 	ind := 0
 	basis := dv[len(dv)-1]
 	for ; ind < len(dv); ind++ {

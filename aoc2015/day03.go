@@ -1,22 +1,20 @@
 package aoc2015
 
 import (
-	"bufio"
 	"image"
 	"strconv"
-	"strings"
 )
 
 // iterateCoordinate moves the location using an input (`v`, `^`, `<`, `>`)
-func iterateCoordinate(location *image.Point, input string) {
+func iterateCoordinate(location *image.Point, input rune) {
 	switch input {
-	case "v":
+	case 'v':
 		location.Y--
-	case "^":
+	case '^':
 		location.Y++
-	case "<":
+	case '<':
 		location.X--
-	case ">":
+	case '>':
 		location.X++
 	}
 }
@@ -32,8 +30,6 @@ func iterateCoordinate(location *image.Point, input string) {
 //
 // Any characters that are not any of those will be ignored.
 func Day03(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	scanner.Split(bufio.ScanBytes)
 
 	// okay how do we "store" these? maybe hash map
 	// part 1
@@ -46,8 +42,7 @@ func Day03(input string) (answer1, answer2 string, err error) {
 	dualHouses[nuSanta]++
 	isSanta := true // is it nuSanta's turn? will invert for every iteration
 
-	for scanner.Scan() {
-		readDirection := scanner.Text()
+	for _, readDirection := range input {
 		iterateCoordinate(&santa, readDirection)
 		houses[santa]++
 		if isSanta {
