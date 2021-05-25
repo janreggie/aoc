@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -136,7 +136,7 @@ func Test_number_iterateDeux(t *testing.T) {
 
 func TestDay02(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Input: "ULL\n" +
 			"RRDDD\n" +
 			"LURDL\n" +
@@ -155,5 +155,5 @@ func TestDay02(t *testing.T) {
 }
 
 func BenchmarkDay02(b *testing.B) {
-	internal.Benchmark(Day01, b, day02myInput)
+	aoc.Benchmark(Day01, b, day02myInput)
 }

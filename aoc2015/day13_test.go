@@ -3,7 +3,7 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -167,7 +167,7 @@ func Test_seatingArrangementQueue(t *testing.T) {
 
 func TestDay13(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Details: "Y2015D13 sample input",
 			Input:   day13sampleInput,
 			Result1: "330",
@@ -195,5 +195,5 @@ func Benchmark_tableScenario_happiestPermutative(b *testing.B) {
 }
 
 func BenchmarkDay13(b *testing.B) {
-	internal.Benchmark(Day13, b, day13myInput)
+	aoc.Benchmark(Day13, b, day13myInput)
 }

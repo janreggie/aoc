@@ -3,7 +3,7 @@ package aoc2019
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -101,7 +101,7 @@ func (q *queue) pop() (val int64) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Details: "Y2019D07 my input",
 			Input:   day07myInput,
 			Result1: "262086",
@@ -113,5 +113,5 @@ func TestDay07(t *testing.T) {
 }
 
 func BenchmarkDay07(b *testing.B) {
-	internal.Benchmark(Day07, b, day07myInput)
+	aoc.Benchmark(Day07, b, day07myInput)
 }

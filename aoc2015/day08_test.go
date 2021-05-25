@@ -3,13 +3,13 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay08(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Input: `""`,
 			Result1: "2",
 			Result2: "4"},
@@ -33,5 +33,5 @@ func TestDay08(t *testing.T) {
 }
 
 func BenchmarkDay08(b *testing.B) {
-	internal.Benchmark(Day08, b, day08myInput)
+	aoc.Benchmark(Day08, b, day08myInput)
 }

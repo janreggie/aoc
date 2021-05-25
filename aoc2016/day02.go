@@ -1,21 +1,12 @@
 package aoc2016
 
 import (
-	"bufio"
 	"strings"
 )
 
 // keypadNumber represents a keypad number from 1 to 9 (or 1 to D). (Day 2)
 // If keypadNumber is 10, 11, 12, or 13 those represent the letters "A", "B", "C", and "D".
 type keypadNumber uint
-
-func (number keypadNumber) Uint() uint {
-	return uint(number)
-}
-
-func (number keypadNumber) Int() int {
-	return int(number)
-}
 
 func (number keypadNumber) Rune() rune {
 	if number > 9 {
@@ -45,7 +36,6 @@ func (number *keypadNumber) iterate(move rune) {
 			*number++
 		}
 	}
-	return
 }
 
 // iterateDeux iterates number using the Part 2 rules.
@@ -103,13 +93,16 @@ func (number *keypadNumber) iterateStringDeux(movement string) {
 // It is guaranteed that no line exceeds 600 characters,
 // and there are no more than five lines.
 func Day02(input string) (answer1, answer2 string, err error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
+
 	var initOne, initTwo keypadNumber = 5, 5
 
 	var a1, a2 strings.Builder
-	for scanner.Scan() {
-		initOne.iterateString(scanner.Text())
-		initTwo.iterateStringDeux(scanner.Text())
+	for _, line := range strings.Split(input, "\n") {
+		if line == "" {
+			continue
+		}
+		initOne.iterateString(line)
+		initTwo.iterateStringDeux(line)
 		a1.WriteRune(initOne.Rune())
 		a2.WriteRune(initTwo.Rune())
 	}

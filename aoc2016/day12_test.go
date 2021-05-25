@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +24,7 @@ func Test_assembunnyComputer_ReadMemory(t *testing.T) {
 
 func TestDay12(t *testing.T) {
 	assert := assert.New(t)
-	testCase := internal.TestCase{
+	testCase := aoc.TestCase{
 		Details: "Y2016D12 my input",
 		Input:   day12myInput,
 		Result1: `318117`,
@@ -34,5 +34,5 @@ func TestDay12(t *testing.T) {
 }
 
 func BenchmarkDay12(b *testing.B) {
-	internal.Benchmark(Day12, b, day12myInput)
+	aoc.Benchmark(Day12, b, day12myInput)
 }

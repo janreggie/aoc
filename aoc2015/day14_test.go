@@ -3,7 +3,7 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -145,7 +145,7 @@ func Test_reindeerOlympics_iterate(t *testing.T) {
 
 func TestDay14(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Details: "Y2015D14 my input",
 			Input:   day14myInput,
 			Result1: "2660",
@@ -157,5 +157,5 @@ func TestDay14(t *testing.T) {
 }
 
 func BenchmarkDay14(b *testing.B) {
-	internal.Benchmark(Day14, b, day14myInput)
+	aoc.Benchmark(Day14, b, day14myInput)
 }

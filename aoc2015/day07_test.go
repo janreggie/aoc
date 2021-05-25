@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -524,7 +524,7 @@ func Test_instruction_operationName(t *testing.T) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Details: "Y2016D07 my input",
 			Input:   day07myInput,
 			Result1: "3176",
@@ -536,5 +536,5 @@ func TestDay07(t *testing.T) {
 }
 
 func BenchmarkDay07(b *testing.B) {
-	internal.Benchmark(Day07, b, day07myInput)
+	aoc.Benchmark(Day07, b, day07myInput)
 }

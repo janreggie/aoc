@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,7 +37,7 @@ func TestTobogganForest(t *testing.T) {
 
 func TestDay03(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{
 			Details: "Y2020D03 sample input",
 			Input:   day03sampleInput,

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/antonholmquist/jason"
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,7 +52,7 @@ func Test_extractSumButRed(t *testing.T) {
 }
 func TestDay12(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Details: "Y2015D12 my input",
 			Input:   day12myInput,
 			Result1: "111754",
@@ -64,5 +64,5 @@ func TestDay12(t *testing.T) {
 }
 
 func BenchmarkDay12(b *testing.B) {
-	internal.Benchmark(Day12, b, day12myInput)
+	aoc.Benchmark(Day12, b, day12myInput)
 }

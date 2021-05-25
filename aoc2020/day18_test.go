@@ -3,7 +3,7 @@ package aoc2020
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,7 +34,7 @@ func Test_equation(t *testing.T) {
 
 func TestDay18(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{
 			Details: "Y2020D18 sample input",
 			Input:   day18sampleInput,

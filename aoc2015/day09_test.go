@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -304,7 +304,7 @@ func Test_townPathQueue_pushAndPop(t *testing.T) {
 
 func TestDay09(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Input: "London to Dublin = 464\n" +
 			"London to Belfast = 518\n" +
 			"Dublin to Belfast = 141\n",
@@ -322,7 +322,7 @@ func TestDay09(t *testing.T) {
 }
 
 func BenchmarkDay09(b *testing.B) {
-	internal.Benchmark(Day09, b, day09myInput)
+	aoc.Benchmark(Day09, b, day09myInput)
 }
 
 func Benchmark_graph_shortestPathPermutative(b *testing.B) {

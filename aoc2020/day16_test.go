@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -98,7 +98,7 @@ nearby tickets:
 
 func TestDay16(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{
 			Details: "Y2020D16 sample input",
 			Input:   day16sampleInput,

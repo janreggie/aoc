@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -164,7 +164,7 @@ func Test_littleScreen_parseInstruction(t *testing.T) {
 
 func TestDay08(t *testing.T) {
 	assert := assert.New(t)
-	testCase := internal.TestCase{
+	testCase := aoc.TestCase{
 		Details: "Y2016D08 my input",
 		Input:   day08myInput,
 		Result1: `110`,
@@ -174,5 +174,5 @@ func TestDay08(t *testing.T) {
 }
 
 func BenchmarkDay08(b *testing.B) {
-	internal.Benchmark(Day08, b, day08myInput)
+	aoc.Benchmark(Day08, b, day08myInput)
 }

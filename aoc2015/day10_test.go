@@ -3,7 +3,7 @@ package aoc2015
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +26,7 @@ func Test_lookAndSay(t *testing.T) {
 
 func TestDay10(t *testing.T) {
 	assert := assert.New(t)
-	testCases := []internal.TestCase{
+	testCases := []aoc.TestCase{
 		{Details: "Y2015D10 my input",
 			Input:   day10myInput,
 			Result1: "329356",
@@ -38,5 +38,5 @@ func TestDay10(t *testing.T) {
 }
 
 func BenchmarkDay10(b *testing.B) {
-	internal.Benchmark(Day10, b, day10myInput)
+	aoc.Benchmark(Day10, b, day10myInput)
 }

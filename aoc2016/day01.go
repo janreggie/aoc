@@ -27,7 +27,7 @@ func checkPointInSlice(slice []image.Point, pt image.Point) bool {
 	return false
 }
 
-func absInt64(a int64) int64 {
+func absInt(a int) int {
 	if a < 0 {
 		return -a
 	}
@@ -35,21 +35,21 @@ func absInt64(a int64) int64 {
 }
 
 // movePosition: return image.Point which is old offset by amt in direction
-func movePosition(old image.Point, dir direction, amt int64) image.Point {
+func movePosition(old image.Point, dir direction, amt int) image.Point {
 	ns := dir%2 == 0            // true for NS; false for EW
 	positive := (dir>>1)%2 == 0 // true for POSITIVE effect; false for NEGATIVE
 	new := image.Pt(0, 0)
 	if ns {
 		if positive {
-			new = old.Add(image.Pt(0, int(amt)))
+			new = old.Add(image.Pt(0, amt))
 		} else {
-			new = old.Add(image.Pt(0, int(-amt)))
+			new = old.Add(image.Pt(0, -amt))
 		}
 	} else {
 		if positive {
-			new = old.Add(image.Pt(int(amt), 0))
+			new = old.Add(image.Pt(amt, 0))
 		} else {
-			new = old.Add(image.Pt(int(-amt), 0))
+			new = old.Add(image.Pt(-amt, 0))
 		}
 	}
 	return new
@@ -69,11 +69,13 @@ func movePosition(old image.Point, dir direction, amt int64) image.Point {
 // is no greater than 200. It is also guaranteed that each
 // instruction is prefixed by either "R" or "L".
 func Day01(input string) (answer1, answer2 string, err error) {
+
 	currentDirection := north
 	current := image.Pt(0, 0) // current position
 	allVisited := make([]image.Point, 0, 32)
 	found := false // have we found the intersection?
 	intersection := image.Pt(0, 0)
+
 	turns := strings.Split(input, ", ")
 	for _, turn := range turns {
 		if len(turn) < 2 {
@@ -90,7 +92,7 @@ func Day01(input string) (answer1, answer2 string, err error) {
 		}
 		currentDirection = currentDirection % 4
 
-		amt, e := strconv.ParseInt(turn[1:], 10, 64)
+		amt, e := strconv.Atoi(turn[1:])
 		if e != nil {
 			err = e
 			return
@@ -99,7 +101,7 @@ func Day01(input string) (answer1, answer2 string, err error) {
 		new := movePosition(current, currentDirection, amt)
 		if !found {
 			trans := current
-			for i := int64(0); i < amt; i++ {
+			for i := 0; i < amt; i++ {
 				trans = movePosition(trans, currentDirection, 1)
 				if !checkPointInSlice(allVisited, trans) {
 					allVisited = append(allVisited, trans)
@@ -112,7 +114,7 @@ func Day01(input string) (answer1, answer2 string, err error) {
 		current = new
 	}
 
-	answer1 = strconv.FormatInt(absInt64(int64(current.X))+absInt64(int64(current.Y)), 10)
-	answer2 = strconv.FormatInt(absInt64(int64(intersection.X))+absInt64(int64(intersection.Y)), 10)
+	answer1 = strconv.Itoa(absInt(current.X) + absInt(current.Y))
+	answer2 = strconv.Itoa(absInt(intersection.X) + absInt(intersection.Y))
 	return
 }

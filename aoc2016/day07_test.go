@@ -3,7 +3,7 @@ package aoc2016
 import (
 	"testing"
 
-	"github.com/janreggie/aoc/internal"
+	aoc "github.com/janreggie/aoc/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -67,7 +67,7 @@ func Test_ipv7Address_supportSSL(t *testing.T) {
 
 func TestDay07(t *testing.T) {
 	assert := assert.New(t)
-	testCase := internal.TestCase{
+	testCase := aoc.TestCase{
 		Details: "Y2016D07 my input",
 		Input:   day07myInput,
 		Result1: `110`,
@@ -77,5 +77,5 @@ func TestDay07(t *testing.T) {
 }
 
 func BenchmarkDay07(b *testing.B) {
-	internal.Benchmark(Day07, b, day07myInput)
+	aoc.Benchmark(Day07, b, day07myInput)
 }
